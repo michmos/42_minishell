@@ -3,6 +3,9 @@
 # define MINISHELL_H
 
 # include "../external_libs/42_libs/ft_libs.h"
+# include <stdio.h>
+# include <string.h>
+# include <errno.h>
 
 typedef enum e_error
 {
@@ -164,4 +167,18 @@ void	free_token(void *token);
 void	free_cmd(void *cmd);
 void	free_redir(void	*redir);
 
+// print_pwd.c -------------------------------------------------------------//
+void		print_pwd(void);
+
+// unset.c ----------------------------------------------------------------//
+t_list		*unset_envlst(t_list *head, char *argv);
+
+// cd.c -------------------------------------------------------------------//
+int			change_directory(char **argv);
+
+// echo.c -----------------------------------------------------------------//
+int			echo(char **argv);
+
+// exit.c -----------------------------------------------------------------//
+int			exit_bash(char **argv);
 #endif

@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/16 10:00:03 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/05/16 10:00:58 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/05/21 13:31:05 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,3 +106,12 @@ t_list	*create_envlst(char **env)
 	}
 	return (head);
 }
+
+/* 
+	if you give me argv[2] i can create a function and send the value to get_env_var that returns a node and
+	then just add that node to the back
+
+	to make sure it's possible to add it in alphabetical order after I created the node I can move through the 
+	linked list and add it to the back of it. and before priting env I can check if there is an equal sign that 
+	should or shouldn't be there, and same with export
+*/ 
