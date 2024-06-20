@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 16:05:11 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/19 17:17:57 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/06/20 13:53:11 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_error	parsing(t_list **cmd_lst, char *str, t_list *env_lst)
 	t_error		error;
 	t_list		*token_lst;
 
-	cmd_line = (t_parse_str) { str, ft_strlen(str) };
+	cmd_line = (t_parse_str) { .buf=str, .buf_len=ft_strlen(str) };
 
 	// lexer
 	token_lst = NULL;
