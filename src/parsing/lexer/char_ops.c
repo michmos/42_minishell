@@ -1,31 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lex_char_ops.c                                     :+:      :+:    :+:   */
+/*   char_ops.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 10:23:56 by mmoser            #+#    #+#             */
-/*   Updated: 2024/05/06 12:10:00 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/06/17 16:23:29 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 char	cur_char(t_parse_str *str)
 {
 	return (str->buf[str->cursor_pos]);
 }
 
-char	next_char(t_parse_str *cmd_line)
+void	advance_char(t_parse_str *str, size_t n)
 {
-	cmd_line->cursor_pos++;
-	return (cmd_line->buf[cmd_line->cursor_pos]);
+	if (str->cursor_pos + n >= str->buf_len)
+	{
+		str->cursor_pos = str->buf_len;
+		return ;
+	}
+	str->cursor_pos += n;
 }
 
-char	peek_char(t_parse_str *cmd_line)
+char	peek_char(t_parse_str *str)
 {
-	if (cur_char(cmd_line)== '\0')
+	if (cur_char(str)== '\0')
 		return (-1);
-	return (cmd_line->buf[cmd_line->cursor_pos + 1]);
+	return (str->buf[str->cursor_pos + 1]);
 }

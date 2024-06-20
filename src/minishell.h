@@ -3,11 +3,28 @@
 # define MINISHELL_H
 
 # include "../external_libs/42_libs/ft_libs.h"
+typedef enum e_error
+{
+	// No error
+	NO_ERR,
 
-# define VEC_START_SZ 4
+	// Syscall fails
+	SYS_ERR,
+
+	// Syntax error
+	SYN_ERR,
+	// Bad function input
+	INP_ERR
+} t_error;
+
+
+// -------------------------------------------------------------------------- //
+// ---------------------------- PARSING/ ------------------------------------ //
+// -------------------------------------------------------------------------- //
 
 typedef enum e_tag
 {
+	WHITESPACE,
 	I_RD,
 	I_RD_HD,
 	O_RD,
@@ -18,20 +35,16 @@ typedef enum e_tag
 	WORD
 }	t_tag;
 
-typedef enum e_error
-{
-	// No error
-	NO_ERR,
-
-	// Syscall fails
-	SYS_ERR
-}	t_error;
-
 typedef struct s_token
 {
-	t_tag			tag;
-	char			*lexeme;
-}	t_token;
+	t_tag	tag;
+	char	*lexeme;
+} t_token;
+
+
+// -------------------------- PARSING/lexer/ -------------------------------- //
+
+# define VEC_START_SZ 4
 
 typedef struct s_parse_str
 {
@@ -46,7 +59,22 @@ typedef struct s_vec
 	size_t	size;
 }	t_vec;
 
-typedef struct s_AST
+// parse_literals.c --------------------------------------------------------- //
+t_error	parse_str_dq(char **lexeme, t_parse_str *cmd_line);
+t_error	parse_str_sq(char **lexeme, t_parse_str *cmd_line);
+t_error	parse_word(char **lexeme, t_parse_str *cmd_line);
+
+// add_char.c --------------------------------------------------------------- //
+t_error	add_char(char c, t_vec *vector);
+
+// char_ops.c --------------------------------------------------------------- //
+char	peek_char(t_parse_str *str);
+char	cur_char(t_parse_str *str);
+void	advance_char(t_parse_str *str, size_t n);
+
+// lexer.c ------------------------------------------------------------------ //
+t_error	create_token_lst(t_list **head, t_parse_str *cmd_line);
+
 {
 	t_tag			tag;
 	char			*buf;
