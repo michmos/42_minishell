@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
+#include "../../minishell.h"
 
 char	*get_key(t_env_var *env_var, t_parse_env *env_parse)
 {

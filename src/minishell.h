@@ -3,6 +3,8 @@
 # define MINISHELL_H
 
 # include "../external_libs/42_libs/ft_libs.h"
+# include <stdio.h>
+
 typedef enum e_error
 {
 	// No error
@@ -110,7 +112,13 @@ t_error	extend_redir_lst(t_list **head, t_list **rem_tokens);
 // parser.c ----------------------------------------------------------------- //
 t_error	create_cmd_lst(t_list **cmd_lst, t_list **token_lst, t_list *env_lst);
 
-// ---------------------------- BUILTINS/ ------------------------------------//
+
+
+// -------------------------------------------------------------------------- //
+// --------------------------- EXECUTION/ ----------------------------------- //
+// -------------------------------------------------------------------------- //
+
+// ----------------------- EXECUTION/builtins/ -------------------------------//
 typedef struct s_env_var
 {
 	char			*key; //before equal sign
@@ -125,21 +133,21 @@ typedef struct s_parse_env
 	size_t	cursor_pos;
 }	t_parse_env;
 
-// builtins.c ---------------------------------------------------------------//
+// builtins.c --------------------------------------------------------------- //
 void		print_envlst(t_list *head);
 
-// env.c --------------------------------------------------------------------//
+// env.c -------------------------------------------------------------------- //
 char		*get_key(t_env_var *env_var, t_parse_env *env_parse);
 char		*get_value(t_env_var *env_var, t_parse_env *env_parse);
 t_env_var	*get_env_var(char *env);
 t_list		*create_envlst(char **env);
 void		free_env_var(void *node);
 
-// ordered_env.c -----------------------------------------------------------//
+// ordered_env.c ------------------------------------------------------------ //
 t_list		*create_ordered_envlst(t_list *env);
 char		*key(t_list *node);
 
-// add_to_list.c -----------------------------------------------------------//
+// add_to_list.c ------------------------------------------------------------ //
 t_list		*add_to_ordered_envlst(t_list *head, char *argv);
 t_list		*add_to_envlst(t_list *head, char *argv);
 
