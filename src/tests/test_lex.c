@@ -6,16 +6,16 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 11:51:51 by mmoser            #+#    #+#             */
-/*   Updated: 2024/05/06 13:41:48 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/06/15 21:34:36 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-#include <stdio.h>
 
 void	print_token_lst(t_list *head)
 {
 	char *enum_strs[] = {
+		"WHITESPACES",
 		"I_RD",
 		"I_RD_HD",
 		"O_RD",
@@ -29,7 +29,7 @@ void	print_token_lst(t_list *head)
 
 	while (head)
 	{
-		printf("%-10s | %s\n", enum_strs[((t_token *)(head->as_ptr))->tag], ((t_token *)(head->as_ptr))->lexeme);
+		printf("%-14s | %s\n", enum_strs[((t_token *)(head->as_ptr))->tag], ((t_token *)(head->as_ptr))->lexeme);
 		head = head->next;
 	}
 }
@@ -37,7 +37,7 @@ void	print_token_lst(t_list *head)
 int main(int argc, char *argv[])
 {
 	t_parse_str	cmd_line;
-	t_list		*head;
+	t_list		*head = NULL;
 
 	if (argc != 2)
 	{
@@ -47,9 +47,7 @@ int main(int argc, char *argv[])
 	cmd_line.buf = argv[1];
 	cmd_line.buf_len = ft_strlen(argv[1]);
 	cmd_line.cursor_pos = 0;
-	head = lexer(&cmd_line);
-	if (!head)
-		return (1);
+	create_token_lst(&head, &cmd_line);
 	print_token_lst(head);
 	return (0);
 }
