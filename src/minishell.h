@@ -41,6 +41,8 @@ typedef struct s_token
 	char	*lexeme;
 } t_token;
 
+// parsing.c ---------------------------------------------------------------- //
+t_error	parsing(t_list **cmd_lst, char *str, t_list *env_lst);
 
 // -------------------------- PARSING/lexer/ -------------------------------- //
 
@@ -75,29 +77,38 @@ void	advance_char(t_parse_str *str, size_t n);
 // lexer.c ------------------------------------------------------------------ //
 t_error	create_token_lst(t_list **head, t_parse_str *cmd_line);
 
+// -------------------------- PARSING/parser/ ------------------------------- //
+
+typedef struct s_cmd
 {
-	t_tag			tag;
-	char			*buf;
-	struct s_AST	**next;
+	char	**args;
+	t_list	*redir_lst;
+} t_cmd;
 
-}	t_AST;
+typedef struct	s_redir
+{
+	t_tag	type;
+	char	*filename;
+} t_redir;
 
-// --------------------------- PARSING/ --------------------------------------//
-// lex_add_ops.c -------------------------------------------------------------//
-t_error		add_word(t_parse_str *cmd_line, t_vec *lexeme);
-t_error		add_str_literal(t_parse_str *cmd_line, t_vec *lexeme);
-t_error		add_char(char c, t_vec *vector);
+// utils.c ------------------------------------------------------------------ //
+t_token	pop_token(t_list **rem_tokens);
+void	consume_token(t_list **rem_tokens);
+t_tag	get_token_tag(t_list *tokens);
+bool	is_literal(t_tag tag);
+bool	is_redir(t_tag tag);
 
-// lex_char_ops.c ------------------------------------------------------------//
-char		peek_char(t_parse_str *cmd_line);
-char		next_char(t_parse_str *cmd_line);
-char		cur_char(t_parse_str *str);
+// expand_env_var.c --------------------------------------------------------- //
+t_error	expand_env_var(char **str, t_list *env_lst);
 
-// lexer.c -------------------------------------------------------------------//
-t_list		*lexer(t_parse_str *cmd_line);
+// get_cmd_args.c ----------------------------------------------------------- //
+t_error	extend_arg_lst(t_list **args_lst, t_list **rem_tokens, t_list *env_lst);
 
-// ---------------------------- UTILS/ ---------------------------------------//
-// utils.c -------------------------------------------------------------------//
+// get_redir_lst.c ---------------------------------------------------------- //
+t_error	extend_redir_lst(t_list **head, t_list **rem_tokens);
+
+// parser.c ----------------------------------------------------------------- //
+t_error	create_cmd_lst(t_list **cmd_lst, t_list **token_lst, t_list *env_lst);
 
 // ---------------------------- BUILTINS/ ------------------------------------//
 typedef struct s_env_var
@@ -131,4 +142,18 @@ char		*key(t_list *node);
 // add_to_list.c -----------------------------------------------------------//
 t_list		*add_to_ordered_envlst(t_list *head, char *argv);
 t_list		*add_to_envlst(t_list *head, char *argv);
+
+
+// -------------------------------------------------------------------------- //
+// ----------------------------- UTILS/ ------------------------------------- //
+// -------------------------------------------------------------------------- //
+
+// utils.c ------------------------------------------------------------------ //
+char	**store_ptrs_in_arr(t_list *lst);
+//
+// free.c ------------------------------------------------------------------- //
+void	free_token(void *token);
+void	free_cmd(void *cmd);
+void	free_redir(void	*redir);
+
 #endif
