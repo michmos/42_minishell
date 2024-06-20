@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:11:45 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/18 12:21:20 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/06/20 14:23:29 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	free_cmd(void *cmd)
 	t_cmd	*ptr;
 
 	ptr = (t_cmd *) cmd;
-	free_2d_array((void **)(ptr->args));
+	ft_free_2d_array((void **)(ptr->args));
 	ft_lstclear(&ptr->redir_lst, free_redir);
 	free(cmd);
 }

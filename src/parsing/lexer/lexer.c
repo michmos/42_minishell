@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 17:15:08 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/19 11:58:07 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/06/20 14:24:23 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static t_tag	get_tag(t_parse_str *cmd_line)
 {
-	if (is_whitespace(cur_char(cmd_line)))
+	if (ft_is_whitespace(cur_char(cmd_line)))
 	{
 		return (WHITESPACE);
 	}
@@ -59,7 +59,7 @@ static t_error	init_lexeme(char **lexeme, t_parse_str *cmd_line, t_tag tag)
 	error = NO_ERR;
 	if (tag == WHITESPACE)
 	{
-		while (cur_char(cmd_line) && is_whitespace(cur_char(cmd_line)))
+		while (cur_char(cmd_line) && ft_is_whitespace(cur_char(cmd_line)))
 			advance_char(cmd_line, 1);
 	}
 	else if (tag == I_RD || tag == O_RD || tag == PIPE)

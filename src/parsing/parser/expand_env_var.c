@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 13:22:17 by mmoser            #+#    #+#             */
-/*   Updated: 2024/05/23 16:17:09 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/06/20 14:24:06 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static t_error	expand_key(char **str, const char *var_value, size_t pos)
 	var_value_len = ft_strlen(var_value);
 	var_key_len = 0;
 
-	while((*str) && !is_whitespace((*str)[pos + var_key_len]))
+	while((*str) && !ft_is_whitespace((*str)[pos + var_key_len]))
 	{
 		var_key_len++;
 	}
