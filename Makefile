@@ -27,7 +27,7 @@ TESTS_BINS	:= $(TESTS_SRCS:%.c=%)
 all: $(NAME)
 
 # rule to make shell
-$(NAME): $(SUBMOD_FLAG) $(OBJS) $(LIBFT)
+$(NAME): $(OBJS) $(SUBMOD_FLAG) $(LIBFT)
 	$(CC) $(OBJS) $(LIBFT) -o $@
 	@printf "$(CREATED)" $@ $(CUR_DIR)
 
@@ -43,7 +43,7 @@ $(LIBFT):
 	$(MAKE) -C $(@D) all
 
 # rule to make tester binaries
-%: $(OBJ_DIR)/%.o $(OBJS) $(LIBFT)
+%: $(OBJ_DIR)/%.o $(OBJS) $(SUBMOD_FLAG) $(LIBFT)
 	$(CC) $(OBJ_DIR)/$*.o $(OBJS) $(LIBFT) -o $(TESTS_DIR)/$*
 	@printf "$(CREATED)" $@ $(CUR_DIR)
 

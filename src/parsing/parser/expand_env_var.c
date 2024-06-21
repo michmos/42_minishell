@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 13:22:17 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/21 13:42:12 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/06/22 16:16:12 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,22 +38,72 @@ static t_error	expand_key(char **str, const char *var_value, size_t pos)
 	return (NO_ERR);
 }
 
-t_error	expand_env_var(char **str, t_list *env_lst)
+// static bool	is_key_part(char c)
+// {
+// 	return (ft_isalnum(c) || c == '_');
+//
+// }
+
+static char	*get_key_start_ptr(char *str)
+{
+	bool	brackets_flag;
+	char	*key_start;
+
+	if (ft_strncmp(str, "${!", 3) == 0)
+	{
+		str += 3;
+	}
+	else if (ft_strncmp(str, "${", 2) == 0)
+	{
+		str += 2;
+	}
+	else
+		str += 1;
+	return (str);
+	// while(str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
+	// {
+	// 	i++;
+	// }
+	// if (str[i] == '}' && brackets_flag)
+	// 	i++;
+	// // TODO: further checks regarding brackets required?
+	// return (i);
+}
+
+static t_error	modify_str(char **str_ptr, size_t pos, t_list *env_lst)
+{
+	char	*str;
+	char	*key_start_ptr;
+	size_t	cut_out_len;
+	size_t	key_len;
+	char	*value_ptr;
+
+	str = *str_ptr;
+	key_start_ptr = get_key_start_ptr(&str[pos]);
+	key_len = 0;
+	while (key_start_ptr[key_len] && (ft_isalnum(key_start_ptr[key_len]) || key_start_ptr[key_len] == '_'))
+	value_ptr = get_env_val_ptr(key_start_ptr, env_lst);
+}
+
+t_error	expand_env_var(char **str_ptr, t_list *env_lst)
 {
 	size_t		i;
 	const char	*var_value_ptr;
+	char		*temp;
+	char		*str;
+	char		*key;
+	t_error		error;
 
 	i = 0;
-	while((*str)[i])
+	str = *str_ptr;
+	while(str[i])
 	{
-		if ((*str)[i] == '$')
+		if (str[i] == '$' && (i == 0 || str[i - 1] != '\\'))
 		{
-			var_value_ptr = get_env_val_ptr(&(*str)[i + 1], env_lst);
-			if (var_value_ptr)
+			error = modify_str(str_ptr, i);
+			if (error)
 			{
-				if (expand_key(str, var_value_ptr, i) != NO_ERR)
-					; // TODO: protect
-				i += ft_strlen(var_value_ptr);
+				return (error);
 			}
 		}
 		i++;
