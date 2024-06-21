@@ -3,7 +3,6 @@
 # define MINISHELL_H
 
 # include "../external_libs/42_libs/ft_libs.h"
-# include <stdio.h>
 
 typedef enum e_error
 {
@@ -158,6 +157,7 @@ t_list		*add_to_envlst(t_list *head, char *argv);
 
 // utils.c ------------------------------------------------------------------ //
 char	**store_ptrs_in_arr(t_list *lst);
+char	*get_env_val_ptr(char *key, t_list *env_list);
 //
 // free.c ------------------------------------------------------------------- //
 void	free_token(void *token);

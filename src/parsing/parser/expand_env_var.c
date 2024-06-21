@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 13:22:17 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/20 14:24:06 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/06/21 13:42:12 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,20 +38,6 @@ static t_error	expand_key(char **str, const char *var_value, size_t pos)
 	return (NO_ERR);
 }
 
-static char	*match_key(char *key, t_list *env_list)
-{
-	size_t	key_len;
-
-	key_len = ft_wordlen(key);
-	while(env_list)
-	{
-		if (ft_strncmp(key, ((t_env_var *)(env_list->as_ptr))->key, key_len) == 0)
-			return (((t_env_var *)(env_list->as_ptr))->value);
-		env_list = env_list->next;
-	}
-	return (NULL);
-}
-
 t_error	expand_env_var(char **str, t_list *env_lst)
 {
 	size_t		i;
@@ -62,7 +48,7 @@ t_error	expand_env_var(char **str, t_list *env_lst)
 	{
 		if ((*str)[i] == '$')
 		{
-			var_value_ptr = match_key(&(*str)[i + 1], env_lst);
+			var_value_ptr = get_env_val_ptr(&(*str)[i + 1], env_lst);
 			if (var_value_ptr)
 			{
 				if (expand_key(str, var_value_ptr, i) != NO_ERR)
