@@ -6,12 +6,11 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 11:51:51 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/19 11:35:25 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/06/20 13:51:31 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
-#include <stdio.h>
+#include "../src/minishell.h"
 
 void	print_token_lst(t_list *head)
 {

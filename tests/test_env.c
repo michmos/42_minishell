@@ -10,17 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../src/minishell.h"
 
 int	main(int argc, char **argv, char **env)
 {
 	t_list	*head;
 	t_list	*tmp;
 
-	if (!ft_strncmp(argv[1], "env", 4))
+	if (argc < 2 || ft_strncmp(argv[1], "env", 4))
 	{
-		head = create_envlst(env);
+		printf("Usage: ./test_env env");
+		return (1);
 	}
+	head = create_envlst(env);
 	tmp = head;
 	while (head != NULL)
 	{
