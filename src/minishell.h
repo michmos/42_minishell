@@ -4,23 +4,29 @@
 
 # include "../external_libs/42_libs/ft_libs.h"
 # include <stdio.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 # include <string.h>
 # include <errno.h>
+# include <signal.h>
+# include <stdbool.h>
+# include <sys/wait.h>
+# include <fcntl.h>
+# include <linux/limits.h>
+
+# define ERROR -1
 
 typedef enum e_error
 {
 	// No error
 	NO_ERR,
-
 	// Syscall fails
 	SYS_ERR,
-
 	// Syntax error
 	SYN_ERR,
 	// Bad function input
 	INP_ERR
-} t_error;
-
+}	t_error;
 
 // -------------------------------------------------------------------------- //
 // ---------------------------- PARSING/ ------------------------------------ //
@@ -43,7 +49,7 @@ typedef struct s_token
 {
 	t_tag	tag;
 	char	*lexeme;
-} t_token;
+}	t_token;
 
 // parsing.c ---------------------------------------------------------------- //
 t_error	parsing(t_list **cmd_lst, char *str, t_list *env_lst);
@@ -87,13 +93,13 @@ typedef struct s_cmd
 {
 	char	**args;
 	t_list	*redir_lst;
-} t_cmd;
+}	t_cmd;
 
-typedef struct	s_redir
+typedef struct s_redir
 {
 	t_tag	type;
 	char	*filename;
-} t_redir;
+}	t_redir;
 
 // utils.c ------------------------------------------------------------------ //
 t_token	pop_token(t_list **rem_tokens);
@@ -113,8 +119,6 @@ t_error	extend_redir_lst(t_list **head, t_list **rem_tokens);
 
 // parser.c ----------------------------------------------------------------- //
 t_error	create_cmd_lst(t_list **cmd_lst, t_list **token_lst, t_list *env_lst);
-
-
 
 // -------------------------------------------------------------------------- //
 // --------------------------- EXECUTION/ ----------------------------------- //
@@ -136,23 +140,64 @@ typedef struct s_parse_env
 }	t_parse_env;
 
 // builtins.c --------------------------------------------------------------- //
-void		print_envlst(t_list *head);
+void	print_envlst(t_list *head);
+void	check_builtins(char **argv, char **env);
 
 // env.c -------------------------------------------------------------------- //
-char		*get_key(t_env_var *env_var, t_parse_env *env_parse);
-char		*get_value(t_env_var *env_var, t_parse_env *env_parse);
+char	*get_key(t_env_var *env_var, t_parse_env *env_parse);
+char	*get_value(t_env_var *env_var, t_parse_env *env_parse);
 t_env_var	*get_env_var(char *env);
-t_list		*create_envlst(char **env);
-void		free_env_var(void *node);
+t_list	*create_envlst(char **env);
+void	free_env_var(void *node);
 
 // ordered_env.c ------------------------------------------------------------ //
-t_list		*create_ordered_envlst(t_list *env);
-char		*key(t_list *node);
+t_list	*create_ordered_envlst(t_list *env);
+char	*key(t_list *node);
 
 // add_to_list.c ------------------------------------------------------------ //
-t_list		*add_to_ordered_envlst(t_list *head, char *argv);
-t_list		*add_to_envlst(t_list *head, char *argv);
+t_list	*add_to_ordered_envlst(t_list *head, char *argv);
+t_list	*add_to_envlst(t_list *head, char *argv);
 
+// print_pwd.c -------------------------------------------------------------//
+void	print_pwd(void);
+
+// unset.c ----------------------------------------------------------------//
+t_list	*unset_envlst(t_list *head, char *argv);
+
+// cd.c -------------------------------------------------------------------//
+int		change_directory(char **argv);
+
+// echo.c -----------------------------------------------------------------//
+int		echo(char **argv);
+
+// exit.c -----------------------------------------------------------------//
+int		exit_bash(char **argv);
+
+// prompt.c ---------------------------------------------------------------//
+void	show_prompt(void);
+
+// ----------------------- EXECUTION/execution/ ---------------------------//
+// execution.c ------------------------------------------------------------//
+int		pipex(t_list *head, char **env);
+
+// pipex_helper.c ---------------------------------------------------------//
+void	err_exit(char *str);
+int		i_o_redirection(int input_fd, int output_fd);
+t_cmd	*get_cmd(t_list *lst);
+t_redir	*get_redir(t_list *lst);
+
+// pipex_paths.c ----------------------------------------------------------//
+char	*find_command_path(char *command, char **env);
+char	*get_env_path(char **env);
+
+// pipex.c ----------------------------------------------------------------//
+pid_t	cmd_pipeline(t_list *head, int num_childs, char **env);
+
+// redir_list.c -----------------------------------------------------------//
+t_list	*return_here_doc_in(t_list *head);
+t_list	*return_here_doc_out(t_list *head);
+char	*in_file(t_list *head);
+char	*out_file(t_list *head);
 
 // -------------------------------------------------------------------------- //
 // ----------------------------- UTILS/ ------------------------------------- //
@@ -166,19 +211,4 @@ char	*get_env_val_ptr(char *key, t_list *env_list);
 void	free_token(void *token);
 void	free_cmd(void *cmd);
 void	free_redir(void	*redir);
-
-// print_pwd.c -------------------------------------------------------------//
-void		print_pwd(void);
-
-// unset.c ----------------------------------------------------------------//
-t_list		*unset_envlst(t_list *head, char *argv);
-
-// cd.c -------------------------------------------------------------------//
-int			change_directory(char **argv);
-
-// echo.c -----------------------------------------------------------------//
-int			echo(char **argv);
-
-// exit.c -----------------------------------------------------------------//
-int			exit_bash(char **argv);
 #endif

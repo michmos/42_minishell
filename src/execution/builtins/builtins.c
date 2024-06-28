@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/25 09:25:29 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/06/21 14:01:00 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/06/26 09:45:04 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	print_envlst(t_list *head)
 	}
 }
 
-int	main(int argc, char **argv, char **env)
+void	check_builtins(char **argv, char **env)
 {
 	t_list	*head;
 	t_list	*head_ordered;
@@ -36,7 +36,7 @@ int	main(int argc, char **argv, char **env)
 	i = 1;
 	head = create_envlst(env);
 	head_ordered = create_ordered_envlst(head);
-	while (argv[++i])
+	while (argv[++i]) // this doesn't make sense
 	{
 		head = add_to_envlst(head, argv[i]);
 		head_ordered = add_to_ordered_envlst(head_ordered, argv[i]);
@@ -55,21 +55,24 @@ int	main(int argc, char **argv, char **env)
 		}
 	}
 	if (!ft_strncmp(argv[1], "pwd", 4))
-	{
 		print_pwd();
-	}
 	if (!ft_strncmp(argv[1], "cd", 3))
-	{
 		change_directory(&argv[1]);
-	}
 	if (!ft_strncmp(argv[1], "echo", 5))
-	{
 		echo(&argv[1]);
-	}
 	if (!ft_strncmp(argv[1], "exit", 5))
-	{
 		exit_bash(&argv[1]);
-	}
-	
-	return (0);
+	if (!ft_strncmp(argv[1], "print", 6))
+		handle_signal(SIGUSR1);
 }
+
+/*
+	while loop with the coment doesn't make sense,
+	cause argv can be another command or pipe,
+	so this approach is very wrong
+	and i need to rework the idea of check_builtins
+	cause i'd like to have a function in which i check
+	if the given word maches a builtin and if it does
+	i call a function and that's it, no need to add or create
+	in this function, we want to keep it short and clean
+*/
