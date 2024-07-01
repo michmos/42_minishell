@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:47:41 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/19 16:53:49 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/07/01 18:00:35 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*get_arg(t_list **rem_tokens, t_list *env_lst)
 		token = pop_token(rem_tokens);
 		if (token.tag == WORD || token.tag == DU_QUO)
 		{
-			if (expand_env_var(&token.lexeme, env_lst) != NO_ERR)
+			if (expand_all_env_vars(&token.lexeme, env_lst) != NO_ERR)
 			{
 				free(token.lexeme);
 				free(arg);

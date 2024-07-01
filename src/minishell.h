@@ -100,8 +100,11 @@ t_tag	get_token_tag(t_list *tokens);
 bool	is_literal(t_tag tag);
 bool	is_redir(t_tag tag);
 
+// expand_all_env_vars.c ----------------------------------------------------- //
+t_error	expand_all_env_vars(char **str, t_list *env_lst);
+
 // expand_env_var.c --------------------------------------------------------- //
-t_error	expand_env_var(char **str, t_list *env_lst);
+t_error	expand_env_var(char **str_ptr, size_t *cursor_pos, t_list *env_lst);
 
 // get_cmd_args.c ----------------------------------------------------------- //
 t_error	extend_arg_lst(t_list **args_lst, t_list **rem_tokens, t_list *env_lst);
