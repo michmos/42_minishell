@@ -6,12 +6,11 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 13:22:17 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/26 17:02:01 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/07/01 11:29:39 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-#include <stddef.h>
 
 static size_t	get_key_pos(char *str, size_t pos)
 {
@@ -61,32 +60,71 @@ static char	*get_new_str(char *str, char *value_ptr, size_t ref_pos, size_t ref_
 	return (new_str);
 }
 
-static	t_error	replace_var_reference(char **str_ptr, size_t ref_pos, t_list *env_lst)
+static t_error	get_var_value(char	**insertion, char *key, size_t key_len, t_list *env_lst)
+{
+	char	*value;
+	char	*ptr;
+
+	if (key_len == 1)
+	{
+		if (key[0] == '$')
+			value = ft_itoa((int) getpid());
+		else if (key[0] == '?')
+			value = ft_itoa((int) get_exit_code());
+
+		if (!value)
+			return (SYS_ERR);
+	}
+	else
+	{
+		ptr = get_env_val_ptr(key, key_len, env_lst);
+		if (ptr)
+		{
+			value = ft_strdup(ptr);
+			if (!value)
+				return (SYS_ERR);
+		}
+		else
+		{
+			value = ptr;
+		}
+	}
+	return (NO_ERR);
+}
+
+static	t_error	replace_var_reference(char **str_ptr, size_t *cursor_pos, t_list *env_lst)
 {
 	char	*new_str;
 	char	*str;
-	char	*value_ptr;
+	char	*var_value;
 	size_t	key_pos;
 	size_t	key_len;
+	size_t	ref_pos;
 	size_t	ref_len;
 
 	str = *str_ptr;
+	ref_pos = *cursor_pos;
 	key_pos = get_key_pos(str, ref_pos);
-	key_len = get_key_len(&str[ref_pos]);
+	key_len = get_key_len(&str[key_pos]);
 	ref_len = (key_pos - ref_pos) + key_len + (str[key_len] == '}');
 	if (has_syntax_err(&str[ref_pos], key_len))
 	{
-		printf("Syntax Error\n");
 		return (SYN_ERR); // TODO: error message to be printed in calling function
 	}
+	if (get_var_value(&var_value, &str[key_pos], key_len, env_lst) != NO_ERR)
+	{
+		return (SYN_ERR);
+	}
 
-	value_ptr = get_env_val_ptr(&str[key_pos], key_len, env_lst);
-
-	new_str = get_new_str(str, value_ptr, ref_pos, ref_len);
+	new_str = get_new_str(str, var_value, ref_pos, ref_len);
 	if (!new_str)
+	{
+		free(var_value);
 		return (SYS_ERR);
+	}
 	free(str);
 	*str_ptr = new_str;
+	*cursor_pos = ref_pos + ft_strlen(var_value) - 1;
 	return (NO_ERR);
 }
 
@@ -95,35 +133,41 @@ static	t_error	replace_var_reference(char **str_ptr, size_t ref_pos, t_list *env
 static	t_error	cut_out_backslash(char **str_ptr, size_t pos)
 {
 	char	*new_str;
+	char	*str;
 	size_t	len;
 
 	
-	len = ft_strlen(*str_ptr) - 1;
-	new_str = malloc((len + 1) * sizeof(char));
+	str = *str_ptr;
+	len = ft_strlen(str) - 1;
+	new_str = ft_calloc((len + 1), sizeof(char));
 	if (!new_str)
 	{
 		return (SYS_ERR);
 	}
-	ft_memcpy(new_str, *str_ptr, pos);
-	ft_strlcat(new_str, *str_ptr, len + 1);
+	ft_memcpy(new_str, str, pos);
+	ft_strlcat(new_str, &str[pos + 1], len + 1);
+	free(str);
 	*str_ptr = new_str;
 	return (NO_ERR);
 }
 
-static t_error	modify_str(char **str_ptr, size_t pos, t_list *env_lst)
+static t_error	modify_str(char **str_ptr, size_t *cursor_pos, t_list *env_lst)
 {
 	char	*str;
 	t_error	error;
+	size_t	pos;
 
 	str = *str_ptr;
 	error = NO_ERR;
+	pos = *cursor_pos;
 	if (pos > 0 && str[pos - 1] == '\\')
 	{
 		error = cut_out_backslash(str_ptr, pos - 1);
+		*cursor_pos -= 1;
 	}
 	else
 	{
-		error = replace_var_reference(str_ptr, pos, env_lst);
+		error = replace_var_reference(str_ptr, cursor_pos, env_lst);
 	}
 	return (error);
 }
@@ -141,7 +185,7 @@ t_error	expand_env_var(char **str_ptr, t_list *env_lst)
 	{
 		if (str[i] == '$' && str[i + 1])
 		{
-			error = modify_str(str_ptr, i, env_lst);
+			error = modify_str(str_ptr, &i, env_lst);
 		}
 		i++;
 	}

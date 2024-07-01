@@ -87,7 +87,7 @@ typedef struct s_cmd
 	t_list	*redir_lst;
 } t_cmd;
 
-typedef struct	s_redir
+typedef struct	s_redir //TODO: we already have token - adapt naming and remove double
 {
 	t_tag	type;
 	char	*filename;
@@ -126,7 +126,7 @@ typedef struct s_env_var
 	bool			equal;
 }	t_env_var;
 
-typedef struct s_parse_env
+typedef struct s_parse_env // TODO: we already have parse_str - remove double
 {
 	char	*buffer;
 	size_t	buffer_len;
@@ -159,10 +159,14 @@ t_list		*add_to_envlst(t_list *head, char *argv);
 // utils.c ------------------------------------------------------------------ //
 char	**store_ptrs_in_arr(t_list *lst);
 char	*get_env_val_ptr(char *key, size_t key_len, t_list *env_list);
-//
+
 // free.c ------------------------------------------------------------------- //
 void	free_token(void *token);
 void	free_cmd(void *cmd);
 void	free_redir(void	*redir);
+
+// exit_code.c -------------------------------------------------------------- //
+int	get_exit_code(void);
+void	set_exit_code(int code);
 
 #endif

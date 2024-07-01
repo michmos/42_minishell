@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 12:17:46 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/24 17:26:07 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/06/27 15:30:25 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ char	**store_ptrs_in_arr(t_list *lst)
 	array[size] = NULL;
 	return (array);
 }
+
 
 char	*get_env_val_ptr(char *key, size_t key_len, t_list *env_list)
 {
