@@ -3,6 +3,7 @@
 # define MINISHELL_H
 
 # include "../external_libs/42_libs/ft_libs.h"
+# include <stdio.h>
 
 typedef enum e_error
 {
@@ -86,7 +87,7 @@ typedef struct s_cmd
 	t_list	*redir_lst;
 } t_cmd;
 
-typedef struct	s_redir
+typedef struct	s_redir //TODO: we already have token - adapt naming and remove double
 {
 	t_tag	type;
 	char	*filename;
@@ -99,8 +100,11 @@ t_tag	get_token_tag(t_list *tokens);
 bool	is_literal(t_tag tag);
 bool	is_redir(t_tag tag);
 
+// expand_all_env_vars.c ----------------------------------------------------- //
+t_error	expand_all_env_vars(char **str, t_list *env_lst);
+
 // expand_env_var.c --------------------------------------------------------- //
-t_error	expand_env_var(char **str, t_list *env_lst);
+t_error	expand_env_var(char **str_ptr, size_t *cursor_pos, t_list *env_lst);
 
 // get_cmd_args.c ----------------------------------------------------------- //
 t_error	extend_arg_lst(t_list **args_lst, t_list **rem_tokens, t_list *env_lst);
@@ -125,7 +129,7 @@ typedef struct s_env_var
 	bool			equal;
 }	t_env_var;
 
-typedef struct s_parse_env
+typedef struct s_parse_env // TODO: we already have parse_str - remove double
 {
 	char	*buffer;
 	size_t	buffer_len;
@@ -157,11 +161,15 @@ t_list		*add_to_envlst(t_list *head, char *argv);
 
 // utils.c ------------------------------------------------------------------ //
 char	**store_ptrs_in_arr(t_list *lst);
-char	*get_env_val_ptr(char *key, t_list *env_list);
-//
+char	*get_env_val_ptr(char *key, size_t key_len, t_list *env_list);
+
 // free.c ------------------------------------------------------------------- //
 void	free_token(void *token);
 void	free_cmd(void *cmd);
 void	free_redir(void	*redir);
+
+// exit_code.c -------------------------------------------------------------- //
+int	get_exit_code(void);
+void	set_exit_code(int code);
 
 #endif

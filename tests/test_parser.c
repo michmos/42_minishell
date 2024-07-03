@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 11:51:51 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/20 13:51:31 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/06/27 15:09:06 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ int main(int argc, char *argv[], char **env)
 	env_lst = create_envlst(env);
 	cmds = NULL;
 	error = parsing(&cmds, argv[1], env_lst);
+	if (error)
+		return (1);
 	print_cmds(cmds);
 	return (0);
 }
