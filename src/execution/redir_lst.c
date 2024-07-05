@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/27 13:55:02 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/06/27 14:36:39 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/07/03 16:24:59 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,22 +29,22 @@ t_list	*return_here_doc_in(t_list *head)
 	return (result);
 }
 
-t_list	*return_here_doc_out(t_list *head)
-{
-	t_list	*temp;
-	t_list	*here_doc;
-	t_list	*result;
+// t_list	*return_here_doc_out(t_list *head)
+// {
+// 	t_list	*temp;
+// 	t_list	*here_doc;
+// 	t_list	*result;
 
-	temp = head;
-	here_doc = get_cmd(temp)->redir_lst;
-	while (here_doc)
-	{
-		if (get_redir(here_doc)->type == O_RD_APP)
-			result = here_doc;
-		here_doc = here_doc->next;
-	}
-	return (result);
-}
+// 	temp = head;
+// 	here_doc = get_cmd(temp)->redir_lst;
+// 	while (here_doc)
+// 	{
+// 		if (get_redir(here_doc)->type == O_RD_APP)
+// 			result = here_doc;
+// 		here_doc = here_doc->next;
+// 	}
+// 	return (result);
+// }
 
 char	*in_file(t_list *head)
 {
@@ -65,22 +65,21 @@ char	*in_file(t_list *head)
 	return (file);
 }
 
-char	*out_file(t_list *head)
+t_redir	*out_file(t_list *head)
 {
 	t_list	*temp;
 	t_list	*outfile;
-	t_list	*result;
-	char	*file;
+	t_redir	*result;
 
 	temp = head;
 	outfile = get_cmd(temp)->redir_lst;
 	while (outfile)
 	{
-		if (get_redir(outfile)->type == O_RD)
-			result = outfile;
+		if (get_redir(outfile)->type == O_RD
+			|| get_redir(outfile)->type == O_RD_APP)
+			result = get_redir(outfile);
 		outfile = outfile->next;
 	}
-	file = ft_strdup((get_redir(get_cmd(result)->redir_lst))->filename);
-	return (file);
+	return (result);
 }
 
