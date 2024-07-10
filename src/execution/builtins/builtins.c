@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/25 09:25:29 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/06/26 09:45:04 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/07/10 11:18:30 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,32 @@ void	check_builtins(char **argv, char **env)
 		handle_signal(SIGUSR1);
 }
 
+int	execute_builtin(int i)
+{
+	int	stat;
+
+	if (i == 1)
+		stat = execute_echo();
+	else if (i == 2)
+		stat = execute_cd();
+	else if (i == 3)
+		stat = execute_pwd();
+	else if (i == 4)
+		stat = execute_export();
+	else if (i == 5)
+		stat = execute_unset();
+	else if (i == 6)
+		stat = execute_env();
+	else if (i == 7)
+		stat = execte_exit();
+	return (stat);
+}
+
+/*
+	execute_builtin for sure needs some more work
+	just the overall picture is there
+*/
+
 /*
 	while loop with the coment doesn't make sense,
 	cause argv can be another command or pipe,
@@ -75,4 +101,19 @@ void	check_builtins(char **argv, char **env)
 	if the given word maches a builtin and if it does
 	i call a function and that's it, no need to add or create
 	in this function, we want to keep it short and clean
+*/
+
+/*
+	check_builtins can be reworked into the function
+	i have at home, so it returns a number and then according to that number 
+	i can execute the right builtin, but that number will be in a struct 
+	and then it will be passed to a fnction called execute_builtin
+	and maybe i want to take into account if the builtin should be a 
+	child or parent process
+*/
+
+/*
+	i have a info struct created at home, so maybe i can add the envlst
+	to it, it would save space (in terms of variables allowed per function)
+	and would be easier to pass
 */

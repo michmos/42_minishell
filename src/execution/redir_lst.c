@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/27 13:55:02 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/07/03 16:24:59 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/07/10 09:38:32 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,3 +83,9 @@ t_redir	*out_file(t_list *head)
 	return (result);
 }
 
+/*
+	i believe the issue here is that i'm returning the last file in
+	the redirection list, but what i want to do
+	is to open every single file given,
+	check it's existents, but use only the last one
+*/

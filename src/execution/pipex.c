@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 09:50:20 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/07/03 16:26:29 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/07/10 11:28:14 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,4 +131,48 @@ pid_t	cmd_pipeline(t_list *head, int num_childs, char **env)
 	- figure out a way to get rid ot change somehow the i and num_childs
 		or change the way I add to i;
 	- need to free the node I just used;
+*/
+
+/*open_files function can be done in a completely new file*/
+
+void	open_files(t_cmd *cmd)
+{
+	/*
+		make a copy of this node, so i could go
+		through it without any problems
+	*/
+	while (/*cmd redir lst exists*/)
+	{
+		/* create a function open_one_file and that function
+			would do all the checking necessary
+			(like the one below)
+			maybe the result of open_one_file could be
+			the fd array
+		
+		   first check what type of t_tag it is
+		   then send it to the according function that would 
+		   open the file, check it's access or whatever
+		   will need multiple function for: 
+		   - input redirection;
+		   - output redirection;
+		   - here doc input;
+		   - here doc append.
+
+		   after opening the files in different function
+		   i assign them to an fd array, that will be sent
+		   to the pipe commands function
+
+		   if redirection is here doc input then deal with it 
+		   with other functions
+		 */
+	}
+}
+
+/*pipe commands function*/
+
+/*
+	this function will deal with setting the correct fd
+	depending on if we have first or last command, it will read
+	and write accordingly from input and to input. and if we're in
+	the middle we'll want to read from previous pipe and write in to pipe
 */
