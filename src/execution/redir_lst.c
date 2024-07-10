@@ -12,22 +12,64 @@
 
 #include "../minishell.h"
 
-t_list	*return_here_doc_in(t_list *head)
+int in_file(t_cmd *cmd)
 {
-	t_list	*temp;
-	t_list	*here_doc;
-	t_list	*result;
+	t_cmd *temp;
+	int result;
+	int i;
 
-	temp = head;
-	here_doc = get_cmd(temp)->redir_lst;
-	while (here_doc)
+	temp = cmd;
+	i = 0;
+	result = -1;
+	// (t_redir *)(temp->redir_lst)->
+	while (temp->redir_lst)
 	{
-		if (get_redir(here_doc)->type == I_RD_HD)
-			result = here_doc;
-		here_doc = here_doc->next;
+		if (temp->redir_lst->tag == I_RD)
+			result = i;
+		i++;
+		temp->redir_lst = temp->redir_lst->next;
 	}
 	return (result);
 }
+/*
+	the idea of these two functions is supposed to be this:
+	they need to return an int, on which they last encountered
+	I_RD or O_RD  /O_RD_APP
+*/
+
+int out_file(t_list *head)
+{
+	t_list *temp;
+	t_list *outfile;
+	int result;
+
+	result = -1;
+	temp = head;
+	outfile = get_cmd(temp)->redir_lst;
+	while (outfile)
+	{
+		if (get_redir(outfile)->type == O_RD || get_redir(outfile)->type == O_RD_APP)
+			result = get_redir(outfile);
+		outfile = outfile->next;
+	}
+	return (result);
+}
+// t_list	*return_here_doc_in(t_list *head)
+// {
+// 	t_list	*temp;
+// 	t_list	*here_doc;
+// 	t_list	*result;
+
+// 	temp = head;
+// 	here_doc = get_cmd(temp)->redir_lst;
+// 	while (here_doc)
+// 	{
+// 		if (get_redir(here_doc)->type == I_RD_HD)
+// 			result = here_doc;
+// 		here_doc = here_doc->next;
+// 	}
+// 	return (result);
+// }
 
 // t_list	*return_here_doc_out(t_list *head)
 // {
@@ -46,42 +88,42 @@ t_list	*return_here_doc_in(t_list *head)
 // 	return (result);
 // }
 
-char	*in_file(t_list *head)
-{
-	t_list	*temp;
-	t_list	*infile;
-	t_list	*result;
-	char	*file;
+// char	*in_file(t_list *head)
+// {
+// 	t_list	*temp;
+// 	t_list	*infile;
+// 	t_list	*result;
+// 	char	*file;
 
-	temp = head;
-	infile = get_cmd(temp)->redir_lst;
-	while (infile)
-	{
-		if (get_redir(infile)->type == I_RD)
-			result = infile;
-		infile = infile->next;
-	}
-	file = ft_strdup((get_redir(get_cmd(result)->redir_lst))->filename);
-	return (file);
-}
+// 	temp = head;
+// 	infile = get_cmd(temp)->redir_lst;
+// 	while (infile)
+// 	{
+// 		if (get_redir(infile)->type == I_RD)
+// 			result = infile;
+// 		infile = infile->next;
+// 	}
+// 	file = ft_strdup((get_redir(get_cmd(result)->redir_lst))->filename);
+// 	return (file);
+// }
 
-t_redir	*out_file(t_list *head)
-{
-	t_list	*temp;
-	t_list	*outfile;
-	t_redir	*result;
+// t_redir	*out_file(t_list *head)
+// {
+// 	t_list	*temp;
+// 	t_list	*outfile;
+// 	t_redir	*result;
 
-	temp = head;
-	outfile = get_cmd(temp)->redir_lst;
-	while (outfile)
-	{
-		if (get_redir(outfile)->type == O_RD
-			|| get_redir(outfile)->type == O_RD_APP)
-			result = get_redir(outfile);
-		outfile = outfile->next;
-	}
-	return (result);
-}
+// 	temp = head;
+// 	outfile = get_cmd(temp)->redir_lst;
+// 	while (outfile)
+// 	{
+// 		if (get_redir(outfile)->type == O_RD
+// 			|| get_redir(outfile)->type == O_RD_APP)
+// 			result = get_redir(outfile);
+// 		outfile = outfile->next;
+// 	}
+// 	return (result);
+// }
 
 /*
 	i believe the issue here is that i'm returning the last file in

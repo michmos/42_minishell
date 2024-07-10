@@ -12,37 +12,40 @@
 
 #include "../minishell.h"
 
-t_cmd	*get_cmd(t_list *lst)
+t_cmd *get_cmd(t_list *lst)
 {
 	return ((t_cmd *)(lst->as_ptr));
 }
 
-t_redir	*get_redir(t_list *lst)
+t_redir *get_redir(t_list *lst)
 {
 	return ((t_redir *)(lst->as_ptr));
 }
 
-void	err_exit(char *str)
+void err_exit(char *str)
 {
 	perror(str);
 	exit(EXIT_FAILURE);
 }
 
-int	i_o_redirection(int input_fd, int output_fd)
+void close_pipes(t_info *info)
 {
-	if (dup2(input_fd, STDIN_FILENO) == -1)
-		return (ERROR);
-	if (input_fd != STDIN_FILENO)
+	int i;
+
+	i = 0;
+	while (i < info->num_cmd - 1)
 	{
-		if (close(input_fd) == -1)
-			return (ERROR);
+		close(info->fd[i][0]);
+		close(info->fd[i][1]);
+		i++;
 	}
-	if (dup2(output_fd, STDOUT_FILENO) == -1)
-		return (ERROR);
-	if (output_fd != STDOUT_FILENO)
-	{
-		if (close(output_fd) == -1)
-			return (ERROR);
-	}
-	return (0);
+}
+
+void close_fd_array(t_cmd *cmd, t_info *info)
+{
+	/*
+		close fd array in cmd
+		go through the redir_count and use close function to
+		close the cmd at fd araay at i
+	*/
 }

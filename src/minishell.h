@@ -93,6 +93,12 @@ typedef struct s_cmd
 {
 	char	**args;
 	t_list	*redir_lst;
+	int		*fd_array;
+	int		redir_count;
+	int		builtin;
+	char	*path;
+	int		last_input;
+	int		last_output;
 }	t_cmd;
 
 typedef struct s_redir
@@ -177,6 +183,13 @@ int		exit_bash(char **argv);
 void	show_prompt(void);
 
 // ----------------------- EXECUTION/execution/ ---------------------------//
+typedef struct s_info
+{
+	int num_cmd;
+	int **fd;
+	int *pid;
+}	t_info;
+
 // execution.c ------------------------------------------------------------//
 int		pipex(t_list *head, char **env);
 
