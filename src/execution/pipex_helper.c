@@ -6,31 +6,31 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 13:32:12 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/07/03 09:50:22 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/07/11 11:38:35 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_cmd *get_cmd(t_list *lst)
+t_cmd	*get_cmd(t_list *lst)
 {
 	return ((t_cmd *)(lst->as_ptr));
 }
 
-t_redir *get_redir(t_list *lst)
+t_redir	*get_redir(t_list *lst)
 {
 	return ((t_redir *)(lst->as_ptr));
 }
 
-void err_exit(char *str)
+void	err_exit(char *str)
 {
 	perror(str);
 	exit(EXIT_FAILURE);
 }
 
-void close_pipes(t_info *info)
+void	close_pipes(t_info *info)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < info->num_cmd - 1)
@@ -41,11 +41,17 @@ void close_pipes(t_info *info)
 	}
 }
 
-void close_fd_array(t_cmd *cmd, t_info *info)
+void	close_fd_array(t_cmd *cmd, t_info *info)
 {
-	/*
-		close fd array in cmd
-		go through the redir_count and use close function to
-		close the cmd at fd araay at i
-	*/
+	int	i;
+
+	i = 0;
+	while (i < cmd->redir_count)
+	{
+		if (close(cmd->fd_array[i]) == -1)
+		{
+			//TODO:error closing fd
+		}
+		i++;
+	}
 }

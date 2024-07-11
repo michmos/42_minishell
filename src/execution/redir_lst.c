@@ -6,51 +6,47 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/27 13:55:02 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/07/10 09:38:32 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/07/11 09:48:21 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int in_file(t_cmd *cmd)
+int	in_file(t_cmd *cmd)
 {
-	t_cmd *temp;
-	int result;
-	int i;
+	t_cmd	*temp;
+	int		result;
+	int		i;
 
 	temp = cmd;
 	i = 0;
 	result = -1;
-	// (t_redir *)(temp->redir_lst)->
 	while (temp->redir_lst)
 	{
-		if (temp->redir_lst->tag == I_RD)
+		if (((t_redir *)(temp->redir_lst))->type == I_RD)
 			result = i;
 		i++;
 		temp->redir_lst = temp->redir_lst->next;
 	}
 	return (result);
 }
-/*
-	the idea of these two functions is supposed to be this:
-	they need to return an int, on which they last encountered
-	I_RD or O_RD  /O_RD_APP
-*/
 
-int out_file(t_list *head)
+int	out_file(t_cmd *cmd)
 {
-	t_list *temp;
-	t_list *outfile;
-	int result;
+	t_cmd	*temp;
+	int		result;
+	int		i;
 
+	temp = cmd;
+	i = 0;
 	result = -1;
-	temp = head;
-	outfile = get_cmd(temp)->redir_lst;
-	while (outfile)
+	while (temp->redir_lst)
 	{
-		if (get_redir(outfile)->type == O_RD || get_redir(outfile)->type == O_RD_APP)
-			result = get_redir(outfile);
-		outfile = outfile->next;
+		if (((t_redir *)(temp->redir_lst))->type == O_RD \
+		|| ((t_redir *)(temp->redir_lst))->type == O_RD_APP)
+			result = i;
+		i++;
+		temp->redir_lst = temp->redir_lst->next;
 	}
 	return (result);
 }

@@ -6,15 +6,15 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 09:50:20 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/07/10 11:28:14 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/07/11 11:42:25 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void close_pipes(t_info *info)
+void	close_pipes(t_info *info)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < info->num_cmd - 1)
@@ -25,7 +25,7 @@ void close_pipes(t_info *info)
 	}
 }
 
-void child_process(t_list *head, t_info *info, int child_i)
+void	child_process(t_list *head, t_info *info, int child_i)
 {
 	t_cmd	*cmd;
 
@@ -36,15 +36,15 @@ void child_process(t_list *head, t_info *info, int child_i)
 	pipe_cmd(cmd, info, child_i);
 	close_fd_array(cmd, info);
 	close_pipes(info);
-	execute_builtin();
+	execute_builtin(cmd->builtin);
 	check_dir();
 	check_cmd();
 }
 
-int parent_process(t_info *info)
+int	parent_process(t_info *info)
 {
-	int i;
-	int status;
+	int	i;
+	int	status;
 
 	close_pipes(info);
 	i = 0;
@@ -56,10 +56,10 @@ int parent_process(t_info *info)
 	return (status);
 }
 
-int cmd_pipeline(t_list *head, t_info *info, char **env)
+int	cmd_pipeline(t_list *head, t_info *info, char **env)
 {
-	int i;
-	int status;
+	int	i;
+	int	status;
 
 	i = -1;
 	while (++i < info->num_cmd - 1)
@@ -74,6 +74,7 @@ int cmd_pipeline(t_list *head, t_info *info, char **env)
 		else if (info->pid[i] == 0)
 		{
 			child_process(head, info, i);
+			// free head and move to next node
 		}
 	}
 	status = parent_process(info); // waits for all child processes to finish
