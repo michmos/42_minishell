@@ -12,18 +12,18 @@
 
 #include "../minishell.h"
 
-int	in_file(t_cmd *cmd)
+int in_file(t_cmd *cmd)
 {
-	t_cmd	*temp;
-	int		result;
-	int		i;
+	t_cmd *temp;
+	int result;
+	int i;
 
 	temp = cmd;
 	i = 0;
 	result = -1;
 	while (temp->redir_lst)
 	{
-		if (((t_redir *)(temp->redir_lst))->type == I_RD)
+		if (((t_redir *)(temp->redir_lst))->type == I_RD || ((t_redir *)(temp->redir_lst))->type == I_RD_HD)
 			result = i;
 		i++;
 		temp->redir_lst = temp->redir_lst->next;
@@ -31,19 +31,18 @@ int	in_file(t_cmd *cmd)
 	return (result);
 }
 
-int	out_file(t_cmd *cmd)
+int out_file(t_cmd *cmd)
 {
-	t_cmd	*temp;
-	int		result;
-	int		i;
+	t_cmd *temp;
+	int result;
+	int i;
 
 	temp = cmd;
 	i = 0;
 	result = -1;
 	while (temp->redir_lst)
 	{
-		if (((t_redir *)(temp->redir_lst))->type == O_RD \
-		|| ((t_redir *)(temp->redir_lst))->type == O_RD_APP)
+		if (((t_redir *)(temp->redir_lst))->type == O_RD || ((t_redir *)(temp->redir_lst))->type == O_RD_APP)
 			result = i;
 		i++;
 		temp->redir_lst = temp->redir_lst->next;

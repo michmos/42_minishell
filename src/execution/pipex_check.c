@@ -1,25 +1,87 @@
 #include "../minishell.h"
 
+void check_dir_utils(t_cmd *cmd, t_info *info, struct stat file_stat)
+{
+    if (!(file_stat.st_mode & S_IXUSR))
+    {
+        // TODO: error message (permission denied)
+        data->error = 126;
+        exit(126);
+    }
+    if (execve(cam->args[0], cmd->args, data->our_env) == -1)
+    {
+        // TODO: error message (no such file or directory)
+        data->error = 127;
+        exit(127);
+    }
+}
+
 void check_dir(t_cmd *cmd, t_info *info)
 {
-    /*
-        basically more checks
-        1. starts with stat again
-        2. depending on stats output which is an int, we write if statements
-            and if they're true we return error messages and exit with relevant status
-    */
+    struct stat file_stat;
+    int stat_result;
+
+    if (!path_separator(cmd))
+        return;
+    stat_result = stat(cmd->cmd_path, &file_stat);
+    if (stat_result == -1)
+    {
+        // TODO: error message (no such file or directory)
+        exit(127);
+    }
+    else if (S_ISDIR(file_stat.st_mode))
+    {
+        // TODO: error message (cmd is a directory)
+        exit(126);
+    }
+    else if (S_ISREG(file_stat.st_mode))
+        check_dir_utils(cmd, info, file_stat);
+}
+
+void check_cmd_utils(t_cmd *cmd, t_info *info, struct stat file_stat)
+{
+    if (cmd->path == NULL)
+    {
+        if (access(cmd->cmd_path, F_OK) || S_ISDIR(file_stat.st_mode))
+        {
+            // TODO: error message (command not found)
+            exit(127);
+        }
+        else if (access(cmd->cmd_path, X_OK))
+        {
+            // TODO: error message (permision denied)
+            exit(126);
+        }
+        else
+        // maybe check for something else
+    }
 }
 
 void check_cmd(t_cmd *cmd, t_info *info)
 {
-    /*
-        1. with stat check the first arg in args list, check command
-        2. get command path
-            - go through michas functions where he gets the comman path
-        3. check command utils
-            - check the command with access function and in case of error
-                write error messages and exit with relevant status
-        4. execve in if statement, and as we know if code after execve continues
-            it means execve failed, so inside the we can write an error message, like command not found
-    */
+    struct stat file_stat;
+    int stat_result;
+
+    stat_result = stat(cmd->cmd_path, &file_stat);
+    get_cmd_path(cmd, info);
+    check_cmd_utils(cmd, info, file_stat);
+    if (execve(cmd->args[0], cmd->args, data->our_env) == -1)
+    {
+        // TODO: error message(command not found)
+        exit(127);
+    }
+}
+
+int check_executable(t_cmd *cmd, t_info *info)
+{
+    struct stat file_stat;
+    int stat_result;
+
+    stat_result = stat(cmd->cmd_path, &file_stat);
+    if (stat_result != -1 && (!(file_stat.st_mode & S_IXUSR)))
+    {
+        // TODO: error message (permision denied)
+        exit(126);
+    }
+    return (0);
 }

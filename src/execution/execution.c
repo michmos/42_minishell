@@ -12,17 +12,23 @@
 
 #include "../minishell.h"
 
-int	pipex(t_list *head, char **env)
+
+
+void	pipex(t_list *head, t_info *info, char *line)
 {
-	t_list		*temp;
-	pid_t		pid;
-	int			num_cmds;
-	int			stat_loc;
+	t_list *temp;
+	int stat;
 
 	temp = head;
-	num_cmds = ft_lstsize(temp);
-	pid = cmd_pipeline(head, num_cmds, env);
-	waitpid(pid, &stat_loc, 0);
+	info->num_cmd = ft_lstsize(temp);
+	if (info->num_cmd == 0)
+		return (ERROR);
+	cmd->builtin = check_builtins(temp);
+	else if (info->num_cmd == 1 && cmd->builtin > 0)
+		info->error = exec_one_builtin(head, line, info);
+	else
+		stat = cmd_pipeline(head, info);
+
 }
 /*
 	with the use of signals manipulate this while loop

@@ -56,7 +56,7 @@ int	open_one_file(t_cmd *cmd, t_info *info, int i)
 	else if (type == O_RD_APP)
 		status = open_append(cmd, info, i);
 	else if (type == I_RD_HD)
-		open_heredoc(cmd, info, i); //TODO
+		heredoc(cmd, info, i); //TODO
 	return (status);
 }
 

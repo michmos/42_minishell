@@ -12,9 +12,9 @@
 
 #include "../minishell.h"
 
-void	close_pipes(t_info *info)
+void close_pipes(t_info *info)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (i < info->num_cmd - 1)
@@ -25,26 +25,30 @@ void	close_pipes(t_info *info)
 	}
 }
 
-void	child_process(t_list *head, t_info *info, int child_i)
+void child_process(t_list *head, t_info *info, int child_i)
 {
-	t_cmd	*cmd;
+	t_cmd *cmd;
 
+	close(info->std_in);
+	close(info->std_out);
 	cmd = get_cmd(head);
-	open_files(cmd, info);
 	cmd->last_input = in_file(cmd);
 	cmd->last_output = out_file(cmd);
+	open_files(cmd, info);
 	pipe_cmd(cmd, info, child_i);
 	close_fd_array(cmd, info);
 	close_pipes(info);
-	execute_builtin(cmd->builtin);
-	check_dir();
-	check_cmd();
+	if (cmd->builtin > 0)
+		execute_builtin(cmd->builtin);
+	cmd->cmd_path = find_command_path(cmd->args[0], info->our_env);
+	check_dir(cmd, info);
+	check_cmd(cmd, info);
 }
 
-int	parent_process(t_info *info)
+int parent_process(t_info *info)
 {
-	int	i;
-	int	status;
+	int i;
+	int status;
 
 	close_pipes(info);
 	i = 0;
@@ -56,10 +60,10 @@ int	parent_process(t_info *info)
 	return (status);
 }
 
-int	cmd_pipeline(t_list *head, t_info *info, char **env)
+int cmd_pipeline(t_list *head, t_info *info)
 {
-	int	i;
-	int	status;
+	int i;
+	int status;
 
 	i = -1;
 	while (++i < info->num_cmd - 1)
@@ -82,3 +86,9 @@ int	cmd_pipeline(t_list *head, t_info *info, char **env)
 }
 // free the node after use,
 // maybe write a function that takes head, frees it and returns head->next
+
+/*
+	in main somewhere I'll need to have init info function that will populate
+	my struct with all the info needed, and would do so depending
+	on if it's called the first time or not
+*/
