@@ -18,19 +18,24 @@ void init_info(t_info *info, char **env, char **line, int first)
 int main(int argc, char **argv, char **env)
 {
     t_info info;
+    t_list *head; // result of parsing? command linked list
+    t_list *temp;
     char *line;
 
+    temp = head;
+    info->num_cmd = ft_lstsize(temp); // maybe these 2 lines need to go in while loop?
     init_info(&info, &env, &line, 1); // first time send 1, to fill the necessary info
     while (1)
     {
-        dup2(data.std_in, STDIN_FILENO);
-        dup2(data.std_out, STDOUT_FILENO);
+        dup2(info.std_in, STDIN_FILENO);
+        dup2(info.std_out, STDOUT_FILENO);
         // deal with signals
         init_info(&info, env, &line, 0);
         // readline and parse it???
         if (line)
             add_history(line);
-        // maybe more checks with signals and then call execute || just call execute
+        finalize_cmd(info);
+        pipex(head, info, line); // do i need line or it will be in redirections list?
         free_info(&info, line, 0);
     }
 }

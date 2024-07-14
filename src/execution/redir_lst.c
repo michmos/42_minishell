@@ -49,80 +49,29 @@ int out_file(t_cmd *cmd)
 	}
 	return (result);
 }
-// t_list	*return_here_doc_in(t_list *head)
-// {
-// 	t_list	*temp;
-// 	t_list	*here_doc;
-// 	t_list	*result;
 
-// 	temp = head;
-// 	here_doc = get_cmd(temp)->redir_lst;
-// 	while (here_doc)
-// 	{
-// 		if (get_redir(here_doc)->type == I_RD_HD)
-// 			result = here_doc;
-// 		here_doc = here_doc->next;
-// 	}
-// 	return (result);
-// }
+void check_last_in_out(t_cmd *cmd)
+{
+	int i;
 
-// t_list	*return_here_doc_out(t_list *head)
-// {
-// 	t_list	*temp;
-// 	t_list	*here_doc;
-// 	t_list	*result;
-
-// 	temp = head;
-// 	here_doc = get_cmd(temp)->redir_lst;
-// 	while (here_doc)
-// 	{
-// 		if (get_redir(here_doc)->type == O_RD_APP)
-// 			result = here_doc;
-// 		here_doc = here_doc->next;
-// 	}
-// 	return (result);
-// }
-
-// char	*in_file(t_list *head)
-// {
-// 	t_list	*temp;
-// 	t_list	*infile;
-// 	t_list	*result;
-// 	char	*file;
-
-// 	temp = head;
-// 	infile = get_cmd(temp)->redir_lst;
-// 	while (infile)
-// 	{
-// 		if (get_redir(infile)->type == I_RD)
-// 			result = infile;
-// 		infile = infile->next;
-// 	}
-// 	file = ft_strdup((get_redir(get_cmd(result)->redir_lst))->filename);
-// 	return (file);
-// }
-
-// t_redir	*out_file(t_list *head)
-// {
-// 	t_list	*temp;
-// 	t_list	*outfile;
-// 	t_redir	*result;
-
-// 	temp = head;
-// 	outfile = get_cmd(temp)->redir_lst;
-// 	while (outfile)
-// 	{
-// 		if (get_redir(outfile)->type == O_RD
-// 			|| get_redir(outfile)->type == O_RD_APP)
-// 			result = get_redir(outfile);
-// 		outfile = outfile->next;
-// 	}
-// 	return (result);
-// }
-
-/*
-	i believe the issue here is that i'm returning the last file in
-	the redirection list, but what i want to do
-	is to open every single file given,
-	check it's existents, but use only the last one
-*/
+	cmd->last_input = -1;
+	cmd->last_output = -1;
+	i = 0;
+	cmd->redir_count = ft_lstsize(cmd->redir_lst);
+	cmd->hd_count = 0;
+	while (i < cmd->redir_count)
+	{
+		if (cmd->redir_lst[i]->type == I_RD)
+			cmd->last_input = i;
+		else if (cmd->redir_lst[i]->type == O_RD)
+			cmd->last_output = i;
+		else if (cmd->redir_lst[i]->type == O_RD_APP)
+			cmd->last_output = i;
+		else if (cmd->redir_lst[i]->type == I_RD_HD)
+		{
+			cmd->last_input = i;
+			cmd->hd_count++;
+		}
+		i++;
+	}
+}

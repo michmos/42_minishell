@@ -101,6 +101,7 @@ typedef struct s_cmd
 	int last_input;
 	int last_output;
 	char *hd_str;
+	int hd_count;
 } t_cmd;
 
 typedef struct s_redir
@@ -199,6 +200,7 @@ typedef struct s_info
 	t_list *env_lst;
 	char **our_env;
 	char *cmd_path;
+	t_cmd *cmd; // is it possible to have cmd here? even though cmd will be a t_list before?
 } t_info;
 
 // execution.c ------------------------------------------------------------//
