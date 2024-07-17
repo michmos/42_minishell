@@ -188,6 +188,7 @@ typedef struct s_cmd_data
 	int last_input;
 	int last_output;
 	char *hd_str;
+	char **hd_array;
 	int hd_count;
 	char *cmd_path;
 

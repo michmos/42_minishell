@@ -33,7 +33,7 @@ void	check_dir(t_cmd *cmd, t_info *info)
 	struct stat	file_stat;
 	int			stat_result;
 
-	if (!path_separator(cmd))
+	if (!path_separator(cmd)) // i think i want to check if the command is given correctly, without any slashes ///
 		return ;
 	stat_result = stat(cmd->cmd_path, &file_stat);
 	if (stat_result == -1)

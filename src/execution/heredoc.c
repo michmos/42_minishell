@@ -12,6 +12,34 @@
 
 #include "../minishell.h"
 
+void get_hd_str(t_info *info, t_cmd_data *cmd)
+{
+	/*
+		i want to get the input either with readline or gnl
+		there can be multiple heredocs, so my while loop
+		needs to take that into account
+	*/
+}
+
+void init_heredoc(t_info *info, t_cmd_data *cmd)
+{
+	int i;
+
+	i = 0;
+	cmd->hd_array = malloc((cmd->hd_count + 1) * sizeof(char *));
+	if (cmd->hd_array == NULL)
+		return ;
+	while (i < cmd->redir_count)
+	{
+		/*
+			i want to malloc here if the redirection type is I_RD_HD
+			but how much do i wan to malloc to put it in the array???
+		*/
+		i++;
+	}
+	get_hd_str(info, cmd);
+}
+
 void	get_hd_fd(t_cmd *cmd, t_info *info)
 {
 	int	fd[2];

@@ -79,7 +79,6 @@ void	check_last_in_out(t_cmd_data *cmd)
 }
 
 /*
-	how to access the i'th element in redir list???
-	or should i have something like this in while loop end:
-	cmd->pars_out->redir_lst->next ???
+	write a helper function, that would get i and the current redirection
+	and according to that would fill it in, in to the cmd struct
 */
