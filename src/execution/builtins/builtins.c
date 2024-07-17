@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/25 09:25:29 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/07/10 11:18:30 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/07/17 14:09:47 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void print_envlst(t_list *head)
 	}
 }
 
-int check_builtins(t_list *head)
+int	check_builtins(t_list *head)
 {
 	t_cmd *cmd;
 	char *str;
@@ -53,12 +53,12 @@ int check_builtins(t_list *head)
 	else if (ft_strncmp(command, "exit", 5) == 0)
 		i = 7;
 	free(command);
-	return (i)
+	return (i);
 }
 
-int execute_builtin(t_cmd *cmd, char *line, t_info *info)
+int	execute_builtin(t_cmd_data *cmd, char *line, t_info *info)
 {
-	int stat;
+	int	stat;
 
 	if (cmd->builtin == 1)
 		stat = execute_echo();
@@ -77,10 +77,10 @@ int execute_builtin(t_cmd *cmd, char *line, t_info *info)
 	return (stat);
 }
 
-int exec_one_builtin(t_list *head, char *line, t_info *info)
+int	exec_one_builtin(t_list *head, char *line, t_info *info)
 {
-	int stat;
-	t_cmd *cmd;
+	int			stat;
+	t_cmd_data	*cmd;
 
 	cmd = get_cmd(head);
 	if (open_files(cmd, info) == 1)

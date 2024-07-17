@@ -6,15 +6,15 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 13:32:12 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/07/11 11:38:35 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/07/17 14:09:39 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_cmd	*get_cmd(t_list *lst)
+t_cmd_data	*get_cmd(t_list *lst)
 {
-	return ((t_cmd *)(lst->as_ptr));
+	return ((t_cmd_data *)(lst->as_ptr));
 }
 
 t_redir	*get_redir(t_list *lst)
@@ -41,7 +41,7 @@ void	close_pipes(t_info *info)
 	}
 }
 
-void	close_fd_array(t_cmd *cmd, t_info *info)
+void	close_fd_array(t_cmd_data *cmd, t_info *info)
 {
 	int	i;
 

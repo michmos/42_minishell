@@ -6,13 +6,13 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/11 11:39:11 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/07/11 11:41:07 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/07/17 14:03:34 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	pipe_cmd(t_cmd *cmd, t_info *info, int i)
+void	pipe_cmd(t_cmd_data *cmd, t_info *info, int i)
 {
 	if (cmd->last_input == -1 && i > 0) // no input && not first command
 		dup2(info->fd[i - 1][0], STDIN_FILENO);

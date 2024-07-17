@@ -94,14 +94,6 @@ typedef struct s_cmd
 {
 	char **args;
 	t_list *redir_lst;
-	int *fd_array;
-	int redir_count;
-	int builtin;
-	char *path;
-	int last_input;
-	int last_output;
-	char *hd_str;
-	int hd_count;
 } t_cmd;
 
 typedef struct s_redir
@@ -150,7 +142,7 @@ typedef struct s_parse_env
 
 // builtins.c --------------------------------------------------------------- //
 void print_envlst(t_list *head);
-void check_builtins(char **argv, char **env);
+int check_builtins(t_list *head);
 
 // env.c -------------------------------------------------------------------- //
 char *get_key(t_env_var *env_var, t_parse_env *env_parse);
@@ -186,6 +178,21 @@ int exit_bash(char **argv);
 void show_prompt(void);
 
 // ----------------------- EXECUTION/execution/ ---------------------------//
+typedef struct s_cmd_data
+{
+	t_cmd *pars_out;
+	int *fd_array;
+	int redir_count;
+	int builtin;
+	char *path;
+	int last_input;
+	int last_output;
+	char *hd_str;
+	int hd_count;
+	char *cmd_path;
+
+} t_cmd_data;
+
 typedef struct s_info
 {
 	int num_cmd;
@@ -204,14 +211,14 @@ typedef struct s_info
 } t_info;
 
 // execution.c ------------------------------------------------------------//
-int pipex(t_list *head, char **env);
+int pipex(t_list *head, t_info *info, char *line);
 
 // pipex_check.c ---------------------------------------------------------//
 
 // pipex_free.c ---------------------------------------------------------//
 
 // pipex_helper.c ---------------------------------------------------------//
-t_cmd *get_cmd(t_list *lst);
+t_cmd_data *get_cmd(t_list *lst);
 t_redir *get_redir(t_list *lst);
 void err_exit(char *str);
 void close_pipes(t_info *info);
@@ -221,7 +228,7 @@ void close_fd_array(t_cmd *cmd, t_info *info);
 int open_append(t_cmd *cmd, t_info *info, int i);
 int open_input_output(t_cmd *cmd, t_info *info, int i);
 int open_one_file(t_cmd *cmd, t_info *info, int i);
-void open_files(t_cmd *cmd, t_info *info);
+int open_files(t_cmd *cmd, t_info *info);
 
 // pipex_paths.c ----------------------------------------------------------//
 char *find_command_path(char *command, char **env);
@@ -232,7 +239,7 @@ static char *concat_path(char *dir, char *command);
 void pipe_cmd(t_cmd *cmd, t_info *info, int i);
 
 // pipex.c ----------------------------------------------------------------//
-int cmd_pipeline(t_list *head, t_info *info, char **env);
+int cmd_pipeline(t_list *head, t_info *info);
 int parent_process(t_info *info);
 void child_process(t_list *head, t_info *info, int child_i);
 void close_pipes(t_info *info);

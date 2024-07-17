@@ -6,49 +6,36 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 09:50:20 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/07/11 11:42:25 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/07/17 14:05:35 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void close_pipes(t_info *info)
+void	child_process(t_list *head, t_info *info, int child_i)
 {
-	int i;
-
-	i = 0;
-	while (i < info->num_cmd - 1)
-	{
-		close(info->fd[i][0]);
-		close(info->fd[i][1]);
-		i++;
-	}
-}
-
-void child_process(t_list *head, t_info *info, int child_i)
-{
-	t_cmd *cmd;
+	t_cmd_data	*cmd;
 
 	close(info->std_in);
 	close(info->std_out);
 	cmd = get_cmd(head);
-	cmd->last_input = in_file(cmd);
-	cmd->last_output = out_file(cmd);
+	cmd->last_input = in_file(cmd->pars_out);
+	cmd->last_output = out_file(cmd->pars_out);
 	open_files(cmd, info);
 	pipe_cmd(cmd, info, child_i);
 	close_fd_array(cmd, info);
 	close_pipes(info);
 	if (cmd->builtin > 0)
-		execute_builtin(cmd->builtin);
-	cmd->cmd_path = find_command_path(cmd->args[0], info->our_env);
+		execute_builtin(cmd);
+	cmd->cmd_path = find_command_path(cmd->pars_out->args[0], info->our_env);
 	check_dir(cmd, info);
 	check_cmd(cmd, info);
 }
 
-int parent_process(t_info *info)
+int	parent_process(t_info *info)
 {
-	int i;
-	int status;
+	int	i;
+	int	status;
 
 	close_pipes(info);
 	i = 0;
@@ -60,10 +47,10 @@ int parent_process(t_info *info)
 	return (status);
 }
 
-int cmd_pipeline(t_list *head, t_info *info)
+int	cmd_pipeline(t_list *head, t_info *info)
 {
-	int i;
-	int status;
+	int	i;
+	int	status;
 
 	i = -1;
 	while (++i < info->num_cmd - 1)
@@ -84,11 +71,3 @@ int cmd_pipeline(t_list *head, t_info *info)
 	status = parent_process(info); // waits for all child processes to finish
 	return (status);			   // could be used as error code message
 }
-// free the node after use,
-// maybe write a function that takes head, frees it and returns head->next
-
-/*
-	in main somewhere I'll need to have init info function that will populate
-	my struct with all the info needed, and would do so depending
-	on if it's called the first time or not
-*/
