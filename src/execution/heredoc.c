@@ -6,22 +6,25 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/17 11:16:48 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/07/17 11:17:27 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/07/18 14:09:57 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void get_hd_str(t_info *info, t_cmd_data *cmd)
+void get_hd_str( t_cmd_data *cmd, t_info *info)
 {
 	/*
 		i want to get the input either with readline or gnl
 		there can be multiple heredocs, so my while loop
 		needs to take that into account
+
+		if there're multiple heredocs the string that is taken in to account
+		printed to the screen is the one from the last heredoc, the previous ones are ignored
 	*/
 }
 
-void init_heredoc(t_info *info, t_cmd_data *cmd)
+void init_heredoc(t_cmd_data *cmd, t_info *info)
 {
 	int i;
 
@@ -34,13 +37,14 @@ void init_heredoc(t_info *info, t_cmd_data *cmd)
 		/*
 			i want to malloc here if the redirection type is I_RD_HD
 			but how much do i wan to malloc to put it in the array???
+			it will only point to the string where the readline result is saved
 		*/
 		i++;
 	}
-	get_hd_str(info, cmd);
+	get_hd_str(cmd, info);
 }
 
-void	get_hd_fd(t_cmd *cmd, t_info *info)
+void	get_hd_fd(t_cmd_data *cmd, t_info *info)
 {
 	int	fd[2];
 
@@ -51,7 +55,7 @@ void	get_hd_fd(t_cmd *cmd, t_info *info)
 	cmd->fd_array[cmd->last_input] = fd[0];
 }
 
-void	heredoc(t_cmd *cmd, t_info *info, int i)
+void	heredoc(t_cmd_data *cmd, t_info *info, int i)
 {
 	if (cmd->last_input == i)
 		get_hd_fd(cmd, info);

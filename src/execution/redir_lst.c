@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/27 13:55:02 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/07/17 14:26:25 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/07/18 09:54:18 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,31 +54,34 @@ int	out_file(t_cmd *cmd)
 
 void	check_last_in_out(t_cmd_data *cmd)
 {
-	int	i;
+	int			i;
+	t_cmd_data	*temp;
 
 	cmd->last_input = -1;
 	cmd->last_output = -1;
 	i = 0;
-	cmd->redir_count = ft_lstsize(cmd->pars_out->redir_lst);
+	temp = cmd;
+	cmd->redir_count = ft_lstsize(temp->pars_out->redir_lst);
 	cmd->hd_count = 0;
 	while (i < cmd->redir_count)
 	{
-		if (((t_redir *)(cmd->pars_out->redir_lst))->type == I_RD)
-			cmd->last_input = i;
-		else if (((t_redir *)(cmd->pars_out->redir_lst))->type == O_RD)
-			cmd->last_output = i;
-		else if (((t_redir *)(cmd->pars_out->redir_lst))->type == O_RD_APP)
-			cmd->last_output = i;
-		else if (((t_redir *)(cmd->pars_out->redir_lst))->type == I_RD_HD)
-		{
-			cmd->last_input = i;
-			cmd->hd_count++;
-		}
+		check_type(cmd, ((t_redir *)(temp->pars_out->redir_lst))->type, i);
+		temp->pars_out->redir_lst = (temp->pars_out->redir_lst)->next;
 		i++;
 	}
 }
 
-/*
-	write a helper function, that would get i and the current redirection
-	and according to that would fill it in, in to the cmd struct
-*/
+void	check_type(t_cmd_data *cmd, t_tag type, int i)
+{
+	if (type == I_RD)
+		cmd->last_input = i;
+	else if (type == O_RD)
+		cmd->last_output = i;
+	else if (type == O_RD_APP)
+		cmd->last_output = i;
+	else if (type == I_RD_HD)
+	{
+		cmd->last_output = i;
+		cmd->hd_count++;
+	}
+}
