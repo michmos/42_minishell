@@ -14,30 +14,57 @@
 
 void get_hd_str( t_cmd_data *cmd, t_info *info)
 {
-	/*
-		i want to get the input either with readline or gnl
-		there can be multiple heredocs, so my while loop
-		needs to take that into account
+	char	*input;
+	char	*result;
+	int		i;
 
-		if there're multiple heredocs the string that is taken in to account
-		printed to the screen is the one from the last heredoc, the previous ones are ignored
-	*/
+	i = 0;
+	result = NULL;
+	while (i < cmd->hd_count)
+	{
+		input = readline("> ");
+		/*
+			if i have no input i need to see what is the signal, or if there is any
+		*/
+		if (!input && /*bad signal*/)
+			// do something
+		else if (input)
+		{
+			if (ft_strncmp(input, cmd->hd_array[i], ft_strlen(input)) == 0)
+				i++;
+			else if (i == cmd->hd_count - 1)
+				// we want to put only the last string into our cmd->hd_str
+				// cause that's the only one that counts
+				// while we are on our last heredoc
+				// we want to keep adding every sentence to the result
+		}
+		if (input)
+			free(input);
+	}
+	cmd->hd_str = result;
 }
+/*
+	i created a small test case in a different file
+	and there only the last sentence would be saved in input
+	need to find a way how to save everything between two heredocs
+*/
 
 void init_heredoc(t_cmd_data *cmd, t_info *info)
 {
 	int i;
+	int j;
 
 	i = 0;
+	j = 0;
 	cmd->hd_array = malloc((cmd->hd_count + 1) * sizeof(char *));
 	if (cmd->hd_array == NULL)
 		return ;
 	while (i < cmd->redir_count)
 	{
-		/*
-			i want to malloc here if the redirection type is I_RD_HD
-			but how much do i wan to malloc to put it in the array???
-			it will only point to the string where the readline result is saved
+		/* 
+			if cmd->redir->type == I_RD_HD, then we do that
+			in hd_array here i want to put the name of the "file" which will
+			be the delimiter
 		*/
 		i++;
 	}
