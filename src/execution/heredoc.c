@@ -6,13 +6,13 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/17 11:16:48 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/07/18 14:09:57 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/07/19 11:59:29 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void get_hd_str( t_cmd_data *cmd, t_info *info)
+void	get_hd_str( t_cmd_data *cmd, t_info *info)
 {
 	char	*input;
 	char	*result;
@@ -23,49 +23,40 @@ void get_hd_str( t_cmd_data *cmd, t_info *info)
 	while (i < cmd->hd_count)
 	{
 		input = readline("> ");
-		/*
-			if i have no input i need to see what is the signal, or if there is any
-		*/
 		if (!input && /*bad signal*/)
-			// do something
+			exit; // error function will be here
 		else if (input)
 		{
 			if (ft_strncmp(input, cmd->hd_array[i], ft_strlen(input)) == 0)
 				i++;
 			else if (i == cmd->hd_count - 1)
-				// we want to put only the last string into our cmd->hd_str
-				// cause that's the only one that counts
-				// while we are on our last heredoc
-				// we want to keep adding every sentence to the result
+				hd_utils(input, cmd, result);
 		}
 		if (input)
 			free(input);
 	}
 	cmd->hd_str = result;
 }
-/*
-	i created a small test case in a different file
-	and there only the last sentence would be saved in input
-	need to find a way how to save everything between two heredocs
-*/
 
-void init_heredoc(t_cmd_data *cmd, t_info *info)
+void	init_heredoc(t_cmd_data *cmd, t_info *info)
 {
-	int i;
-	int j;
+	int		i;
+	int		j;
+	t_cmd	*temp;
+	t_redir	*redir_lst;
 
 	i = 0;
 	j = 0;
 	cmd->hd_array = malloc((cmd->hd_count + 1) * sizeof(char *));
 	if (cmd->hd_array == NULL)
 		return ;
+	temp = cmd->pars_out;
 	while (i < cmd->redir_count)
 	{
-		/* 
-			if cmd->redir->type == I_RD_HD, then we do that
-			in hd_array here i want to put the name of the "file" which will
-			be the delimiter
-		*/
+		redir_lst = get_redir(temp->redir_lst);
+		if (redir_lst->type == I_RD_HD)
+			cmd->hd_array[j++] = ft_strdup(redir_lst->filename);
+		temp->redir_lst->next;
 		i++;
 	}
 	get_hd_str(cmd, info);
