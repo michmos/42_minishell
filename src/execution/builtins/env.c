@@ -45,7 +45,6 @@ char	*get_value(t_env_var *env_var, t_parse_env *env_parse)
 	}
 	pos = env_parse->cursor_pos - i;
 	ft_strlcpy(env_var->value, &env_parse->buffer[pos], i + 1);
-	env_var->value = ft_strjoin(env_var->value, "\n");
 	return (env_var->value);
 }
 

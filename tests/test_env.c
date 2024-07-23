@@ -29,7 +29,7 @@ int	main(int argc, char **argv, char **env)
 		printf("%s", ((t_env_var *)(head->as_ptr))->key);
 		if (((t_env_var *)(head->as_ptr))->equal)
 			printf("=");
-		printf("%s", ((t_env_var *)(head->as_ptr))->value);
+		printf("%s\n", ((t_env_var *)(head->as_ptr))->value);
 		head = head->next;
 	}
 	return (0);
