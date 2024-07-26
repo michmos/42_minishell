@@ -13,6 +13,7 @@ OBJS_WO_MAIN:= $(filter-out $(OBJ_DIR)/main.o, $(OBJS))
 
 CC			:= cc
 CFLAGS		:= -Wall -Wextra -Werror -Wunused -Wuninitialized -Wunreachable-code -g -MMD
+LIB_FLAGS	:= -lreadline
 RM			:= rm -rf
 
 TESTS_DIR	:= tests
@@ -29,7 +30,7 @@ all: $(NAME)
 
 # rule to make shell
 $(NAME): $(OBJS) $(SUBMOD_FLAG) $(LIBFT)
-	$(CC) $(OBJS) $(LIBFT) -o $@
+	$(CC) $(OBJS) $(LIBFT) $(LIB_FLAGS) -o $@
 	@printf "$(CREATED)" $@ $(CUR_DIR)
 
 $(SUBMOD_FLAG):
@@ -45,7 +46,7 @@ $(LIBFT):
 
 # rule to make tester binaries
 %: $(OBJ_DIR)/%.o $(OBJS_WO_MAIN) $(SUBMOD_FLAG) $(LIBFT)
-	$(CC) $(OBJ_DIR)/$*.o $(OBJS_WO_MAIN) $(LIBFT) -o $(TESTS_DIR)/$*
+	$(CC) $(OBJ_DIR)/$*.o $(OBJS_WO_MAIN) $(LIBFT) $(LIB_FLAGS) -o $(TESTS_DIR)/$*
 	@printf "$(CREATED)" $@ $(CUR_DIR)
 
 $(OBJ_DIR)/%.o: $(TESTS_DIR)/%.c
