@@ -9,6 +9,7 @@ SRCS		:= $(shell find $(SRC_DIR) -iname "*.c")
 
 OBJ_DIR		:= .build
 OBJS		:= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+OBJS_WO_MAIN:= $(filter-out $(OBJ_DIR)/main.o, $(OBJS))
 
 CC			:= cc
 CFLAGS		:= -Wall -Wextra -Werror -Wunused -Wuninitialized -Wunreachable-code -g -MMD
@@ -43,8 +44,8 @@ $(LIBFT):
 	$(MAKE) -C $(@D) all
 
 # rule to make tester binaries
-%: $(OBJ_DIR)/%.o $(OBJS) $(SUBMOD_FLAG) $(LIBFT)
-	$(CC) $(OBJ_DIR)/$*.o $(OBJS) $(LIBFT) -o $(TESTS_DIR)/$*
+%: $(OBJ_DIR)/%.o $(OBJS_WO_MAIN) $(SUBMOD_FLAG) $(LIBFT)
+	$(CC) $(OBJ_DIR)/$*.o $(OBJS_WO_MAIN) $(LIBFT) -o $(TESTS_DIR)/$*
 	@printf "$(CREATED)" $@ $(CUR_DIR)
 
 $(OBJ_DIR)/%.o: $(TESTS_DIR)/%.c
