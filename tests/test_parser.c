@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 11:51:51 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/27 15:09:06 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/07/26 15:33:17 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	print_cmds(t_list *cmds)
 		// print redirs linked list
 		printf("- redirections list: ");
 		print_token_lst(cmd->redir_lst);
+		printf("\n");
 
 		cmds = cmds->next;
 		if (cmds)
@@ -71,20 +72,34 @@ void	print_cmds(t_list *cmds)
 
 int main(int argc, char *argv[], char **env)
 {
-	t_list		*cmds;
-	t_list		*env_lst;
-	t_error	error;
+	t_shell	*shell;
+	t_list	*cmd_lst;
+	char	*cmd_line;
 
-	if (argc != 2)
+	// use argc argv to avoid compiling error
+	argc = argv[0][0];
+
+	init_shell(&shell, env);
+	while (1)
 	{
-		printf("Usage '<ARGS>'");
-		return (1);
+		cmd_line = readline("minishell> ");
+		if (!cmd_line)
+		{
+			break;
+		}
+		else if (!*cmd_line)
+		{
+			free(cmd_line);
+			continue;
+		}
+		else if (ft_strncmp(cmd_line, "exit", 5) == 0)
+		{
+			break;
+		}
+		parsing(&cmd_lst, cmd_line);
+		print_cmds(cmd_lst);
+		ft_lstclear(&cmd_lst, free_cmd);
+		free(cmd_line);
 	}
-	env_lst = create_envlst(env);
-	cmds = NULL;
-	error = parsing(&cmds, argv[1], env_lst);
-	if (error)
-		return (1);
-	print_cmds(cmds);
-	return (0);
+	clean_exit(shell->ex_code);
 }

@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 11:51:51 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/20 13:51:23 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/07/26 15:28:09 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,48 @@ void	print_token_lst(t_list *head)
 	}
 }
 
-int main(int argc, char *argv[])
+t_list	*test_lexer(char *input)
 {
 	t_parse_str	cmd_line;
 	t_list		*head = NULL;
 
-	if (argc != 2)
-	{
-		printf("Usage '<ARGS>'");
-		return (1);
-	}
-	cmd_line.buf = argv[1];
-	cmd_line.buf_len = ft_strlen(argv[1]);
+	cmd_line.buf = input;
+	cmd_line.buf_len = ft_strlen(input);
 	cmd_line.cursor_pos = 0;
 	create_token_lst(&head, &cmd_line);
-	print_token_lst(head);
-	return (0);
+	return (head);
+}
+
+int main(int argc, char *argv[], char **env)
+{
+	t_shell	*shell;
+	t_list	*token_lst;
+	char	*cmd_line;
+
+	// use argc argv to avoid compiling error
+	argc = argv[0][0];
+
+	init_shell(&shell, env);
+	while (1)
+	{
+		cmd_line = readline("minishell> ");
+		if (!cmd_line)
+		{
+			break;
+		}
+		else if (!*cmd_line)
+		{
+			free(cmd_line);
+			continue;
+		}
+		else if (ft_strncmp(cmd_line, "exit", 5) == 0)
+		{
+			break;
+		}
+		token_lst = test_lexer(cmd_line);
+		print_token_lst(token_lst);
+		ft_lstclear(&token_lst, free_token);
+		free(cmd_line);
+	}
+	clean_exit(shell->ex_code);
 }
