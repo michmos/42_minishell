@@ -3,6 +3,8 @@
 # define MINISHELL_H
 
 # include "../external_libs/42_libs/ft_libs.h"
+# include "readline/readline.h"
+# include "readline/history.h"
 # include <stdio.h>
 
 typedef enum e_error
