@@ -19,6 +19,17 @@ typedef enum e_error
 	INP_ERR
 } t_error;
 
+typedef struct s_shell
+{
+	char	*cwd;
+	char	*old_wd;
+	t_list	*env_lst;
+	int		ex_code;
+	t_error	error;
+} t_shell;
+
+// init_shell.c ------------------------------------------------------------- //
+void	init_shell(t_shell **ptr, char **env);
 
 // -------------------------------------------------------------------------- //
 // ---------------------------- PARSING/ ------------------------------------ //
@@ -171,5 +182,7 @@ void	free_redir(void	*redir);
 // exit_code.c -------------------------------------------------------------- //
 int	get_exit_code(void);
 void	set_exit_code(int code);
+// cleanup.c ----------------------------------------------------------------- //
+void	clean_exit(int exit_code);
 
 #endif
