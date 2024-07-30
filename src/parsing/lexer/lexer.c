@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 17:15:08 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/20 14:24:23 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/07/29 15:36:14 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ static t_error	create_token(t_token **token, t_parse_str *cmd_line)
 	t_error	error;
 	t_token	*new_token;
 
-	new_token = malloc(sizeof(t_token));
+	new_token = ft_calloc(1, sizeof(t_token));
 	if (!new_token)
 	{
 		return (SYS_ERR);

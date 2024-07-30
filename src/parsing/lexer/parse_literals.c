@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 21:11:23 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/20 13:52:31 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/07/30 10:24:06 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ t_error	parse_str_sq(char **lexeme, t_parse_str *cmd_line)
 	if (!*lexeme)
 		return (SYS_ERR);
 
-	if (cur_char(cmd_line) != '\"')
+	if (cur_char(cmd_line) != '\'')
 	{
 		printf("syntaxerror\n"); // TODO: display syntax error
 		return (SYN_ERR);
