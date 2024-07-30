@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 21:11:23 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/30 10:24:06 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/07/30 11:18:53 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ t_error	parse_str_dq(char **lexeme, t_parse_str *cmd_line)
 
 	if (cur_char(cmd_line) != '\"')
 	{
+		free(*lexeme);
+		*lexeme = NULL;
 		printf("syntaxerror\n"); // TODO: display syntax error
 		return (SYN_ERR);
 	}
@@ -65,6 +67,8 @@ t_error	parse_str_sq(char **lexeme, t_parse_str *cmd_line)
 
 	if (cur_char(cmd_line) != '\'')
 	{
+		free(*lexeme);
+		*lexeme = NULL;
 		printf("syntaxerror\n"); // TODO: display syntax error
 		return (SYN_ERR);
 	}
