@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:56:13 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/26 14:45:05 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/07/30 11:41:13 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static void	process_cmd_line(char *cmd_line)
 	t_error	error;
 	t_list	*cmd_lst;
 
+	cmd_lst = NULL;
 	add_history(cmd_line);
 	error = parsing(&cmd_lst, cmd_line);
 	free(cmd_line);
