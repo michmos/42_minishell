@@ -40,7 +40,7 @@ char	*get_env_path(char **env)
 			return (env[i]);
 		i++;
 	}
-	write(STDERR_FILENO, "ERROR: PATH not found\n", 22);
+	write(2, "ERROR: PATH not found\n", 22);
 	return (NULL);
 }
 

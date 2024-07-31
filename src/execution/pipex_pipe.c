@@ -15,8 +15,7 @@
 void	dup2_copy(int old_fd, int new_fd, t_info *info)
 {
 	if (dup2(old_fd, new_fd) == -1)
-		// TODO: error, maybe set error in info struct
-	exit ; // here just for now, so wouldn't see norm errors
+		error(ERR_DUP, info);
 }
 
 void	pipe_cmd(t_cmd_data *cmd, t_info *info, int i)

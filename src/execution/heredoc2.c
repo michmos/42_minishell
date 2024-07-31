@@ -12,13 +12,31 @@
 
 #include "../minishell.h"
 
-void	hd_utils(char *input, t_cmd_data *cmd, char *result)
+char *hd_strjoin(char *s1, char *s2, t_info *info)
 {
+	char *buf;
+	int len;
+
+	len = ft_strlen(s1) + ft_strlen(s2) + 2;
+	buf = malloc(sizeof(char) * len);
+	if (!buf)
+		exit(); // call error function
+	if (!s1)
+		ft_strlcpy(buf, s2, len);
+	else
+	{
+		ft_strlcpy(buf, s1, len);
+		ft_strlcat(buf, s2, len);
+	}
+	buf[len - 2] = '\n';
+	return (buf);
 }
 
-	/*
-		the code will go here only if we are on the last heredoc
-		so i need to put input in result somehow
-		cause in the previous function cmd->hd_str will be
-		equal to result
-	*/
+void	hd_utils(char **str, char *input, t_info *info, char **result)
+{
+	*result = hd_strjoin(*str, input, info);
+	if (*str)
+		free(*str);
+	*str = *result;
+}
+

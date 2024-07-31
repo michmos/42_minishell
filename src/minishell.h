@@ -26,7 +26,18 @@ typedef enum e_error
 	// Syntax error
 	SYN_ERR,
 	// Bad function input
-	INP_ERR
+	INP_ERR,
+	ERR_PIPE,
+	ERR_MALLOC,
+	ERR_OPEN,
+	ERR_CLOSE,
+	ERR_DUP,
+	ERR_EXEC,
+	ERR_FORK,
+	ERR_PRINT,
+	ERR_CWD;
+	CHILD,
+	PARENT
 } t_error;
 
 // -------------------------------------------------------------------------- //
@@ -208,11 +219,10 @@ typedef struct s_info
 	t_list *env_lst;
 	char **our_env;
 	char *cmd_path;
-	t_cmd *cmd; // is it possible to have cmd here? even though cmd will be a t_list before?
 } t_info;
 
 // execution.c ------------------------------------------------------------//
-int pipex(t_list *head, t_info *info, char *line);
+int execution(t_list *head, t_info *info, char *line);
 
 // pipex_check.c ---------------------------------------------------------//
 

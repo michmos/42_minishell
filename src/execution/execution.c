@@ -12,11 +12,11 @@
 
 #include "../minishell.h"
 
-void	pipex(t_list *head, t_info *info, char *line)
+int execution(t_list *head, t_info *info, char *line)
 {
-	t_list		*temp;
-	t_cmd_data	*cmd;
-	int			stat;
+	t_list *temp;
+	t_cmd_data *cmd;
+	int stat;
 
 	temp = head;
 	info->num_cmd = ft_lstsize(temp);
@@ -26,18 +26,9 @@ void	pipex(t_list *head, t_info *info, char *line)
 	if (info->num_cmd == 1 && cmd->builtin > 0)
 		info->error = exec_one_builtin(head, line, info);
 	else
+	{
 		stat = cmd_pipeline(head, info);
+		info->error = WEXITSTATUS(stat);
+	}
+	return (info->error);
 }
-/*
-	with the use of signals manipulate this while loop
-	once the prompt is showed we should wait for the user 
-	to input something and after that is executed we can
-	print the prompt again
-*/
-
-/*
-	the signal part and prompt part don't make any sense
-	i can't seem to find a way to make the prompt on the screen stay
-	or it doesn't even show up and the while loop terminates quite fast
-	just by itself without typing anything and none of my commands work... 
-*/

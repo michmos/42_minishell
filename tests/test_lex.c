@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../src/minishell.h"
 
 void	print_token_lst(t_list *head)
 {

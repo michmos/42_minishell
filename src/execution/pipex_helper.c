@@ -49,9 +49,7 @@ void	close_fd_array(t_cmd_data *cmd, t_info *info)
 	while (i < cmd->redir_count)
 	{
 		if (cmd->fd_array[i] > 0 && close(cmd->fd_array[i]) == -1)
-		{
-			//TODO:error closing fd
-		}
+			error(ERR_CLOSE, info);
 		i++;
 	}
 }

@@ -12,16 +12,16 @@
 
 #include "../minishell.h"
 
-void	child_process(t_list *head, t_info *info, int child_i)
+void child_process(t_list *head, t_info *info, int child_i)
 {
-	t_cmd_data	*cmd;
+	t_cmd_data *cmd;
 
 	close(info->std_in);
 	close(info->std_out);
 	cmd = get_cmd(head);
 	cmd->last_input = in_file(cmd->pars_out);
 	cmd->last_output = out_file(cmd->pars_out);
-	open_files(cmd, info);
+	open_files(cmd, CHILD, info);
 	pipe_cmd(cmd, info, child_i);
 	close_fd_array(cmd, info);
 	close_pipes(info);
@@ -32,10 +32,10 @@ void	child_process(t_list *head, t_info *info, int child_i)
 	check_cmd(cmd, info);
 }
 
-int	parent_process(t_info *info)
+int parent_process(t_info *info)
 {
-	int	i;
-	int	status;
+	int i;
+	int status;
 
 	close_pipes(info);
 	i = 0;
@@ -47,15 +47,15 @@ int	parent_process(t_info *info)
 	return (status);
 }
 
-int	cmd_pipeline(t_list *head, t_info *info)
+int cmd_pipeline(t_list *head, t_info *info)
 {
-	int	i;
-	int	status;
+	int i;
+	int status;
 
 	i = -1;
 	while (++i < info->num_cmd - 1)
 		if (pipe(info->fd[i]) == -1)
-			wait_free_exit((head, EXIT_FAILURE));
+			wait_free_exit(head, EXIT_FAILURE);
 	i = -1;
 	while (++i < info->num_cmd)
 	{
