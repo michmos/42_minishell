@@ -73,7 +73,7 @@ int	execute_builtin(t_cmd_data *cmd, char *line, t_info *info)
 	else if (cmd->builtin == 6)
 		stat = execute_env();
 	else if (cmd->builtin == 7)
-		stat = execute_exit();
+		stat = execute_exit(cmd, line, info);
 	return (stat);
 }
 
