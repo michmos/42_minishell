@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 13:22:17 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/03 11:14:46 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/07/22 13:05:28 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static	t_error	cut_out_backslash(char **str_ptr, size_t pos)
 	return (NO_ERR);
 }
 
-static t_error	modify_str(char **str_ptr, size_t *cursor_pos, t_list *env_lst)
+static t_error	modify_str(char **str_ptr, size_t *cursor_pos)
 {
 	char	*str;
 	t_error	error;
@@ -53,12 +53,12 @@ static t_error	modify_str(char **str_ptr, size_t *cursor_pos, t_list *env_lst)
 	}
 	else
 	{
-		error = expand_env_var(str_ptr, cursor_pos, env_lst);
+		error = expand_env_var(str_ptr, cursor_pos);
 	}
 	return (error);
 }
 
-t_error	expand_all_env_vars(char **str_ptr, t_list *env_lst)
+t_error	expand_all_env_vars(char **str_ptr)
 {
 	size_t	i;
 	char	*str;
@@ -71,7 +71,7 @@ t_error	expand_all_env_vars(char **str_ptr, t_list *env_lst)
 	{
 		if (str[i] == '$')
 		{
-			error = modify_str(str_ptr, &i, env_lst);
+			error = modify_str(str_ptr, &i);
 			str = *str_ptr;
 		}
 		i++;

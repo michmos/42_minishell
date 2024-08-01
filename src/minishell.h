@@ -57,7 +57,7 @@ typedef struct s_token
 } t_token;
 
 // parsing.c ---------------------------------------------------------------- //
-t_error	parsing(t_list **cmd_lst, char *str, t_list *env_lst);
+t_error	parsing(t_list **cmd_lst, char *str);
 
 // -------------------------- PARSING/lexer/ -------------------------------- //
 
@@ -114,19 +114,19 @@ bool	is_literal(t_tag tag);
 bool	is_redir(t_tag tag);
 
 // expand_all_env_vars.c ----------------------------------------------------- //
-t_error	expand_all_env_vars(char **str, t_list *env_lst);
+t_error	expand_all_env_vars(char **str_ptr);
 
 // expand_env_var.c --------------------------------------------------------- //
-t_error	expand_env_var(char **str_ptr, size_t *cursor_pos, t_list *env_lst);
+t_error	expand_env_var(char **str_ptr, size_t *cur_pos);
 
 // get_cmd_args.c ----------------------------------------------------------- //
-t_error	extend_arg_lst(t_list **args_lst, t_list **rem_tokens, t_list *env_lst);
+t_error	extend_arg_lst(t_list **args_lst, t_list **rem_tokens);
 
 // get_redir_lst.c ---------------------------------------------------------- //
 t_error	extend_redir_lst(t_list **head, t_list **rem_tokens);
 
 // parser.c ----------------------------------------------------------------- //
-t_error	create_cmd_lst(t_list **cmd_lst, t_list **token_lst, t_list *env_lst);
+t_error	create_cmd_lst(t_list **cmd_lst, t_list **token_lst);
 
 
 

@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 11:33:33 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/19 17:16:58 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/07/22 13:07:18 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static t_error	parse_pipe(t_list **rem_tokens)
 }
 
 // TODO: clear up this function
-static t_error	parse_cmd(t_cmd **cmd, t_list **rem_tokens, t_list *env_lst)
+static t_error	parse_cmd(t_cmd **cmd, t_list **rem_tokens)
 {
 	t_error	error;
 	t_list	*arg_lst;
@@ -61,7 +61,7 @@ static t_error	parse_cmd(t_cmd **cmd, t_list **rem_tokens, t_list *env_lst)
 		}
 		else if (is_literal(get_token_tag(*rem_tokens)))
 		{
-			error = extend_arg_lst(&arg_lst, rem_tokens, env_lst);
+			error = extend_arg_lst(&arg_lst, rem_tokens);
 		}
 	}
 	
@@ -83,14 +83,14 @@ static t_error	parse_cmd(t_cmd **cmd, t_list **rem_tokens, t_list *env_lst)
 	return (NO_ERR);
 }
 
-static t_error	extend_cmd_lst(t_list **cmd_lst, t_list **rem_tokens, t_list *env_lst)
+static t_error	extend_cmd_lst(t_list **cmd_lst, t_list **rem_tokens)
 {
 	t_error	error;
 	t_cmd	*cmd;
 	t_list	*new;
 
 	cmd = NULL;
-	error = parse_cmd(&cmd, rem_tokens, env_lst);
+	error = parse_cmd(&cmd, rem_tokens);
 	if (error)
 	{
 		return (error);
@@ -105,7 +105,7 @@ static t_error	extend_cmd_lst(t_list **cmd_lst, t_list **rem_tokens, t_list *env
 	return (NO_ERR);
 }
 
-t_error	create_cmd_lst(t_list **cmd_lst, t_list **token_lst, t_list *env_lst)
+t_error	create_cmd_lst(t_list **cmd_lst, t_list **token_lst)
 {
 	t_error	error;
 
@@ -113,7 +113,7 @@ t_error	create_cmd_lst(t_list **cmd_lst, t_list **token_lst, t_list *env_lst)
 	error = NO_ERR;
 	while (*token_lst && !error)
 	{
-		error = extend_cmd_lst(cmd_lst, token_lst, env_lst);
+		error = extend_cmd_lst(cmd_lst, token_lst);
 		if (*token_lst && !error)
 		{
 			error = parse_pipe(token_lst);

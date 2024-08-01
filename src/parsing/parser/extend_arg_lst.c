@@ -6,13 +6,13 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:47:41 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/01 18:00:35 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/07/26 12:12:48 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-char	*get_arg(t_list **rem_tokens, t_list *env_lst)
+char	*get_arg(t_list **rem_tokens)
 {
 	t_token	token;
 	char	*arg;
@@ -25,7 +25,7 @@ char	*get_arg(t_list **rem_tokens, t_list *env_lst)
 		token = pop_token(rem_tokens);
 		if (token.tag == WORD || token.tag == DU_QUO)
 		{
-			if (expand_all_env_vars(&token.lexeme, env_lst) != NO_ERR)
+			if (expand_all_env_vars(&token.lexeme) != NO_ERR)
 			{
 				free(token.lexeme);
 				free(arg);
@@ -42,12 +42,12 @@ char	*get_arg(t_list **rem_tokens, t_list *env_lst)
 	return (arg);
 }
 
-t_error	extend_arg_lst(t_list **args_lst, t_list **rem_tokens, t_list *env_lst)
+t_error	extend_arg_lst(t_list **args_lst, t_list **rem_tokens)
 {
 	t_list	*new;
 	char	*arg;
 
-	arg = get_arg(rem_tokens, env_lst);
+	arg = get_arg(rem_tokens);
 	if (!arg)
 	{
 		return (SYS_ERR);

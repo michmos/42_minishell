@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 17:46:04 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/03 15:19:35 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/07/22 13:40:46 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,8 @@ static char	*get_new_str(char *start, size_t start_len, char *insertion, size_t	
 	return (new_str);
 }
 
-static t_error	get_var_value(char	**insertion, char *ref_start, t_list *env_lst)
+// TODO: cleanup function
+static t_error	get_var_value(char	**insertion, char *ref_start)
 {
 	char	*value;
 	char	*ptr;
@@ -117,7 +118,7 @@ static t_error	get_var_value(char	**insertion, char *ref_start, t_list *env_lst)
 	}
 	else
 	{
-		ptr = get_env_val_ptr(&ref_start[key_pos], key_len, env_lst);
+		ptr = get_env_val_ptr(key);
 		if (!ptr)
 		{
 			*insertion = NULL;
@@ -132,7 +133,7 @@ static t_error	get_var_value(char	**insertion, char *ref_start, t_list *env_lst)
 	return (NO_ERR);
 }
 
-t_error	expand_env_var(char **str_ptr, size_t *cur_pos, t_list *env_lst)
+t_error	expand_env_var(char **str_ptr, size_t *cur_pos)
 {
 	char	*str;
 	char	*insertion;
@@ -150,7 +151,7 @@ t_error	expand_env_var(char **str_ptr, size_t *cur_pos, t_list *env_lst)
 	{
 		return (SYN_ERR);
 	}
-	if (get_var_value(&insertion, &str[*cur_pos + brackets], env_lst) != NO_ERR)
+	if (get_var_value(&insertion, &str[*cur_pos + brackets]) != NO_ERR)
 	{
 		return (SYS_ERR);
 	}

@@ -6,13 +6,13 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 16:05:11 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/30 11:29:33 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/07/30 11:48:25 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_error	parsing(t_list **cmd_lst, char *str, t_list *env_lst)
+t_error	parsing(t_list **cmd_lst, char *str)
 {
 	t_parse_str	cmd_line;
 	t_list		*token_lst;
@@ -30,7 +30,7 @@ t_error	parsing(t_list **cmd_lst, char *str, t_list *env_lst)
 	}
 
 	// parser
-	error = create_cmd_lst(cmd_lst, &token_lst, env_lst);
+	error = create_cmd_lst(cmd_lst, &token_lst);
 	if (error)
 	{
 		ft_lstclear(&token_lst, free_token);
