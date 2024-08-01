@@ -6,9 +6,7 @@
 # include "readline/readline.h"
 # include "readline/history.h"
 # include <stdio.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-#include <sys/stat.h>
+# include <sys/stat.h>
 
 # define SHELLNAME "minishell"
 
