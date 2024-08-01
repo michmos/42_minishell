@@ -192,7 +192,8 @@ t_error	set_pwd(char *new_path);
 
 // utils.c ------------------------------------------------------------------ //
 char	**store_ptrs_in_arr(t_list *lst);
-char	*get_env_val_ptr(char *key, size_t key_len, t_list *env_list);
+char	*get_env_val_ptr(char *key);
+bool	has_key(void *var, char *key);
 
 // free.c ------------------------------------------------------------------- //
 void	free_token(void *token);

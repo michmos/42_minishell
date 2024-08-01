@@ -103,16 +103,20 @@ static t_error	get_var_value(char	**insertion, char *ref_start)
 {
 	char	*value;
 	char	*ptr;
+	char	*key;
 	size_t	key_pos;
 	size_t	key_len;
 
 	key_pos = get_key_pos(ref_start);
 	key_len = get_key_len(&ref_start[key_pos]);
-	if (ref_start[key_pos] == '$')
+	key = ft_substr(ref_start, key_pos, key_len);
+	if (!key)
+		return (SYS_ERR);
+	if (*key == '$')
 	{
 		value = ft_itoa((int) getpid());
 	}
-	else if (ref_start[key_pos] == '?')
+	else if (*key == '?')
 	{
 		value = ft_itoa((int) get_exit_code());
 	}
@@ -121,12 +125,14 @@ static t_error	get_var_value(char	**insertion, char *ref_start)
 		ptr = get_env_val_ptr(key);
 		if (!ptr)
 		{
+			free(key);
 			*insertion = NULL;
 			return (NO_ERR);
 		}
 		value = ft_strdup(ptr);
 	}
 
+	free(key);
 	if (!value)
 		return (SYS_ERR);
 	*insertion = value;

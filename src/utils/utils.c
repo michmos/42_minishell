@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 12:17:46 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/03 11:35:02 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/07/22 13:44:42 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,28 @@ char	**store_ptrs_in_arr(t_list *lst)
 	return (array);
 }
 
-
-char	*get_env_val_ptr(char *key, size_t key_len, t_list *env_list)
+bool	has_key(void *var, char *key)
 {
-	if (key_len == 0)
-	{
+	if (!var)
+		return (false);
+	return (ft_strncmp(key, ((t_env_var *) var)->key, ft_strlen(key) + 1) == 0);
+}
+
+char	*get_env_val_ptr(char *key)
+{
+	t_list	*env_lst;
+	t_list	*result_node;
+
+	if (!key)
 		return (NULL);
-	}
-	while(env_list)
-	{
-		if (ft_strncmp(key, ((t_env_var *)(env_list->as_ptr))->key, key_len) == 0)
-			return (((t_env_var *)(env_list->as_ptr))->value);
-		env_list = env_list->next;
-	}
+
+	env_lst = get_env_lst();
+	if (!env_lst)
+		return (NULL);
+
+	result_node = ft_lstfind(env_lst, has_key, key);
+	if (result_node)
+		return (((t_env_var *) result_node->as_ptr)->value);
 	return (NULL);
 }
 
