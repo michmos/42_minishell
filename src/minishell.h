@@ -133,8 +133,6 @@ t_error	create_cmd_lst(t_list **cmd_lst, t_list **token_lst);
 // -------------------------------------------------------------------------- //
 // --------------------------- EXECUTION/ ----------------------------------- //
 // -------------------------------------------------------------------------- //
-
-// ----------------------- EXECUTION/builtins/ -------------------------------//
 typedef struct s_env_var
 {
 	char			*key; //before equal sign
@@ -166,6 +164,23 @@ char		*key(t_list *node);
 // add_to_list.c ------------------------------------------------------------ //
 t_list		*add_to_ordered_envlst(t_list *head, char *argv);
 t_list		*add_to_envlst(t_list *head, char *argv);
+
+// cd.c --------------------------------------------------------------------- //
+t_error	cd(char *argv[]);
+
+// cd_utils.c --------------------------------------------------------------- //
+bool	is_dir(char *pathname);
+t_error	add_slash(char **str);
+void	del_char(char *ptr);
+
+// cd_sec_1_to_6.c ---------------------------------------------------------- //
+t_error	init_curpath(char **curpath, char *arg);
+
+// cd_sec_7_to_8.c ---------------------------------------------------------- //
+t_error	modify_curpath(char **curpath);
+
+// cd_sec_9.c --------------------------------------------------------------- //
+t_error	cnvrt_to_rltv_path(char **curpath, char *cwd);
 
 // -------------------------------------------------------------------------- //
 // ------------------------ SETTERS_GETTERS/ -------------------------------- //
