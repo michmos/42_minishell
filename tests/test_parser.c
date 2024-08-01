@@ -6,11 +6,12 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 11:51:51 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/26 15:33:17 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/07/30 11:50:43 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../src/minishell.h"
+#include <stdlib.h>
 
 void	print_token_lst(t_list *head)
 {
@@ -75,6 +76,7 @@ int main(int argc, char *argv[], char **env)
 	t_shell	*shell;
 	t_list	*cmd_lst;
 	char	*cmd_line;
+	t_error	error;
 
 	// use argc argv to avoid compiling error
 	argc = argv[0][0];
@@ -96,7 +98,18 @@ int main(int argc, char *argv[], char **env)
 		{
 			break;
 		}
-		parsing(&cmd_lst, cmd_line);
+		error = parsing(&cmd_lst, cmd_line);
+		if (error == SYS_ERR)
+		{
+			printf("SYS_ERR occurred\n");
+			free(cmd_line);
+			clean_exit(EXIT_FAILURE);
+		}
+		else if (error == SYN_ERR)
+		{
+			free(cmd_line);
+			continue;
+		}
 		print_cmds(cmd_lst);
 		ft_lstclear(&cmd_lst, free_cmd);
 		free(cmd_line);

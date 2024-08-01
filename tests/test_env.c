@@ -22,15 +22,18 @@ int	main(int argc, char **argv, char **env)
 		printf("Usage: ./test_env env");
 		return (1);
 	}
-	head = create_envlst(env);
-	tmp = head;
-	while (head != NULL)
+	set_shell_struct(malloc(sizeof(t_shell)));
+	set_env_lst(create_envlst(env));
+	tmp = get_env_lst();
+	while (tmp != NULL)
 	{
-		printf("%s", ((t_env_var *)(head->as_ptr))->key);
-		if (((t_env_var *)(head->as_ptr))->equal)
+		printf("%s", ((t_env_var *)(tmp->as_ptr))->key);
+		if (((t_env_var *)(tmp->as_ptr))->equal)
 			printf("=");
 		printf("%s\n", ((t_env_var *)(head->as_ptr))->value);
 		head = head->next;
 	}
+	printf("\n\n");
+	printf("found value %s\n", get_env_val_ptr(ft_strdup("PWD")));
 	return (0);
 }
