@@ -6,6 +6,11 @@
 # include "readline/readline.h"
 # include "readline/history.h"
 # include <stdio.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+#include <sys/stat.h>
+
+# define SHELLNAME "minishell"
 
 typedef enum e_error
 {
@@ -18,7 +23,9 @@ typedef enum e_error
 	// Syntax error
 	SYN_ERR,
 	// Bad function input
-	INP_ERR
+	INP_ERR,
+	// Other error
+	OTH_ERR
 } t_error;
 
 typedef struct s_shell
