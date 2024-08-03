@@ -67,7 +67,7 @@ long long exit_value(char *str, char *line, t_info *info)
 		i++;
 	}
 	if ((sign == 1 && res > LLONG_MAX) || (sign == -1 && res - 1 < LLONG_MIN))
-		exit_err();
+		exit_err(str, line, info);
 	return (res * sign);
 }
 

@@ -12,7 +12,7 @@
 
 #include "../../minishell.h"
 
-char	*get_key(t_env_var *env_var, t_parse_env *env_parse)
+char *get_key(t_env_var *env_var, t_parse_env *env_parse)
 {
 	while (env_parse->buffer[env_parse->cursor_pos] != '=')
 		env_parse->cursor_pos++;
@@ -26,10 +26,10 @@ char	*get_key(t_env_var *env_var, t_parse_env *env_parse)
 	return (env_var->key);
 }
 
-char	*get_value(t_env_var *env_var, t_parse_env *env_parse)
+char *get_value(t_env_var *env_var, t_parse_env *env_parse)
 {
-	int	i;
-	int	pos;
+	int i;
+	int pos;
 
 	i = 0;
 	while (env_parse->buffer[env_parse->cursor_pos] != '\0')
@@ -49,10 +49,10 @@ char	*get_value(t_env_var *env_var, t_parse_env *env_parse)
 	return (env_var->value);
 }
 
-t_env_var	*get_env_var(char *env)
+t_env_var *get_env_var(char *env)
 {
-	t_env_var	*env_var;
-	t_parse_env	env_parse;
+	t_env_var *env_var;
+	t_parse_env env_parse;
 
 	env_parse.buffer = env;
 	env_parse.cursor_pos = 0;
@@ -65,25 +65,24 @@ t_env_var	*get_env_var(char *env)
 	env_var->value = get_value(env_var, &env_parse);
 
 	return (env_var);
-
 }
 
-void	free_env_var(void *node)
+void free_env_var(void *node)
 {
-	t_env_var	*env_var;
+	t_env_var *env_var;
 
-	env_var = (t_env_var *) node;
+	env_var = (t_env_var *)node;
 	free(env_var->key);
 	free(env_var->value);
 	free(env_var);
 }
 
-t_list	*create_envlst(char **env)
+t_list *create_envlst(char **env)
 {
-	t_env_var	*env_var;
-	t_list		*head;
-	t_list		*new;
-	int			i;
+	t_env_var *env_var;
+	t_list *head;
+	t_list *new;
+	int i;
 
 	i = 0;
 	head = NULL;
@@ -107,11 +106,17 @@ t_list	*create_envlst(char **env)
 	return (head);
 }
 
-/* 
+/*
 	if you give me argv[2] i can create a function and send the value to get_env_var that returns a node and
 	then just add that node to the back
 
-	to make sure it's possible to add it in alphabetical order after I created the node I can move through the 
-	linked list and add it to the back of it. and before priting env I can check if there is an equal sign that 
+	to make sure it's possible to add it in alphabetical order after I created the node I can move through the
+	linked list and add it to the back of it. and before priting env I can check if there is an equal sign that
 	should or shouldn't be there, and same with export
-*/ 
+*/
+
+/*
+	before every execve call i can go and look at the env linked list created by us, and then put everything
+	into a 2d array, so that execve could use it easily.
+	every time if there's anything inside i can free it and then malloc again
+*/

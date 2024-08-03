@@ -27,7 +27,7 @@ void print_envlst(t_list *head)
 	}
 }
 
-int	check_builtins(t_list *head)
+int check_builtins(t_list *head)
 {
 	t_cmd *cmd;
 	char *str;
@@ -56,31 +56,31 @@ int	check_builtins(t_list *head)
 	return (i);
 }
 
-int	execute_builtin(t_cmd_data *cmd, char *line, t_info *info)
+int execute_builtin(t_cmd_data *cmd, char *line, t_info *info)
 {
-	int	stat;
+	int stat;
 
 	if (cmd->builtin == 1)
-		stat = execute_echo();
+		stat = execute_echo(); // micha
 	else if (cmd->builtin == 2)
-		stat = execute_cd();
+		stat = execute_cd(); // micha
 	else if (cmd->builtin == 3)
-		stat = execute_pwd();
+		stat = execute_pwd(); // micha
 	else if (cmd->builtin == 4)
-		stat = execute_export();
+		stat = execute_export(); // me -> double check these three cause they've been started a while ago
 	else if (cmd->builtin == 5)
-		stat = execute_unset();
+		stat = execute_unset(); // me
 	else if (cmd->builtin == 6)
-		stat = execute_env();
+		stat = execute_env(); // me
 	else if (cmd->builtin == 7)
-		stat = execute_exit(cmd, line, info);
+		stat = execute_exit(cmd, line, info); // me -> done
 	return (stat);
 }
 
-int	exec_one_builtin(t_list *head, char *line, t_info *info)
+int exec_one_builtin(t_list *head, char *line, t_info *info)
 {
-	int			stat;
-	t_cmd_data	*cmd;
+	int stat;
+	t_cmd_data *cmd;
 
 	cmd = get_cmd(head);
 	if (open_files(cmd, info) == 1)
