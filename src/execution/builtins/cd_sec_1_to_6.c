@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 12:21:40 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/01 15:12:49 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/03 15:50:17 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ static t_error set_dir(char **directory, char *arg)
 		home_ptr = get_env_val_ptr("HOME");
 		if (!home_ptr)
 		{
-			printf("bash: cd: HOME not set\n"); // TODO: print to stderr instead
+			ft_printf_fd(STDERR_FILENO, "cd: HOME not set\n");
 			*directory = NULL;
 		}
 		else
@@ -163,7 +163,7 @@ t_error	init_curpath(char **curpath, char *arg)
 	*curpath = finding;
 	if (!finding)
 	{
-		printf("cd: No such file or directory: %s\n", arg); // TODO: print to stderr
+		ft_printf_fd(STDERR_FILENO, "cd: %s: No such file or directory\n", arg);
 	}
 	return (error);
 }
