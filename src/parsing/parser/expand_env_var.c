@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 17:46:04 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/22 13:40:46 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/05 11:10:15 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,43 +98,63 @@ static char	*get_new_str(char *start, size_t start_len, char *insertion, size_t	
 	return (new_str);
 }
 
-// TODO: cleanup function
-static t_error	get_var_value(char	**insertion, char *ref_start)
+static t_error	get_var_key(char **key, char *ref_start)
 {
-	char	*value;
-	char	*ptr;
-	char	*key;
 	size_t	key_pos;
 	size_t	key_len;
 
 	key_pos = get_key_pos(ref_start);
 	key_len = get_key_len(&ref_start[key_pos]);
-	key = ft_substr(ref_start, key_pos, key_len);
-	if (!key)
+	*key = ft_substr(ref_start, key_pos, key_len);
+	if (!*key)
 		return (SYS_ERR);
+	return (NO_ERR);
+}
+
+static t_error	get_var_value(char **value, char *key)
+{
+	char	*ptr;
+
 	if (*key == '$')
 	{
-		value = ft_itoa((int) getpid());
+		*value = ft_itoa((int) getpid());
 	}
 	else if (*key == '?')
 	{
-		value = ft_itoa((int) get_exit_code());
+		*value = ft_itoa((int) get_exit_code());
 	}
 	else
 	{
 		ptr = get_env_val_ptr(key);
 		if (!ptr)
 		{
-			free(key);
-			*insertion = NULL;
+			*value = NULL;
 			return (NO_ERR);
 		}
-		value = ft_strdup(ptr);
+		*value = ft_strdup(ptr);
+		if (!value)
+		{
+			return (SYS_ERR);
+		}
 	}
+	return (NO_ERR);
+}
 
-	free(key);
-	if (!value)
+static t_error	get_insertion(char	**insertion, char *ref_start)
+{
+	char	*value;
+	char	*key;
+
+	if (get_var_key(&key, ref_start) != NO_ERR)
+	{
 		return (SYS_ERR);
+	}
+	if (get_var_value(&value, key) != NO_ERR)
+	{
+		free(key);
+		return (SYS_ERR);
+	}
+	free(key);
 	*insertion = value;
 	return (NO_ERR);
 }
@@ -157,7 +177,7 @@ t_error	expand_env_var(char **str_ptr, size_t *cur_pos)
 	{
 		return (SYN_ERR);
 	}
-	if (get_var_value(&insertion, &str[*cur_pos + brackets]) != NO_ERR)
+	if (get_insertion(&insertion, &str[*cur_pos + brackets]) != NO_ERR)
 	{
 		return (SYS_ERR);
 	}
