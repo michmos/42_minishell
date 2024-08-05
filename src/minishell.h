@@ -44,7 +44,7 @@ typedef enum e_error
 	ERR_EXEC,
 	ERR_FORK,
 	ERR_PRINT,
-	ERR_CWD;
+	ERR_CWD,
 	CHILD,
 	PARENT
 } t_error;
