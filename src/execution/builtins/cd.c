@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 12:04:52 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/01 15:48:57 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/03 15:48:08 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static t_error	set_curpath(char **curpath, char *arg, char *old_wd)
 	}
 	else if (!is_dir((*curpath)))
 	{
-		printf("cd: No such file or directory: %s\n", arg); // TODO: print to stderr
+		ft_printf_fd(STDERR_FILENO, "cd: %s: No such file or directory\n", arg);
 		sfree((void **) curpath);
 	}
 	return (error);
@@ -61,7 +61,7 @@ t_error	cd(char *argv[])
 
 	if (argv[1] && argv[2])
 	{
-		printf("bash: cd: too many arguments\n"); // TODO: print to stderr instead
+		ft_printf_fd(STDERR_FILENO, "cd: too many arguments\n");
 		return (NO_ERR);
 	}
 

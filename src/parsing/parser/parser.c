@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 11:33:33 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/22 13:07:18 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/05 12:00:39 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,26 +28,18 @@ static t_error	parse_pipe(t_list **rem_tokens)
 	return (NO_ERR);
 }
 
-// TODO: clear up this function
+// TODO: only do normconform on very end
 static t_error	parse_cmd(t_cmd **cmd, t_list **rem_tokens)
 {
 	t_error	error;
 	t_list	*arg_lst;
 	t_cmd	*new_cmd;
 
-	error = NO_ERR;
-
 	new_cmd = ft_calloc(1, sizeof(t_cmd));
 	if (!new_cmd)
 		return (SYS_ERR);
 
-	if (get_token_tag(*rem_tokens) == PIPE)
-	{
-		free(new_cmd);
-		printf("Syntax error");
-		return (SYN_ERR);
-	}
-
+	error = NO_ERR;
 	arg_lst = NULL;
 	while (!error && *rem_tokens && get_token_tag(*rem_tokens) != PIPE)
 	{
@@ -90,6 +82,11 @@ static t_error	extend_cmd_lst(t_list **cmd_lst, t_list **rem_tokens)
 	t_list	*new;
 
 	cmd = NULL;
+	if (get_token_tag(*rem_tokens) == PIPE)
+	{
+		printf("Syntax error");
+		return (SYN_ERR);
+	}
 	error = parse_cmd(&cmd, rem_tokens);
 	if (error)
 	{

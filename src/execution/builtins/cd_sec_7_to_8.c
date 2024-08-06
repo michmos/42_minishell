@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 16:12:45 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/01 17:40:37 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/03 15:48:30 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ static t_error	rmv_dot_dot_comps(char **curpath, char *og_path)
 			}
 			else
 			{
-				printf("bash: cd: %s: Not a directory\n", og_path); // TODO: write to stderr
+				ft_printf_fd(STDERR_FILENO, "cd: %s: No such file or directory\n", og_path);
 				ft_bzero(*curpath, ft_strlen(*curpath));
 				return (NO_ERR);
 			}
