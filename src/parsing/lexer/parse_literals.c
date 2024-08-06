@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 21:11:23 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/30 11:18:53 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 11:17:50 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,8 @@ t_error	parse_str_dq(char **lexeme, t_parse_str *cmd_line)
 
 	if (cur_char(cmd_line) != '\"')
 	{
-		free(*lexeme);
-		*lexeme = NULL;
-		printf("syntaxerror\n"); // TODO: display syntax error
+		sfree((void **) lexeme);
+		ft_printf_fd(STDERR_FILENO, "syntax error: missing closing double quotation mark\n");
 		return (SYN_ERR);
 	}
 	advance_char(cmd_line, 2);
@@ -67,9 +66,8 @@ t_error	parse_str_sq(char **lexeme, t_parse_str *cmd_line)
 
 	if (cur_char(cmd_line) != '\'')
 	{
-		free(*lexeme);
-		*lexeme = NULL;
-		printf("syntaxerror\n"); // TODO: display syntax error
+		sfree((void **) lexeme);
+		ft_printf_fd(STDERR_FILENO, "syntax error: missing closing single quotation mark\n");
 		return (SYN_ERR);
 	}
 	advance_char(cmd_line, 2);

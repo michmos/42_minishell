@@ -6,12 +6,13 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 17:46:04 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/05 11:10:15 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 11:31:30 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 #include <stddef.h>
+#include <unistd.h>
 
 static size_t	get_key_pos(char *ref_start)
 {
@@ -57,7 +58,7 @@ static t_error	has_syn_error(char *str)
 	size_t	i;
 	bool	bad_substition;
 
-	i = 0;
+	i = 2;
 	bad_substition = false;
 	while (str[i] && str[i] != '}')
 	{
@@ -67,12 +68,12 @@ static t_error	has_syn_error(char *str)
 	}
 	if (str[i] != '}')
 	{
-		printf("Syntax error: missing closing bracket");
+		ft_printf_fd(STDERR_FILENO, "syntax error: closing } is missing\n");
 		return (SYN_ERR);
 	}
 	else if (bad_substition)
 	{
-		printf ("Bad substition\n");
+		ft_printf_fd(STDERR_FILENO, "syntax error: %s: bad substition\n", str);
 		return (SYN_ERR);
 	}
 	return (NO_ERR);
@@ -159,7 +160,7 @@ static t_error	get_insertion(char	**insertion, char *ref_start)
 	return (NO_ERR);
 }
 
-t_error	expand_env_var(char **str_ptr, size_t *cur_pos)
+t_error	expand_env_var(char **str_ptr, size_t *dollar_pos)
 {
 	char	*str;
 	char	*insertion;
@@ -168,27 +169,27 @@ t_error	expand_env_var(char **str_ptr, size_t *cur_pos)
 	bool	brackets;
 
 	str = *str_ptr;
-	brackets = (str[*cur_pos + 1] == '{');
-	if (!brackets && !is_valid_key_char(str[*cur_pos + 1]))
+	brackets = (str[*dollar_pos + 1] == '{');
+	if (!brackets && !is_valid_key_char(str[*dollar_pos + 1]))
 	{
 		return (NO_ERR);
 	}
-	if (brackets && has_syn_error(&str[*cur_pos + 2]))
+	if (brackets && has_syn_error(&str[*dollar_pos]))
 	{
 		return (SYN_ERR);
 	}
-	if (get_insertion(&insertion, &str[*cur_pos + brackets]) != NO_ERR)
+	if (get_insertion(&insertion, &str[*dollar_pos + brackets]) != NO_ERR)
 	{
 		return (SYS_ERR);
 	}
-	end_pos = get_end_pos(str, *cur_pos, brackets);
-	new_str = get_new_str(str, *cur_pos, insertion, end_pos);
+	end_pos = get_end_pos(str, *dollar_pos, brackets);
+	new_str = get_new_str(str, *dollar_pos, insertion, end_pos);
 	if (!new_str)
 	{
 		free(insertion);
 		return (SYS_ERR);
 	}
-	*cur_pos = *cur_pos + ft_strlen(insertion) - 1;
+	*dollar_pos = *dollar_pos + ft_strlen(insertion) - 1;
 	free(insertion);
 	free(*str_ptr);
 	*str_ptr = new_str;

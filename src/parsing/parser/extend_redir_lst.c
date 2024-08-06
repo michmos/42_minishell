@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:47:10 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/05 13:35:45 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 11:21:22 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static t_error	parse_redir(t_redir **redir, t_list **rem_tokens)
 	// check next token
 	if (!*rem_tokens)
 	{
-		printf("Syntax error\n");
+		ft_printf_fd(STDERR_FILENO, "syntax error: missing redirection target\n");
 		return (SYN_ERR);
 	}
 	else if (get_token_tag(*rem_tokens)== WHITESPACE)
@@ -34,7 +34,7 @@ static t_error	parse_redir(t_redir **redir, t_list **rem_tokens)
 	// get filename
 	if (!*rem_tokens || get_token_tag(*rem_tokens)!= WORD)
 	{
-		printf("Syntax error\n");
+		ft_printf_fd(STDERR_FILENO, "syntax error: missing redirection target\n");
 		return (SYN_ERR);
 	}
 	token = pop_token(rem_tokens);

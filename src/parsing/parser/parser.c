@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 11:33:33 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/05 12:00:39 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 11:37:02 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ static t_error	parse_pipe(t_list **rem_tokens)
 {
 	if (get_token_tag(*rem_tokens) != PIPE)
 	{
-		printf("Syntax Error\n");
+		ft_printf_fd(STDERR_FILENO, "syntax error: unexpected token: %s\n", ((t_token *)((*rem_tokens)->as_ptr))->lexeme);
 		return (SYN_ERR);
 	}
 	consume_token(rem_tokens);
 	if (!*rem_tokens)
 	{
-		printf("Syntax Error\n");
+		ft_printf_fd(STDERR_FILENO, "syntax error: unexpected token: %s\n", "new line");
 		return (SYN_ERR);
 	}
 	return (NO_ERR);
@@ -84,7 +84,7 @@ static t_error	extend_cmd_lst(t_list **cmd_lst, t_list **rem_tokens)
 	cmd = NULL;
 	if (get_token_tag(*rem_tokens) == PIPE)
 	{
-		printf("Syntax error");
+		ft_printf_fd(STDERR_FILENO, "syntax error: unexpected token: %s\n", "pipe");;
 		return (SYN_ERR);
 	}
 	error = parse_cmd(&cmd, rem_tokens);
