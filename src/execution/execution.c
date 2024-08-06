@@ -27,7 +27,7 @@ int execution(t_list *head, t_info *info, char *line)
 		info->error = exec_one_builtin(head, line, info);
 	else
 	{
-		stat = cmd_pipeline(head, info);
+		stat = cmd_pipeline(head, info, line);
 		info->error = WEXITSTATUS(stat);
 	}
 	return (info->error);

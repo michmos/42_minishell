@@ -12,6 +12,13 @@
 
 #include "../minishell.h"
 
+static void print_msg(char *str)
+{
+	ft_putstr_fd("Wanted: ", 1);
+	ft_putstr_fd(str, 1);
+	ft_putstr_fd("\n", 1);
+}
+
 void get_hd_str(t_cmd_data *cmd, t_info *info)
 {
 	char *input;
@@ -23,11 +30,12 @@ void get_hd_str(t_cmd_data *cmd, t_info *info)
 	result = NULL;
 	while (i < cmd->hd_count)
 	{
+		signal(SIGINT, handle_sig);
 		input = readline("> ");
-		if (/*signal == 42*/ && exit_signal(str) == 1)
+		if (g_signal == 42 && exit_signal(str) == 1)
 			return;
-		if (!input && /*signal == 0*/)
-			exit; // print error to screen instead of exit
+		if (!input && g_signal == 0)
+			print_msg(cmd->hd_array[i++]);
 		else if (input)
 		{
 			if (ft_strncmp(input, cmd->hd_array[i], ft_strlen(input)) == 0)
@@ -70,8 +78,8 @@ void get_hd_fd(t_cmd_data *cmd, t_info *info)
 	int fd[2];
 
 	if (pipe(fd) == -1)
-		// TODO: Error message
-		write(fd[1], cmd->hd_str, ft_strlen(cmd->hd_str));
+		error(ERR_PIPE, info);
+	write(fd[1], cmd->hd_str, ft_strlen(cmd->hd_str));
 	close(fd[1]);
 	cmd->fd_array[cmd->last_input] = fd[0];
 }

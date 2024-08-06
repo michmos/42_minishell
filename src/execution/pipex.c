@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void child_process(t_list *head, t_info *info, int child_i)
+void child_process(t_list *head, t_info *info, int child_i, char *line)
 {
 	t_cmd_data *cmd;
 
@@ -26,7 +26,7 @@ void child_process(t_list *head, t_info *info, int child_i)
 	close_fd_array(cmd, info);
 	close_pipes(info);
 	if (cmd->builtin > 0)
-		execute_builtin(cmd);
+		execute_builtin(cmd, line, info);
 	cmd->cmd_path = find_command_path(cmd->pars_out->args[0], info->our_env);
 	check_dir(cmd, info);
 	check_cmd(cmd, info);
@@ -47,7 +47,7 @@ int parent_process(t_info *info)
 	return (status);
 }
 
-int cmd_pipeline(t_list *head, t_info *info)
+int cmd_pipeline(t_list *head, t_info *info, char *line)
 {
 	int i;
 	int status;
@@ -64,7 +64,8 @@ int cmd_pipeline(t_list *head, t_info *info)
 			wait_free_exit(head, EXIT_FAILURE);
 		else if (info->pid[i] == 0)
 		{
-			child_process(head, info, i);
+			signal(SIGQUIT, handle_sig);
+			child_process(head, info, i, line);
 			// free head and move to next node
 		}
 	}
