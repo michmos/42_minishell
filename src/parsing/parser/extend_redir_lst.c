@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:47:10 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/06 11:21:22 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 15:39:31 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ static t_error	parse_redir(t_redir **redir, t_list **rem_tokens)
 	*redir = ft_calloc(1, sizeof(t_redir));
 	if (!*redir)
 	{
+		perror("malloc");
 		return (SYS_ERR);
 	}
 	**redir = new_redir;
@@ -65,6 +66,7 @@ t_error	extend_redir_lst(t_list **head, t_list **rem_tokens)
 	if (!new)
 	{
 		free_redir(redir);
+		perror("malloc");
 		return (SYS_ERR);
 	}
 	ft_lstadd_back(head, new);

@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 16:12:45 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/03 15:48:30 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 15:55:45 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,10 @@ static t_error	cnvrt_to_canonical(char **curpath)
 
 	og_path = ft_strdup(*curpath);
 	if (!og_path)
+	{
+		perror("malloc");
 		return (SYS_ERR);
+	}
 
 	// section 8 c. part 1
 	smplfy_lead_slashes(*curpath);
@@ -220,6 +223,7 @@ static t_error	cnvrt_to_canonical(char **curpath)
 	free(og_path);
 	if (!result)
 	{
+		perror("malloc");
 		return (SYS_ERR);
 	}
 	*curpath = result;
@@ -237,6 +241,7 @@ static t_error	concatenate_to_pwd(char **curpath)
 	pwd = ft_strdup(shell->cwd);
 	if (!pwd)
 	{
+		perror("malloc");
 		return (SYS_ERR);
 	}
 	if (!ft_ends_on(pwd, '/'))
@@ -250,7 +255,10 @@ static t_error	concatenate_to_pwd(char **curpath)
 	tmp = ft_strjoin(pwd, *curpath);
 	free(pwd);
 	if (!tmp)
+	{
+		perror("malloc");
 		return (SYS_ERR);
+	}
 	free(*curpath);
 	*curpath = tmp;
 	return (NO_ERR);

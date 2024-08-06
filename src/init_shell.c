@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 14:44:58 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/26 14:49:12 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 15:41:35 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static void	assign_env_values(char **ptr, t_list *env_lst, const char *env_key)
 		*ptr = ft_strdup(((t_env_var *)tmp->as_ptr)->value);
 		if (!*ptr)
 		{
+			perror("malloc");
 			clean_exit(EXIT_FAILURE);
 		}
 	}
@@ -33,7 +34,10 @@ void	init_shell(t_shell **ptr, char **env)
 
 	shell = ft_calloc(1, sizeof(t_shell));
 	if (!shell)
+	{
+		perror("malloc");
 		exit(EXIT_FAILURE);
+	}
 	shell->env_lst = create_envlst(env);
 	if (!shell->env_lst)
 	{

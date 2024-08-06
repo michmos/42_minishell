@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 11:33:33 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/06 11:37:02 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 15:48:59 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,10 @@ static t_error	parse_cmd(t_cmd **cmd, t_list **rem_tokens)
 
 	new_cmd = ft_calloc(1, sizeof(t_cmd));
 	if (!new_cmd)
+	{
+		perror("malloc");
 		return (SYS_ERR);
+	}
 
 	error = NO_ERR;
 	arg_lst = NULL;
@@ -61,7 +64,10 @@ static t_error	parse_cmd(t_cmd **cmd, t_list **rem_tokens)
 	{
 		new_cmd->args = store_ptrs_in_arr(arg_lst);
 		if (!new_cmd->args)
+		{
+			perror("malloc");
 			error = SYS_ERR;
+		}
 	}
 	
 	if (error)
@@ -95,6 +101,7 @@ static t_error	extend_cmd_lst(t_list **cmd_lst, t_list **rem_tokens)
 	new = ft_lstnew(cmd);
 	if (!new)
 	{
+		perror("malloc");
 		free_cmd(cmd);
 		return (SYS_ERR);
 	}

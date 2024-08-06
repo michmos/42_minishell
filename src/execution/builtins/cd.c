@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 12:04:52 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/03 15:48:08 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 15:46:02 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,10 @@ static t_error	set_curpath(char **curpath, char *arg, char *old_wd)
 	{
 		*curpath = ft_strdup(old_wd);
 		if (!*curpath)
+		{
+			perror("malloc");
 			return (SYS_ERR);
+		}
 		return (NO_ERR);
 	}
 

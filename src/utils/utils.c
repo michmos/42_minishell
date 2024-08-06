@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 12:17:46 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/22 13:44:42 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 15:58:52 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ char	**store_ptrs_in_arr(t_list *lst)
 	size = ft_lstsize(lst);
 	array = malloc((size + 1) * sizeof(char *));
 	if (!array)
+	{
+		perror("malloc");
 		return (NULL);
+	}
 
 	i = 0;
 	while(i < size)

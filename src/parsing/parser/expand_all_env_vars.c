@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 13:22:17 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/22 13:05:28 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 15:39:31 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ static	t_error	cut_out_backslash(char **str_ptr, size_t pos)
 	new_str = ft_calloc((len + 1), sizeof(char));
 	if (!new_str)
 	{
+		perror("malloc");
 		return (SYS_ERR);
 	}
 	ft_memcpy(new_str, str, pos);

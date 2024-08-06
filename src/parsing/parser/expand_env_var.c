@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 17:46:04 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/06 11:31:30 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 15:36:59 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,10 @@ static char	*get_new_str(char *start, size_t start_len, char *insertion, size_t	
 	new_size = start_len + ft_strlen(insertion) + ft_strlen(end_ptr) + 1;
 	new_str = ft_calloc(new_size, sizeof(char));
 	if (!new_str)
+	{
+		perror("malloc");
 		return (NULL);
+	}
 	if (start_len)
 		ft_memcpy(new_str, start, start_len);
 	if (insertion)
@@ -108,7 +111,10 @@ static t_error	get_var_key(char **key, char *ref_start)
 	key_len = get_key_len(&ref_start[key_pos]);
 	*key = ft_substr(ref_start, key_pos, key_len);
 	if (!*key)
+	{
+		perror("malloc");
 		return (SYS_ERR);
+	}
 	return (NO_ERR);
 }
 
@@ -135,6 +141,7 @@ static t_error	get_var_value(char **value, char *key)
 		*value = ft_strdup(ptr);
 		if (!value)
 		{
+			perror("malloc");
 			return (SYS_ERR);
 		}
 	}

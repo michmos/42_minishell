@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 21:11:23 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/06 11:17:50 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 15:35:13 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ static char	*get_substr_until(t_parse_str *cmd_line, const char *seperators)
 	vec.size = VEC_START_SZ;
 	vec.buf = ft_calloc(sizeof(char), vec.size);
 	if (!vec.buf)
+	{
+		perror("malloc");
 		return(NULL);
+	}
 
 	while(cur_char(cmd_line) && !ft_strchr(seperators, cur_char(cmd_line)))
 	{
@@ -34,6 +37,7 @@ static char	*get_substr_until(t_parse_str *cmd_line, const char *seperators)
 	substr = ft_realloc(vec.buf, ft_strlen(vec.buf) + 1, vec.size);
 	if (!substr)
 	{
+		perror("malloc");
 		free(vec.buf);
 		return (NULL);
 	}

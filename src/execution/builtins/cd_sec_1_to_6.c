@@ -6,11 +6,12 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 12:21:40 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/03 15:50:17 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 15:54:17 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+#include <stdio.h>
 
 static t_error	try_curdir(char **finding, char *dir)
 {
@@ -19,8 +20,10 @@ static t_error	try_curdir(char **finding, char *dir)
 	*finding = NULL;
 	tmp = ft_strjoin("./", dir);
 	if (!tmp)
+	{
+		perror("malloc");
 		return (SYS_ERR);
-
+	}
 	if (is_dir(tmp))
 	{
 		*finding = tmp;
@@ -41,13 +44,21 @@ static char	*get_candidate(char *pathname, char *dir)
 	{
 		tmp = ft_strjoin(pathname, "/");
 		if (!tmp)
+		{
+			perror("malloc");
 			return (NULL);
+		}
 		candidate = ft_strjoin(tmp, dir);
 		free(tmp);
 	}
 	else
 	{
 		candidate = ft_strjoin(pathname, dir);
+	}
+
+	if (!candidate)
+	{
+		perror("malloc");
 	}
 	return (candidate);
 }
@@ -90,7 +101,10 @@ static t_error	try_cdpaths(char **finding, char *dir)
 
 	pathnames = ft_split(cd_path_ptr, ':');
 	if (!pathnames || !*pathnames)
+	{
+		perror("malloc");
 		return (SYS_ERR);
+	}
 
 	i = 0;
 	while (!error && !*finding && pathnames[i])
@@ -111,7 +125,10 @@ static t_error set_dir(char **directory, char *arg)
 	{
 		*directory = ft_strdup(arg);
 		if (!*directory)
+		{
+			perror("malloc");
 			return (SYS_ERR);
+		}
 	}
 	else
 	{
@@ -125,7 +142,10 @@ static t_error set_dir(char **directory, char *arg)
 		{
 			*directory = ft_strdup(home_ptr);
 			if (!*directory)
+			{
+				perror("malloc");
 				return (SYS_ERR);
+			}
 		}
 	}
 	return (NO_ERR);

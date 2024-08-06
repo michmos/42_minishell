@@ -26,6 +26,7 @@ t_list	*add_to_envlst(t_list *head, char *argv)
 	new = ft_lstnew(env_var);
 	if (!new)
 	{
+		perror("malloc");
 		ft_lstclear(&head, free_env_var);
 		return (NULL);
 	}
@@ -49,6 +50,7 @@ t_list	*add_to_ordered_envlst(t_list *head, char *argv)
 	new = ft_lstnew(env_var);
 	if (!new)
 	{
+		perror("malloc");
 		ft_lstclear(&head, free_env_var);
 		return (NULL);
 	}

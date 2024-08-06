@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 10:16:59 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/15 21:14:15 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 15:33:07 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ static t_error	extend_vec(t_vec *vector)
 	temp = ft_realloc(vector->buf, vector->size * 2, vector->size);
 	if (!temp)
 	{
+		perror("malloc");
 		return (SYS_ERR);
 	}
 	ft_bzero(&temp[vector->size], vector->size);

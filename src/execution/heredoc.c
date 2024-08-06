@@ -66,7 +66,7 @@ void init_heredoc(t_cmd_data *cmd, t_info *info)
 	{
 		redir_lst = get_redir(temp->redir_lst);
 		if (redir_lst->type == I_RD_HD)
-			cmd->hd_array[j++] = ft_strdup(redir_lst->filename); // might need to add the NULL terminator
+			cmd->hd_array[j++] = ft_strdup(redir_lst->filename); // might need to add the NULL terminator // TODO: protection missing
 		temp->redir_lst->next;
 		i++;
 	}

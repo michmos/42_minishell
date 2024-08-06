@@ -29,6 +29,7 @@ t_list	*unset_envlst(t_list *head, char *argv)
 	new = ft_lstnew(env_var);
 	if (!new)
 	{
+		perror("malloc");
 		ft_lstclear(&head, free_env_var);
 		return (NULL);
 	}

@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 16:19:25 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/31 16:21:38 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 15:54:49 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ t_error	add_slash(char **str)
 	}
 	result = ft_strjoin(*str, "/");
 	if (!result)
+	{
+		perror("malloc");
 		return (SYS_ERR);
+	}
 	free(*str);
 	*str = result;
 	return (NO_ERR);

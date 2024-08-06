@@ -19,6 +19,7 @@ char *get_key(t_env_var *env_var, t_parse_env *env_parse)
 	env_var->key = malloc((sizeof(char) * env_parse->cursor_pos) + 1);
 	if (env_var->key == NULL)
 	{
+		perror("malloc");
 		free(env_var);
 		return (NULL);
 	}
@@ -40,6 +41,7 @@ char *get_value(t_env_var *env_var, t_parse_env *env_parse)
 	env_var->value = malloc((sizeof(char) * i) + 2);
 	if (env_var->value == NULL)
 	{
+		perror("malloc");
 		free(env_var);
 		return (NULL);
 	}
@@ -58,6 +60,11 @@ t_env_var *get_env_var(char *env)
 	env_parse.buffer_len = ft_strlen(env);
 
 	env_var = malloc(sizeof(t_env_var));
+	if (!env_var)
+	{
+		perror("malloc");
+		return (NULL);
+	}
 	env_var->key = get_key(env_var, &env_parse);
 	env_var->equal = (env[env_parse.cursor_pos] == '=');
 	env_parse.cursor_pos++;
@@ -96,6 +103,7 @@ t_list *create_envlst(char **env)
 		new = ft_lstnew(env_var);
 		if (!new)
 		{
+			perror("malloc");
 			ft_lstclear(&head, free_env_var);
 			return (NULL);
 		}

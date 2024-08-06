@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:47:41 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/26 12:12:48 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 15:37:57 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ char	*get_arg(t_list **rem_tokens)
 		free(token.lexeme);
 		free(arg);
 		if (!temp)
+		{
+			perror("malloc");
 			return (NULL);
+		}
 		arg = temp;
 	}
 	return (arg);
@@ -56,6 +59,7 @@ t_error	extend_arg_lst(t_list **args_lst, t_list **rem_tokens)
 	if (!new)
 	{
 		free(arg);
+		perror("malloc");
 		return (SYS_ERR);
 	}
 	ft_lstadd_back(args_lst, new);

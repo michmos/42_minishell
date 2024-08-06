@@ -45,6 +45,7 @@ t_list	*create_ordered_envlst(t_list *env)
 		new = ft_lstnew(env->as_ptr);
 		if (!new)
 		{
+			perror("malloc");
 			ft_lstclear(&head, free_env_var);
 			return (NULL);
 		}

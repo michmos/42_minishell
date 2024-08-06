@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:56:17 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/23 16:39:05 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/06 15:43:11 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ static t_error	update_shell_struct(t_shell *shell, char *new_path)
 	shell->old_wd = shell->cwd;
 	shell->cwd = ft_strdup(new_path);
 	if (!shell->cwd)
+	{
+		perror("malloc");
 		return (SYS_ERR);
+	}
 	return (NO_ERR);
 }
 
@@ -33,7 +36,10 @@ static t_error	update_env_lst(t_list *env_lst, char *cwd_ptr, char *old_wd_ptr)
 		free(((t_env_var *) pwd_node->as_ptr)->value);
 		((t_env_var *) pwd_node->as_ptr)->value = ft_strdup(cwd_ptr);
 		if (!(((t_env_var *) pwd_node->as_ptr)->value))
+		{
+			perror("malloc");
 			return (SYS_ERR);
+		}
 	}
 	oldpwd_node = ft_lstfind(env_lst, has_key, "OLDPWD");
 	if (oldpwd_node)
@@ -41,7 +47,10 @@ static t_error	update_env_lst(t_list *env_lst, char *cwd_ptr, char *old_wd_ptr)
 		free(((t_env_var *) oldpwd_node->as_ptr)->value);
 		((t_env_var *) oldpwd_node->as_ptr)->value = ft_strdup(old_wd_ptr);
 		if (!(((t_env_var *) oldpwd_node->as_ptr)->value))
+		{
+			perror("malloc");
 			return (SYS_ERR);
+		}
 	}
 	return (NO_ERR);
 }
