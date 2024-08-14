@@ -6,13 +6,13 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/16 10:00:03 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/05/21 13:31:05 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/14 09:11:34 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-char *get_key(t_env_var *env_var, t_parse_env *env_parse)
+char	*get_key(t_env_var *env_var, t_parse_env *env_parse)
 {
 	while (env_parse->buffer[env_parse->cursor_pos] != '=')
 		env_parse->cursor_pos++;
@@ -27,10 +27,10 @@ char *get_key(t_env_var *env_var, t_parse_env *env_parse)
 	return (env_var->key);
 }
 
-char *get_value(t_env_var *env_var, t_parse_env *env_parse)
+char	*get_value(t_env_var *env_var, t_parse_env *env_parse)
 {
-	int i;
-	int pos;
+	int	i;
+	int	pos;
 
 	i = 0;
 	while (env_parse->buffer[env_parse->cursor_pos] != '\0')
@@ -50,10 +50,10 @@ char *get_value(t_env_var *env_var, t_parse_env *env_parse)
 	return (env_var->value);
 }
 
-t_env_var *get_env_var(char *env)
+t_env_var	*get_env_var(char *env)
 {
-	t_env_var *env_var;
-	t_parse_env env_parse;
+	t_env_var	*env_var;
+	t_parse_env	env_parse;
 
 	env_parse.buffer = env;
 	env_parse.cursor_pos = 0;

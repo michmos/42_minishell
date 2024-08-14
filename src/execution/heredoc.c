@@ -6,25 +6,25 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/17 11:16:48 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/07/19 11:59:29 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/14 09:23:19 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void print_msg(char *str)
+static void	print_msg(char *str)
 {
 	ft_putstr_fd("Wanted: ", 1);
 	ft_putstr_fd(str, 1);
 	ft_putstr_fd("\n", 1);
 }
 
-void get_hd_str(t_cmd_data *cmd, t_info *info)
+void	get_hd_str(t_cmd_data *cmd, t_info *info)
 {
-	char *input;
-	char *result;
-	char *str;
-	int i;
+	char	*input;
+	char	*result;
+	char	*str;
+	int		i;
 
 	i = 0;
 	result = NULL;
@@ -33,7 +33,7 @@ void get_hd_str(t_cmd_data *cmd, t_info *info)
 		signal(SIGINT, handle_sig);
 		input = readline("> ");
 		if (g_signal == 42 && exit_signal(str) == 1)
-			return;
+			return ;
 		if (!input && g_signal == 0)
 			print_msg(cmd->hd_array[i++]);
 		else if (input)
@@ -49,18 +49,18 @@ void get_hd_str(t_cmd_data *cmd, t_info *info)
 	cmd->hd_str = str;
 }
 
-void init_heredoc(t_cmd_data *cmd, t_info *info)
+void	init_heredoc(t_cmd_data *cmd, t_info *info)
 {
-	int i;
-	int j;
-	t_cmd *temp;
-	t_redir *redir_lst;
+	int		i;
+	int		j;
+	t_cmd	*temp;
+	t_redir	*redir_lst;
 
 	i = 0;
 	j = 0;
 	cmd->hd_array = malloc((cmd->hd_count + 1) * sizeof(char *));
 	if (cmd->hd_array == NULL)
-		return;
+		return ;
 	temp = cmd->pars_out;
 	while (i < cmd->redir_count)
 	{
@@ -73,9 +73,9 @@ void init_heredoc(t_cmd_data *cmd, t_info *info)
 	get_hd_str(cmd, info);
 }
 
-void get_hd_fd(t_cmd_data *cmd, t_info *info)
+void	get_hd_fd(t_cmd_data *cmd, t_info *info)
 {
-	int fd[2];
+	int	fd[2];
 
 	if (pipe(fd) == -1)
 		error(ERR_PIPE, info);
@@ -84,7 +84,7 @@ void get_hd_fd(t_cmd_data *cmd, t_info *info)
 	cmd->fd_array[cmd->last_input] = fd[0];
 }
 
-void heredoc(t_cmd_data *cmd, t_info *info, int i)
+void	heredoc(t_cmd_data *cmd, t_info *info, int i)
 {
 	if (cmd->last_input == i)
 		get_hd_fd(cmd, info);

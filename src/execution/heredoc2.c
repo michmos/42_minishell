@@ -6,21 +6,21 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/19 11:10:16 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/07/19 11:52:01 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/14 09:23:52 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char *hd_strjoin(char *s1, char *s2, t_info *info)
+char	*hd_strjoin(char *s1, char *s2, t_info *info)
 {
-	char *buf;
-	int len;
+	char	*buf;
+	int		len;
 
 	len = ft_strlen(s1) + ft_strlen(s2) + 2;
 	buf = malloc(sizeof(char) * len);
 	if (!buf)
-		exit(); // call error function
+		exit(1); // call error function
 	if (!s1)
 		ft_strlcpy(buf, s2, len);
 	else

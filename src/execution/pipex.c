@@ -6,15 +6,15 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 09:50:20 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/07/17 14:05:35 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/14 09:27:31 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void child_process(t_list *head, t_info *info, int child_i, char *line)
+void	child_process(t_list *head, t_info *info, int child_i, char *line)
 {
-	t_cmd_data *cmd;
+	t_cmd_data	*cmd;
 
 	close(info->std_in);
 	close(info->std_out);
@@ -32,10 +32,10 @@ void child_process(t_list *head, t_info *info, int child_i, char *line)
 	check_cmd(cmd, info);
 }
 
-int parent_process(t_info *info)
+int	parent_process(t_info *info)
 {
-	int i;
-	int status;
+	int	i;
+	int	status;
 
 	close_pipes(info);
 	i = 0;
@@ -47,10 +47,10 @@ int parent_process(t_info *info)
 	return (status);
 }
 
-int cmd_pipeline(t_list *head, t_info *info, char *line)
+int	cmd_pipeline(t_list *head, t_info *info, char *line)
 {
-	int i;
-	int status;
+	int	i;
+	int	status;
 
 	i = -1;
 	while (++i < info->num_cmd - 1)
@@ -69,6 +69,6 @@ int cmd_pipeline(t_list *head, t_info *info, char *line)
 			// free head and move to next node
 		}
 	}
-	status = parent_process(info); // waits for all child processes to finish
-	return (status);			   // could be used as error code message
+	status = parent_process(info);
+	return (status);
 }

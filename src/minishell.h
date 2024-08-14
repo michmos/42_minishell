@@ -238,10 +238,10 @@ t_error cd(char *argv[]);
 void echo(char *argv[]);
 
 // env.c -------------------------------------------------------------------- //
-// char *get_key(t_env_var *env_var, t_parse_env *env_parse);
-// char *get_value(t_env_var *env_var, t_parse_env *env_parse);
-// t_env_var *get_env_var(char *env);
-// t_list *create_envlst(char **env);
+char *get_key(t_env_var *env_var, t_parse_env *env_parse);
+char *get_value(t_env_var *env_var, t_parse_env *env_parse);
+t_env_var *get_env_var(char *env);
+t_list *create_envlst(char **env);
 void free_env_var(void *node);
 
 // exit.c -------------------------------------------------------------------- //

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   cd_sec_1_to_6.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/23 12:21:40 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/06 15:54:17 by mmoser           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   cd_sec_1_to_6.c                                    :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/07/23 12:21:40 by mmoser        #+#    #+#                 */
+/*   Updated: 2024/08/14 09:10:48 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 static t_error	try_curdir(char **finding, char *dir)
 {
-	char *tmp;
+	char	*tmp;
 
 	*finding = NULL;
 	tmp = ft_strjoin("./", dir);

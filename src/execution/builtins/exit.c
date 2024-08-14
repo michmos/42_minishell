@@ -6,13 +6,13 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/30 11:23:41 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/05/31 10:41:27 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/14 09:18:44 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void exit_err(char *str, char *line, t_info *info)
+void	exit_err(char *str, char *line, t_info *info)
 {
 	print_num_arg_err(str);
 	close(info->std_in);
@@ -21,16 +21,16 @@ void exit_err(char *str, char *line, t_info *info)
 	exit(255);
 }
 
-void print_num_arg_err(char *str)
+void	print_num_arg_err(char *str)
 {
 	ft_putstr_fd("exit\nMinishell: exit: ", 2);
 	ft_putstr_fd(str, 2);
 	ft_putstr_fd(": numeric argument required\n", 2); // looks like it exits bash after this, might be because i'm on os now
 }
 
-int str_is_num(char *str)
+int	str_is_num(char *str)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	if (!ft_isdigit(str[0]) && str[0] != '-' && str[0] != '+')
@@ -44,11 +44,11 @@ int str_is_num(char *str)
 	return (1);
 }
 
-long long exit_value(char *str, char *line, t_info *info)
+long long	exit_value(char *str, char *line, t_info *info)
 {
-	unsigned long long res;
-	int sign;
-	int i;
+	unsigned long long	res;
+	int					sign;
+	int					i;
 
 	res = 0;
 	sign = 1;
@@ -71,9 +71,9 @@ long long exit_value(char *str, char *line, t_info *info)
 	return (res * sign);
 }
 
-int execute_exit(t_cmd *cmd, char *line, t_info *info)
+int	execute_exit(t_cmd *cmd, char *line, t_info *info)
 {
-	int i;
+	int	i;
 
 	if (!cmd->args[1])
 	{
@@ -96,5 +96,5 @@ int execute_exit(t_cmd *cmd, char *line, t_info *info)
 		ft_putstr_fd("exit\n", 1);
 	}
 	return (close(info->std_in), close(info->std_out),
-			free_info(info), exit(i), 0);
+		free_info(info), exit(i), 0);
 }
