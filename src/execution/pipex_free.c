@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/28 11:11:50 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/06/28 11:56:37 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/15 11:33:09 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,34 @@ static void	free_redir_lst(void *node)
 
 	redir_lst = (t_redir *)node;
 	free(redir_lst->filename);
-	free(redir_lst->type);
 	free(redir_lst);
 }
 
-static void	free_cmd_lst(void *node)
+void	free_cmd_lst(void *node)
 {
-	t_cmd	*cmd;
+	t_cmd_data	*cmd;
 
-	cmd = (t_cmd *) node;
-	free_ar2(cmd->args);
-	ft_lstclear(&cmd->redir_lst, free_redir_lst);
+	cmd = (t_cmd_data *) node;
+	free_ar2((void **) cmd->pars_out->args);
+	ft_lstclear(&cmd->pars_out->redir_lst, free_redir_lst);
+	if (cmd->path)
+		free(cmd->path);
+	if (cmd->hd_array)
+		free(cmd->hd_str);
+	if (cmd->cmd_path)
+		free(cmd->cmd_path);
 	free(cmd);
 }
+
+// static void	free_cmd_lst(void *node)
+// {
+// 	t_cmd	*cmd;
+
+// 	cmd = (t_cmd *) node;
+// 	free_ar2((void **) cmd->args);
+// 	ft_lstclear(&cmd->redir_lst, free_redir_lst);
+// 	free(cmd);
+// }
 
 void	wait_free_exit(t_list *head, int exit_status)
 {

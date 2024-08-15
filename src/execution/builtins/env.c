@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/16 10:00:03 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/14 09:11:34 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/14 11:27:54 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,9 @@ t_env_var	*get_env_var(char *env)
 	return (env_var);
 }
 
-void free_env_var(void *node)
+void	free_env_var(void *node)
 {
-	t_env_var *env_var;
+	t_env_var	*env_var;
 
 	env_var = (t_env_var *)node;
 	free(env_var->key);
@@ -83,16 +83,16 @@ void free_env_var(void *node)
 	free(env_var);
 }
 
-t_list *create_envlst(char **env)
+t_list	*create_envlst(char **env)
 {
-	t_env_var *env_var;
-	t_list *head;
-	t_list *new;
-	int i;
+	t_env_var	*env_var;
+	t_list		*head;
+	t_list		*new;
+	int			i;
 
-	i = 0;
+	i = -1;
 	head = NULL;
-	while (env[i])
+	while (env[++i])
 	{
 		env_var = get_env_var(env[i]);
 		if (!env_var)
@@ -108,19 +108,9 @@ t_list *create_envlst(char **env)
 			return (NULL);
 		}
 		ft_lstadd_back(&head, new);
-		i++;
 	}
 	return (head);
 }
-
-/*
-	if you give me argv[2] i can create a function and send the value to get_env_var that returns a node and
-	then just add that node to the back
-
-	to make sure it's possible to add it in alphabetical order after I created the node I can move through the
-	linked list and add it to the back of it. and before priting env I can check if there is an equal sign that
-	should or shouldn't be there, and same with export
-*/
 
 /*
 	before every execve call i can go and look at the env linked list created by us, and then put everything

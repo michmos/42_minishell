@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/17 11:16:48 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/14 09:23:19 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/15 09:37:52 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,16 @@ void	get_hd_str(t_cmd_data *cmd, t_info *info)
 	char	*result;
 	char	*str;
 	int		i;
+	int		g_signal;
 
 	i = 0;
+	g_signal = 0;
 	result = NULL;
 	while (i < cmd->hd_count)
 	{
-		signal(SIGINT, handle_sig);
+		signal(SIGINT, sigint_handle);
 		input = readline("> ");
-		if (g_signal == 42 && exit_signal(str) == 1)
+		if (g_signal == 42 /*&& exit_signal(str) == 1*/)
 			return ;
 		if (!input && g_signal == 0)
 			print_msg(cmd->hd_array[i++]);
@@ -67,7 +69,7 @@ void	init_heredoc(t_cmd_data *cmd, t_info *info)
 		redir_lst = get_redir(temp->redir_lst);
 		if (redir_lst->type == I_RD_HD)
 			cmd->hd_array[j++] = ft_strdup(redir_lst->filename); // might need to add the NULL terminator // TODO: protection missing
-		temp->redir_lst->next;
+		temp->redir_lst = temp->redir_lst->next; // is it actually redir_lst or i made a mistake?
 		i++;
 	}
 	get_hd_str(cmd, info);

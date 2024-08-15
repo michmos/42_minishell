@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/19 11:10:16 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/14 09:23:52 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/14 15:57:27 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ char	*hd_strjoin(char *s1, char *s2, t_info *info)
 	char	*buf;
 	int		len;
 
+	(void)info; // remove after error function is implemented
 	len = ft_strlen(s1) + ft_strlen(s2) + 2;
 	buf = malloc(sizeof(char) * len);
 	if (!buf)

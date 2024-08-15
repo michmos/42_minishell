@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 09:50:20 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/14 09:27:31 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/15 11:04:32 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ int	cmd_pipeline(t_list *head, t_info *info, char *line)
 			wait_free_exit(head, EXIT_FAILURE);
 		else if (info->pid[i] == 0)
 		{
-			signal(SIGQUIT, handle_sig);
+			signal(SIGQUIT, sigquit_handle);
 			child_process(head, info, i, line);
-			// free head and move to next node
+			// free head and move to next node, good representation is in lstclear in while loop
 		}
 	}
 	status = parent_process(info);

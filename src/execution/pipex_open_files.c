@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/11 09:48:26 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/14 09:26:40 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/15 09:27:09 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	open_input_output(t_cmd_data *cmd, t_info *info, int i, int proc)
 int	open_one_file(t_cmd_data *cmd, int process, t_info *info, int i)
 {
 	int		status;
-	t_tag	*type;
+	t_tag	type;
 
 	status = 0;
 	type = ((t_redir *)(cmd->pars_out->redir_lst))->type;
@@ -65,6 +65,7 @@ int	open_files(t_cmd_data *cmd, int process, t_info *info)
 	int			status;
 	t_cmd_data	*temp;
 
+	temp = cmd;
 	cmd->redir_count = ft_lstsize(temp->pars_out->redir_lst);
 	if (cmd->redir_count == 0)
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/30 11:23:41 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/14 09:18:44 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/14 15:24:15 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	exit_err(char *str, char *line, t_info *info)
 {
+	(void)line;
 	print_num_arg_err(str);
 	close(info->std_in);
 	close(info->std_out);
@@ -66,33 +67,34 @@ long long	exit_value(char *str, char *line, t_info *info)
 		res = (res * 10) + (str[i] - 48);
 		i++;
 	}
-	if ((sign == 1 && res > LLONG_MAX) || (sign == -1 && res - 1 < LLONG_MIN))
+	if ((sign == 1 && res > LLONG_MAX) || (sign == -1 /*&& res - 1 < LLONG_MIN*/))
 		exit_err(str, line, info);
 	return (res * sign);
 }
 
-int	execute_exit(t_cmd *cmd, char *line, t_info *info)
+int	execute_exit(t_cmd_data *cmd, char *line, t_info *info)
 {
 	int	i;
 
-	if (!cmd->args[1])
+	(void)line;
+	if (!cmd->pars_out->args[1])
 	{
 		i = 0;
 		ft_putstr_fd("exit\n", 1);
 	}
-	else if (!str_is_num(cmd->args[1]))
+	else if (!str_is_num(cmd->pars_out->args[1]))
 	{
 		i = 255;
-		print_num_arg_err(cmd->args[1]); // looks like it exits bash after this, might be because i'm on os now
+		print_num_arg_err(cmd->pars_out->args[1]); // looks like it exits bash after this, might be because i'm on os now
 	}
-	else if (cmd->args[2])
+	else if (cmd->pars_out->args[2])
 	{
 		i = 1;
 		ft_putstr_fd("exit\nMinishell: exit: too many arguments\n", 2); // doesn't exit bash
 	}
 	else
 	{
-		i = exit_value(cmd->args[1], line, info);
+		i = exit_value(cmd->pars_out->args[1], line, info);
 		ft_putstr_fd("exit\n", 1);
 	}
 	return (close(info->std_in), close(info->std_out),

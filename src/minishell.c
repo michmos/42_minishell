@@ -6,57 +6,59 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/17 14:19:35 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/07/17 14:21:01 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/15 11:36:28 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	init_info(t_info *info, char **env, char **line, int first)
+static void	process_cmd_line(char *cmd_line, t_info *info)
 {
-	if (first)
+	t_error	error;
+	t_list	*cmd_lst;
+
+	cmd_lst = NULL;
+	add_history(cmd_line);
+	error = parsing(&cmd_lst, cmd_line);
+	if (error == SYS_ERR)
 	{
-		info->cur_dir = getcwd(NULL, 0);
-		info->env_lst = create_envlst(env);
-		info->std_in = dup(STDIN_FILENO);
-		info->std_out = dup(STDOUT_FILENO);
-		*line = NULL;
+		clean_exit(EXIT_FAILURE);
 	}
-	info->prev_error = info->error;
-	info->error = 0;
-	info->num_cmd = 0;
+	else if (error == SYN_ERR)
+	{
+		ft_lstclear(&cmd_lst, free_cmd);
+		return ;
+	}
+	error = execution(cmd_lst, info, cmd_line);
+	free(cmd_line);
+	ft_lstclear(&cmd_lst, free_cmd);
+	if (error)
+	{
+		clean_exit(EXIT_FAILURE);
+	}
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	t_info	info;
-	t_list	*head;
-	t_list	*temp;
-	char	*line;
+	t_info	*info;
+	char	*cmd_line;
+	t_error	error;
 
-	temp = head;
-	info.num_cmd = ft_lstsize(temp); // maybe these 2 lines need to go in while loop?
-	init_info(&info, &env, &line, 1); // first time send 1, to fill the necessary info
+	(void)error;
+	(void)argv;
+	(void)argc;
+	init_info(&info, env);
 	while (1)
 	{
-		dup2(info.std_in, STDIN_FILENO);
-		dup2(info.std_out, STDOUT_FILENO);
-		// deal with signals
-		init_info(&info, env, &line, 0);
-		// readline and parse it???
-		if (line)
-			add_history(line);
-		finalize_cmd(info);
-		pipex(head, &info, line);
-		free_info(&info, line, 0);
+		cmd_line = readline("minishell> ");
+		if (!cmd_line)
+			break ;
+		else if (!*cmd_line) // i don't understand this line
+		{
+			free(cmd_line);
+			continue ;
+		}
+		process_cmd_line(cmd_line, info);
 	}
+	clean_exit(info->error);
 }
-
-/*
-	put env in to the info struct in the env_lst struct
-	and make a copy of it in the 2d array? cause it will be easier
-	to access it for execve
-
-	we can do that in the finalize_cmd function, maybe then I should
-	rename it to finalize_info?
-*/

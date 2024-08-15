@@ -1,6 +1,6 @@
 
 #ifndef MINISHELL_H
-#define MINISHELL_H
+# define MINISHELL_H
 
 // # include "../external_libs/42_libs/ft_libs.h"
 // # include "readline/readline.h"
@@ -8,23 +8,23 @@
 // # include <stdio.h>
 // # include <sys/stat.h>
 
-#define SHELLNAME "minishell"
-#include "../external_libs/42_libs/ft_libs.h"
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <string.h>
-#include <errno.h>
-#include <signal.h>
-#include <stdbool.h>
-#include <sys/wait.h>
-#include <fcntl.h>
-// #include <linux/limits.h>
-#include <sys/stat.h>
+# define SHELLNAME "minishell"
+# include "../external_libs/42_libs/ft_libs.h"
+# include <stdio.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <string.h>
+# include <errno.h>
+# include <signal.h>
+# include <stdbool.h>
+# include <sys/wait.h>
+# include <fcntl.h>
+# include <linux/limits.h>
+# include <sys/stat.h>
 
-#define ERROR -1
+# define ERROR -1
 
-int g_signal;
+extern int g_signal;
 
 typedef enum e_error
 {
@@ -190,6 +190,7 @@ typedef struct s_cmd_data
 	char *cmd_path;
 
 } t_cmd_data;
+// why do i have path and cmd_path, what is the difference and where do i use it???
 
 typedef struct s_info
 {
@@ -213,7 +214,7 @@ t_list *add_to_envlst(t_list *head, char *argv);
 
 // builtins.c --------------------------------------------------------------- //
 void print_envlst(t_list *head);
-int check_builtins(t_list *head);
+int check_builtins(t_list *head, t_cmd *cmd);
 int execute_builtin(t_cmd_data *cmd, char *line, t_info *info);
 int exec_one_builtin(t_list *head, char *line, t_info *info);
 
@@ -249,7 +250,7 @@ void exit_err(char *str, char *line, t_info *info);
 void print_num_arg_err(char *str);
 int str_is_num(char *str);
 long long exit_value(char *str, char *line, t_info *info);
-int execute_exit(t_cmd *cmd, char *line, t_info *info);
+int execute_exit(t_cmd_data *cmd, char *line, t_info *info);
 
 // ordered_env.c ------------------------------------------------------------ //
 t_list *create_ordered_envlst(t_list *env);
@@ -282,9 +283,13 @@ t_error set_pwd(char *new_path);
 
 // ----------------------- EXECUTION/execution/ ---------------------------//
 
+// convert_tlist_2d.c ----------------------------------------------------//
+char	**converter(t_list *head);
+
 // error.c ------------------------------------------------------------//
+void	free_info(t_info *info);
 void error(int error, t_info *info);
-int error_open(t_cmd *cmd, int process, t_info *info);
+int error_open(t_cmd_data *cmd, int process, t_info *info);
 
 // execution.c ------------------------------------------------------------//
 int execution(t_list *head, t_info *info, char *line);
@@ -318,13 +323,13 @@ t_cmd_data *get_cmd(t_list *lst);
 t_redir *get_redir(t_list *lst);
 void err_exit(char *str);
 void close_pipes(t_info *info);
-void close_fd_array(t_cmd *cmd, t_info *info);
+void close_fd_array(t_cmd_data *cmd, t_info *info);
 
 // pipex_open_files.c -----------------------------------------------------//
-int open_append(t_cmd *cmd, t_info *info, int i, int proc);
-int open_input_output(t_cmd *cmd, t_info *info, int i, int proc);
-int open_one_file(t_cmd *cmd, int process, t_info *info, int i);
-int open_files(t_cmd *cmd, int process, t_info *info);
+int open_append(t_cmd_data *cmd, t_info *info, int i, int proc);
+int open_input_output(t_cmd_data *cmd, t_info *info, int i, int proc);
+int open_one_file(t_cmd_data *cmd, int process, t_info *info, int i);
+int open_files(t_cmd_data *cmd, int process, t_info *info);
 
 // pipex_paths.c ----------------------------------------------------------//
 char *find_command_path(char *command, char **env);
@@ -333,7 +338,7 @@ char *get_env_path(char **env);
 
 // pipex_pipe.c ----------------------------------------------------------------//
 void dup2_copy(int old_fd, int new_fd, t_info *info);
-void pipe_cmd(t_cmd *cmd, t_info *info, int i);
+void pipe_cmd(t_cmd_data *cmd, t_info *info, int i);
 
 // pipex.c ----------------------------------------------------------------//
 int cmd_pipeline(t_list *head, t_info *info, char *line);
@@ -347,6 +352,10 @@ void check_last_in_out(t_cmd_data *cmd);
 void check_type(t_cmd_data *cmd, t_tag type, int i);
 // signals.c -----------------------------------------------------------//
 void handle_sig(int signal);
+void	signal_ctrl_d(t_shell *shell, char **line);
+void	sigint_handle(int signal);
+void	sigquit_handle(int signal);
+void	init_signals(void);
 
 // -------------------------------------------------------------------------- //
 // ----------------------------- UTILS/ ------------------------------------- //
@@ -367,4 +376,15 @@ int get_exit_code(void);
 void set_exit_code(int code);
 // cleanup.c ----------------------------------------------------------------- //
 void clean_exit(int exit_code);
+
+/*for testing puroses my own struct init and etc...*/
+// init_info.c -------- //
+void	init_info(t_info **ptr, char **env);
+
+// info_struct.c -------- //
+t_info	*get_info_struct(void);
+void	set_info_struct(t_info *new_shell);
+
+void	free_cmd_lst(void *node);
+
 #endif
