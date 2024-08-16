@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/30 11:23:41 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/14 15:24:15 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/16 13:20:43 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,12 @@ int	execute_exit(t_cmd_data *cmd, char *line, t_info *info)
 	else if (!str_is_num(cmd->pars_out->args[1]))
 	{
 		i = 255;
-		print_num_arg_err(cmd->pars_out->args[1]); // looks like it exits bash after this, might be because i'm on os now
+		print_num_arg_err(cmd->pars_out->args[1]);
 	}
 	else if (cmd->pars_out->args[2])
 	{
-		i = 1;
-		ft_putstr_fd("exit\nMinishell: exit: too many arguments\n", 2); // doesn't exit bash
+		info->error = 1;
+		return (ft_putstr_fd("exit\nMinishell: exit: too many arguments\n", 2), 0);
 	}
 	else
 	{

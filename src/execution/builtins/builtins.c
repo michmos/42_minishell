@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/25 09:25:29 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/15 14:17:38 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/16 16:01:53 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	print_envlst(t_list *head)
 		printf("%s", ((t_env_var *)(tmp->as_ptr))->key);
 		if (((t_env_var *)(tmp->as_ptr))->equal)
 			printf("=");
-		printf("%s", ((t_env_var *)(tmp->as_ptr))->value);
+		printf("%s\n", ((t_env_var *)(tmp->as_ptr))->value);
 		tmp = tmp->next;
 	}
 }
@@ -33,20 +33,19 @@ int	check_builtins(t_list *head, t_cmd	*cmd)
 	int			i;
 
 	(void)head;
-	str = malloc(sizeof(char) * (ft_strlen(cmd->args[0]) + 1));
-	str = cmd->args[0];
+	str = ft_strdup(cmd->args[0]);
 	i = 0;
-	if (ft_strncmp(str, "echo", 5) == 0)
+	if (ft_strncmp(str, "echo", 5) == 0) // doesn't work yet
 		i = 1;
-	else if (ft_strncmp(str, "cd", 3) == 0)
+	else if (ft_strncmp(str, "cd", 3) == 0) // doesn't work yet
 		i = 2;
 	else if (ft_strncmp(str, "pwd", 4) == 0)
 		i = 3;
-	else if (ft_strncmp(str, "export", 7) == 0)
+	else if (ft_strncmp(str, "export", 7) == 0) // doesn't work yet
 		i = 4;
-	else if (ft_strncmp(str, "unset", 6) == 0)
+	else if (ft_strncmp(str, "unset", 6) == 0) // doesn't work yet
 		i = 5;
-	else if (ft_strncmp(str, "env", 4) == 0)
+	else if (ft_strncmp(str, "env", 4) == 0) // doesn't work yet
 		i = 6;
 	else if (ft_strncmp(str, "exit", 5) == 0)
 		i = 7;
@@ -73,7 +72,10 @@ int	execute_builtin(t_cmd_data *cmd, char *line, t_info *info)
 	else if (cmd->builtin == 3)
 		pwd();
 	else if (cmd->builtin == 4)
+	{
 		create_ordered_envlst(info->env_lst);
+		print_envlst(info->env_lst);
+	}
 	else if (cmd->builtin == 5)
 		unset_envlst(info->env_lst, line);
 	else if (cmd->builtin == 6)
@@ -95,21 +97,24 @@ int	execute_builtin(t_cmd_data *cmd, char *line, t_info *info)
 	that can be used as error if there's any
 */
 
-int	exec_one_builtin(t_list *head, char *line, t_info *info)
+int	exec_one_builtin(t_cmd_data *cmd, char *line, t_info *info)
 {
 	int			stat;
-	t_cmd_data	*cmd;
 
-	cmd = get_cmd(head);
 	if (open_files(cmd, PARENT, info) == 1)
 		return (1);
+	cmd->fd_array = malloc((sizeof(int) * (2 * info->num_cmd)) + 1);
+	if (!cmd->fd_array)
+		return (1);
+	cmd->last_input = in_file(cmd->pars_out);
+	cmd->last_output = out_file(cmd->pars_out);
 	if (cmd->last_input > -1)
 	{
-		dup2(cmd->fd_array[cmd->last_input], STDIN_FILENO);
+		dup2_copy(cmd->fd_array[cmd->last_input], STDIN_FILENO, info);
 	}
 	if (cmd->last_output > -1)
 	{
-		dup2(cmd->fd_array[cmd->last_output], STDOUT_FILENO);
+		dup2_copy(cmd->fd_array[cmd->last_output], STDOUT_FILENO, info);
 	}
 	close_fd_array(cmd, info);
 	stat = execute_builtin(cmd, line, info);

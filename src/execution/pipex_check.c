@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/17 11:02:09 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/14 15:59:25 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/16 16:40:53 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void	check_dir_utils(t_cmd_data *cmd, t_info *info, struct stat file_stat)
 		info->error = 126;
 		exit(126);
 	}
-	info->our_env = converter(info->env_lst);
 	if (execve(cmd->pars_out->args[0], cmd->pars_out->args, info->our_env) == -1)
 	{
 		ft_putstr_fd("bash: ", 2);
@@ -87,7 +86,6 @@ void	check_cmd(t_cmd_data *cmd, t_info *info)
 
 	stat_result = stat(cmd->cmd_path, &file_stat);
 	check_cmd_utils(cmd, info, file_stat);
-	info->our_env = converter(info->env_lst);
 	if (execve(cmd->pars_out->args[0], cmd->pars_out->args, \
 	info->our_env) == -1)
 	{

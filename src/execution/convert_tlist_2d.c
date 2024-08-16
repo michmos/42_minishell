@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/08/14 11:56:35 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/14 12:00:01 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/16 14:08:14 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ char	**converter(t_list *head)
 	temp = head;
 	i = 0;
 	array = (char **) malloc((ft_lstsize(temp) + 1) * sizeof(char *));
+	// if (!array)
+	// 	exit ; // need an error function or smth here
 	temp = head;
 	while (temp != NULL)
 	{

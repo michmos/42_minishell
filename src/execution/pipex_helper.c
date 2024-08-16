@@ -6,13 +6,19 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 13:32:12 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/15 14:09:35 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/16 15:03:34 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_cmd_data	*get_cmd(t_list *lst)
+t_cmd	*get_cmd(t_list *lst)
+{
+
+	return ((t_cmd *)(lst->as_ptr));
+}
+
+t_cmd_data	*get_cmd_data(t_list *lst)
 {
 	return ((t_cmd_data *)(lst->as_ptr));
 }

@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/28 11:11:50 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/15 11:33:09 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/16 10:56:46 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,28 +36,28 @@ void	free_ar2(void **array)
 	free(array);
 }
 
-static void	free_redir_lst(void *node)
-{
-	t_redir	*redir_lst;
+// static void	free_redir_lst(void *node)
+// {
+// 	t_redir	*redir_lst;
 
-	redir_lst = (t_redir *)node;
-	free(redir_lst->filename);
-	free(redir_lst);
-}
+// 	redir_lst = (t_redir *)node;
+// 	free(redir_lst->filename);
+// 	free(redir_lst);
+// }
 
 void	free_cmd_lst(void *node)
 {
 	t_cmd_data	*cmd;
 
 	cmd = (t_cmd_data *) node;
-	free_ar2((void **) cmd->pars_out->args);
-	ft_lstclear(&cmd->pars_out->redir_lst, free_redir_lst);
-	if (cmd->path)
-		free(cmd->path);
-	if (cmd->hd_array)
-		free(cmd->hd_str);
-	if (cmd->cmd_path)
-		free(cmd->cmd_path);
+	// free_ar2((void **) cmd->pars_out->args);
+	// ft_lstclear(&cmd->pars_out->redir_lst, free_redir_lst);
+	// if (cmd->path)
+	// 	free(cmd->path);
+	// if (cmd->hd_array)
+	// 	free(cmd->hd_str);
+	// if (cmd->cmd_path)
+	// 	free(cmd->cmd_path);
 	free(cmd);
 }
 

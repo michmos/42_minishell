@@ -216,7 +216,7 @@ t_list *add_to_envlst(t_list *head, char *argv);
 void print_envlst(t_list *head);
 int check_builtins(t_list *head, t_cmd *cmd);
 int execute_builtin(t_cmd_data *cmd, char *line, t_info *info);
-int exec_one_builtin(t_list *head, char *line, t_info *info);
+int exec_one_builtin(t_cmd_data *cmd, char *line, t_info *info);
 
 // cd_sec_1_to_6.c ---------------------------------------------------------- //
 t_error init_curpath(char **curpath, char *arg);
@@ -319,7 +319,8 @@ void free_ar2(void **array);
 void wait_free_exit(t_list *head, int exit_status);
 
 // pipex_helper.c ---------------------------------------------------------//
-t_cmd_data *get_cmd(t_list *lst);
+t_cmd *get_cmd(t_list *lst);
+t_cmd_data *get_cmd_data(t_list *lst);
 t_redir *get_redir(t_list *lst);
 void err_exit(char *str);
 void close_pipes(t_info *info);
@@ -341,7 +342,7 @@ void dup2_copy(int old_fd, int new_fd, t_info *info);
 void pipe_cmd(t_cmd_data *cmd, t_info *info, int i);
 
 // pipex.c ----------------------------------------------------------------//
-int cmd_pipeline(t_list *head, t_info *info, char *line);
+int cmd_pipeline(t_list *head, t_info *info, char *line, t_cmd *test);
 int parent_process(t_info *info);
 void child_process(t_list *head, t_info *info, int child_i, char *line);
 
