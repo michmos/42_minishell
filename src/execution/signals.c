@@ -15,20 +15,22 @@
 void	handle_sig(int signal)
 {
 	(void)signal;
-	// TODO: needs to read from new line
-	//  cause only the ctrl-C will come here
+	rl_on_new_line();
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 1);
+	rl_redisplay();
 }
 
-void	signal_ctrl_d(t_shell *shell, char **line)
+void	signal_ctrl_d(t_info *info, char **line)
 {
-	(void)shell;
 	if (*line == NULL)
 	{
-		//  i need to connect them, choose either shell or info
-		// TODO: instead of shell, send info struct
-		//  in here print exit
-		//  close info->std_in and info->std_out
-		//  free everything and exit with previous_error
+		printf("exit\n"); // TODO: do i need to print more?
+		free_info_line(info, *line);
+		close(info->std_in);
+		close(info->std_out);
+		exit(info->prev_error);
 	}
 }
 
@@ -51,8 +53,9 @@ void	sigquit_handle(int signal)
 	}
 }
 
-void	init_signals(void)
+int	init_signals(void)
 {
 	signal(SIGINT, handle_sig);
 	signal(SIGQUIT, SIG_IGN);
+	return (0);
 }

@@ -181,13 +181,13 @@ typedef struct s_cmd_data
 	int *fd_array;
 	int redir_count;
 	int builtin;
-	char *path;
+	char *path; // 1-------
 	int last_input;
 	int last_output;
 	char *hd_str;
 	char **hd_array;
 	int hd_count;
-	char *cmd_path;
+	char *cmd_path; //1--------
 
 } t_cmd_data;
 // why do i have path and cmd_path, what is the difference and where do i use it???
@@ -205,8 +205,13 @@ typedef struct s_info
 	int std_out;
 	t_list *env_lst;
 	char **our_env;
-	char *cmd_path;
 } t_info;
+
+/*
+	1------
+	all three things marked with 1----- aren't they the same thing?
+	why do i have all of them?
+*/
 
 // add_to_list.c ------------------------------------------------------------ //
 t_list *add_to_ordered_envlst(t_list *head, char *argv);
@@ -353,10 +358,10 @@ void check_last_in_out(t_cmd_data *cmd);
 void check_type(t_cmd_data *cmd, t_tag type, int i);
 // signals.c -----------------------------------------------------------//
 void handle_sig(int signal);
-void	signal_ctrl_d(t_shell *shell, char **line);
+void	signal_ctrl_d(t_info *info, char **line);
 void	sigint_handle(int signal);
 void	sigquit_handle(int signal);
-void	init_signals(void);
+int	init_signals(void);
 
 // -------------------------------------------------------------------------- //
 // ----------------------------- UTILS/ ------------------------------------- //

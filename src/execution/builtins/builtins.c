@@ -29,27 +29,24 @@ void	print_envlst(t_list *head)
 
 int	check_builtins(t_list *head, t_cmd	*cmd)
 {
-	char		*str;
 	int			i;
 
 	(void)head;
-	str = ft_strdup(cmd->args[0]);
 	i = 0;
-	if (ft_strncmp(str, "echo", 5) == 0) // doesn't work yet
+	if (ft_strncmp(cmd->args[0], "echo", 5) == 0) // doesn't work yet
 		i = 1;
-	else if (ft_strncmp(str, "cd", 3) == 0) // doesn't work yet
+	else if (ft_strncmp(cmd->args[0], "cd", 3) == 0) // doesn't work yet
 		i = 2;
-	else if (ft_strncmp(str, "pwd", 4) == 0)
+	else if (ft_strncmp(cmd->args[0], "pwd", 4) == 0)
 		i = 3;
-	else if (ft_strncmp(str, "export", 7) == 0) // doesn't work yet
+	else if (ft_strncmp(cmd->args[0], "export", 7) == 0) // doesn't work yet
 		i = 4;
-	else if (ft_strncmp(str, "unset", 6) == 0) // doesn't work yet
+	else if (ft_strncmp(cmd->args[0], "unset", 6) == 0) // doesn't work yet
 		i = 5;
-	else if (ft_strncmp(str, "env", 4) == 0) // doesn't work yet
+	else if (ft_strncmp(cmd->args[0], "env", 4) == 0) // doesn't work yet
 		i = 6;
-	else if (ft_strncmp(str, "exit", 5) == 0)
+	else if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
 		i = 7;
-	free(str);
 	return (i);
 }
 
@@ -66,9 +63,9 @@ int	execute_builtin(t_cmd_data *cmd, char *line, t_info *info)
 
 	stat = 0;
 	if (cmd->builtin == 1)
-		echo(&line);
+		echo(cmd->pars_out->args);
 	else if (cmd->builtin == 2)
-		cd(&line);
+		cd(cmd->pars_out->args);
 	else if (cmd->builtin == 3)
 		pwd();
 	else if (cmd->builtin == 4)
@@ -86,15 +83,19 @@ int	execute_builtin(t_cmd_data *cmd, char *line, t_info *info)
 }
 /*
 	builtin == 4 (export)
-		i want to create the ordered list but at the same time if there anything given i want to add to it
+		need to add thing to the env_lst if they were given in the command line
+		i have a funcction add to ordered list that could do that
+		and then it needs to be printed to the screen
+		maybe create a different function for printing ordered list
+		cause i imagine env_lst will never actually change to an ordered list
+		create ordered list function will return an ordered list that i can print, 
+		but maybe i should be saving it somewhere?
+	builtin == 5 (unset)
+		instead of line i need to send cmd->pars_out->args
+		and unset everything like bash would with whats given to me at args[0]...
 	builtin == 6 (env)
 		same goes here, the list should be already created and i just want to add to it
 		doesn't make any sense to create it every single time... 
-*/
-/*
-	fix the call names of the function above
-	and make sure evry function has an int return value
-	that can be used as error if there's any
 */
 
 int	exec_one_builtin(t_cmd_data *cmd, char *line, t_info *info)

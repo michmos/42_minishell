@@ -15,12 +15,48 @@
 void	free_info(t_info *info)
 {
 	ft_lstclear(&info->env_lst, free_env_var);
-	free(info->cur_dir);
-	free(info->old_dir);
+	info->env_lst = NULL;
 	free_ar2((void **)info->our_env);
-	free(info->cmd_path);
-
+	info->our_env = NULL;
+	if (info->cur_dir)
+	{
+		free(info->cur_dir);
+		info->cur_dir = NULL;
+	}
+	if (info->cur_dir)
+	{
+		free(info->old_dir);
+		info->old_dir = NULL;
+	}
 	rl_clear_history();
+}
+
+void free_info_line(t_info *info, char *line)
+{
+	ft_lstclear(&info->env_lst, free_env_var);
+	info->env_lst = NULL;
+	free_ar2((void **)info->our_env);
+	info->our_env = NULL;
+	if (info->cur_dir)
+	{
+		free(info->cur_dir);
+		info->cur_dir = NULL;
+	}
+	if (info->cur_dir)
+	{
+		free(info->old_dir);
+		info->old_dir = NULL;
+	}
+	if (info->pid)
+	{
+		free(info->pid);
+		info->pid = NULL;
+	}
+	if (line)
+	{
+		free(line);
+		line = NULL;
+	}
 }
 /*
 	do i need to free the whole info struct as well?

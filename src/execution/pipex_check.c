@@ -37,8 +37,7 @@ void	check_dir(t_cmd_data *cmd, t_info *info)
 	struct stat	file_stat;
 	int	stat_result;
 
-	//get_cmd_path(cmd, info); // TODO: this function doesn't exist yet, but implement it with pipex_paths functions
-	stat_result = stat(cmd->cmd_path, &file_stat);
+	stat_result = stat(cmd->pars_out->args[0], &file_stat); // I think i was sending wrong thing to stat here, instead of cmd->cmd_path i need to send args[0]
 	if (stat_result == -1)
 	{
 		ft_putstr_fd("bash: ", 2);
@@ -59,23 +58,25 @@ void	check_dir(t_cmd_data *cmd, t_info *info)
 
 void	check_cmd_utils(t_cmd_data *cmd, t_info *info, struct stat file_stat)
 {
-	(void)info; // add freeing function for info
+	(void)info; // add freeing function for info in case of failur in if statements
 	if (cmd->path == NULL)
 	{
-		if (access(cmd->cmd_path, F_OK) || S_ISDIR(file_stat.st_mode))
+		if (access(cmd->pars_out->args[0], F_OK) || S_ISDIR(file_stat.st_mode)) //changing cmd->path to cmd->pars_out->args[0]
 		{
 			ft_putstr_fd("Minishell: ", 2);
 			ft_putstr_fd(cmd->pars_out->args[0], 2);
 			ft_putstr_fd(": command not found\n", 2);
 			exit(127);
 		}
-		else if (access(cmd->cmd_path, X_OK))
+		else if (access(cmd->pars_out->args[0], X_OK)) //changing cmd->path to cmd->pars_out->args[0]
 		{
 			ft_putstr_fd("Minishell: ", 2);
 			ft_putstr_fd(cmd->pars_out->args[0], 2);
 			ft_putstr_fd(": Permission denied\n", 2);
 			exit(126);
 		}
+		else
+			cmd->path = ft_strdup(cmd->pars_out->args[0]);
 	}
 }
 
@@ -84,9 +85,10 @@ void	check_cmd(t_cmd_data *cmd, t_info *info)
 	struct stat	file_stat;
 	int			stat_result;
 
-	stat_result = stat(cmd->cmd_path, &file_stat);
+	stat_result = stat(cmd->pars_out->args[0], &file_stat);
+	cmd->path = find_command_path(cmd->pars_out->args[0], info->our_env);
 	check_cmd_utils(cmd, info, file_stat);
-	if (execve(cmd->pars_out->args[0], cmd->pars_out->args, \
+	if (execve(cmd->path, cmd->pars_out->args, \
 	info->our_env) == -1)
 	{
 		ft_putstr_fd("Minishell: ", 2);
@@ -101,8 +103,8 @@ int	check_executable(t_cmd_data *cmd, t_info *info)
 	struct stat	file_stat;
 	int			stat_result;
 
-	(void)info;
-	stat_result = stat(cmd->cmd_path, &file_stat);
+	(void)info; // free info in case of failure as well
+	stat_result = stat(cmd->pars_out->args[0], &file_stat);
 	if (stat_result != -1 && (!(file_stat.st_mode & S_IXUSR)))
 	{
 		ft_putstr_fd("bash: ", 2);
@@ -112,9 +114,3 @@ int	check_executable(t_cmd_data *cmd, t_info *info)
 	}
 	return (0);
 }
-
-/*
-	TODO:
-		paths function rewrite that
-		need to put the env_list from linked list to 2d array somewhere
-*/

@@ -54,12 +54,18 @@ void	free_cmd_lst(void *node)
 	// ft_lstclear(&cmd->pars_out->redir_lst, free_redir_lst);
 	// if (cmd->path)
 	// 	free(cmd->path);
-	// if (cmd->hd_array)
+	// free_ar2((void **) cmd->hd_array);
+	// if (cmd->hd_str)
 	// 	free(cmd->hd_str);
 	// if (cmd->cmd_path)
 	// 	free(cmd->cmd_path);
 	free(cmd);
 }
+/*
+	do i need a while loop and go through every node and free them?
+	i guess that's logical
+	but when would this function be called?
+*/
 
 // static void	free_cmd_lst(void *node)
 // {
