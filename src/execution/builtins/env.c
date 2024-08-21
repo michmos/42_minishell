@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/16 10:00:03 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/14 11:27:54 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/21 14:18:45 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ char	*get_key(t_env_var *env_var, t_parse_env *env_parse)
 	if (env_var->key == NULL)
 	{
 		perror("malloc");
-		free(env_var);
 		return (NULL);
 	}
 	ft_strlcpy(env_var->key, env_parse->buffer, env_parse->cursor_pos + 1);
@@ -42,7 +41,6 @@ char	*get_value(t_env_var *env_var, t_parse_env *env_parse)
 	if (env_var->value == NULL)
 	{
 		perror("malloc");
-		free(env_var);
 		return (NULL);
 	}
 	pos = env_parse->cursor_pos - i;
@@ -66,9 +64,21 @@ t_env_var	*get_env_var(char *env)
 		return (NULL);
 	}
 	env_var->key = get_key(env_var, &env_parse);
+	if (!env_var->key)
+	{
+		free(env_var);
+		return (NULL);
+	}
+	if (!env[env_parse.cursor_pos])
+		return (env_var);
 	env_var->equal = (env[env_parse.cursor_pos] == '=');
 	env_parse.cursor_pos++;
 	env_var->value = get_value(env_var, &env_parse);
+	if (!env_var->value)
+	{
+		free(env_var);
+		return (NULL);
+	}
 
 	return (env_var);
 }

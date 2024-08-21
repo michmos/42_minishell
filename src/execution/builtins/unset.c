@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/21 11:10:30 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/14 15:26:06 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/21 09:49:53 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	unset_envlst_util_2(t_list *prev, t_list *cur, t_list *last)
 	prev->next->next = cur;
 }
 
-t_list	*unset_envlst(t_list *head, char *argv)
+t_list	*unset_envlst(t_list *head, char **argv)
 {
 	t_env_var	*env_var;
 	t_list		*cur;
@@ -36,7 +36,7 @@ t_list	*unset_envlst(t_list *head, char *argv)
 
 	prev = NULL;
 	last = NULL;
-	env_var = get_env_var(argv);
+	env_var = get_env_var(*argv);
 	if (!env_var)
 		return (ft_lstclear(&head, free_env_var), NULL);
 	new = ft_lstnew(env_var);

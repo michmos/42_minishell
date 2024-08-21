@@ -204,6 +204,7 @@ typedef struct s_info
 	int std_in;
 	int std_out;
 	t_list *env_lst;
+	t_list *ordered_lst;
 	char **our_env;
 } t_info;
 
@@ -214,11 +215,11 @@ typedef struct s_info
 */
 
 // add_to_list.c ------------------------------------------------------------ //
-t_list *add_to_ordered_envlst(t_list *head, char *argv);
-t_list *add_to_envlst(t_list *head, char *argv);
+t_list *add_to_ordered_envlst(t_list *head, char **argv);
+t_list *add_to_envlst(t_list *head, char **argv);
 
 // builtins.c --------------------------------------------------------------- //
-void print_envlst(t_list *head);
+void print_envlst(t_list *head, int order);
 int check_builtins(t_list *head, t_cmd *cmd);
 int execute_builtin(t_cmd_data *cmd, char *line, t_info *info);
 int exec_one_builtin(t_cmd_data *cmd, char *line, t_info *info);
@@ -265,7 +266,7 @@ char *key(t_list *node);
 void pwd(void);
 
 // unset.c ------------------------------------------------------------ //
-t_list *unset_envlst(t_list *head, char *argv);
+t_list *unset_envlst(t_list *head, char **argv);
 
 // -------------------------------------------------------------------------- //
 // ------------------------ SETTERS_GETTERS/ -------------------------------- //
@@ -295,6 +296,7 @@ char	**converter(t_list *head);
 void	free_info(t_info *info);
 void error(int error, t_info *info);
 int error_open(t_cmd_data *cmd, int process, t_info *info);
+void free_info_line(t_info *info, char *line);
 
 // execution.c ------------------------------------------------------------//
 int execution(t_list *head, t_info *info, char *line);
@@ -347,7 +349,7 @@ void dup2_copy(int old_fd, int new_fd, t_info *info);
 void pipe_cmd(t_cmd_data *cmd, t_info *info, int i);
 
 // pipex.c ----------------------------------------------------------------//
-int cmd_pipeline(t_list *head, t_info *info, char *line, t_cmd *test);
+int cmd_pipeline(t_list *head, t_info *info, char *line);
 int parent_process(t_info *info);
 void child_process(t_list *head, t_info *info, int child_i, char *line);
 

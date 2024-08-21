@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/08/14 09:31:22 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/14 16:09:48 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/21 09:48:35 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,11 @@ void	signal_ctrl_d(t_info *info, char **line)
 		exit(info->prev_error);
 	}
 }
+
+/*
+	when there's something written in the line (terminal), is does nothing
+	but if there's nothing it gives a seg fault
+*/
 
 void	sigint_handle(int signal)
 {

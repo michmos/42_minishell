@@ -6,18 +6,20 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/21 10:42:28 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/14 11:50:57 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/21 14:58:16 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-t_list	*add_to_envlst(t_list *head, char *argv)
+t_list	*add_to_envlst(t_list *head, char **argv)
 {
 	t_list		*new;
 	t_env_var	*env_var;
 
-	env_var = get_env_var(argv);
+	// if (*argv == NULL)
+	// 	return (head);
+	env_var = get_env_var(*argv);
 	if (!env_var)
 	{
 		ft_lstclear(&head, free_env_var);
@@ -34,14 +36,16 @@ t_list	*add_to_envlst(t_list *head, char *argv)
 	return (head);
 }
 
-t_list	*add_to_ordered_envlst(t_list *head, char *argv)
+t_list	*add_to_ordered_envlst(t_list *head, char **argv)
 {
 	t_list		*new;
 	t_env_var	*env_var;
 	t_list		*cur;
 	t_list		*last;
 
-	env_var = get_env_var(argv);
+	// if (*argv == NULL)
+	// 	return (head);
+	env_var = get_env_var(*argv);
 	if (!env_var)
 	{
 		ft_lstclear(&head, free_env_var);

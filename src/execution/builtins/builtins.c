@@ -6,24 +6,40 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/25 09:25:29 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/16 16:01:53 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/21 15:49:49 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void	print_envlst(t_list *head)
+void	print_envlst(t_list *head, int order)
 {
 	t_list	*tmp;
 
 	tmp = head;
-	while (tmp != NULL)
+	if (order == 4)
 	{
-		printf("%s", ((t_env_var *)(tmp->as_ptr))->key);
-		if (((t_env_var *)(tmp->as_ptr))->equal)
-			printf("=");
-		printf("%s\n", ((t_env_var *)(tmp->as_ptr))->value);
-		tmp = tmp->next;
+		while (tmp != NULL)
+		{
+			if (((t_env_var *)(tmp->as_ptr))->key)
+				printf("declare -x %s", ((t_env_var *)(tmp->as_ptr))->key);
+			if (((t_env_var *)(tmp->as_ptr))->equal)
+				printf("=");
+			if (((t_env_var *)(tmp->as_ptr))->value)
+				printf("\"%s\"\n", ((t_env_var *)(tmp->as_ptr))->value);
+			tmp = tmp->next;
+		}
+	}
+	else
+	{
+		while (tmp != NULL)
+		{
+			printf("%s", ((t_env_var *)(tmp->as_ptr))->key);
+			if (((t_env_var *)(tmp->as_ptr))->equal)
+				printf("=");
+			printf("%s\n", ((t_env_var *)(tmp->as_ptr))->value);
+			tmp = tmp->next;
+		}
 	}
 }
 
@@ -57,6 +73,40 @@ int	check_builtins(t_list *head, t_cmd	*cmd)
 	or something with dereferencing?
 */
 
+void	export(t_cmd_data *cmd, t_info *info)
+{
+	t_list	*ordered;
+
+	ordered = NULL;
+	info->ordered_lst = create_ordered_envlst(info->env_lst); // maybe we want to already have this in info or shell struct
+	if (cmd->pars_out->args[1])
+		ordered = add_to_ordered_envlst(info->ordered_lst, &cmd->pars_out->args[1]);
+	else
+	{
+		if (ordered)
+			print_envlst(ordered, 4);
+		else
+			print_envlst(info->ordered_lst, 4);
+	}
+}
+/*
+	it works now almost as intended:
+	- when only export is typed, it prints everything
+	- when more thing are given it doesn't print, but for some reason it doesn't add
+		things to the ordered list
+	- the ordered list has to be saved, so that every time i type export i could access it
+
+	same thing below with the env
+*/
+
+void	env(t_cmd_data *cmd, t_info *info)
+{
+	if (cmd->pars_out->args[1])
+		info->env_lst = add_to_envlst(info->env_lst, &cmd->pars_out->args[1]);
+	else
+		print_envlst(info->env_lst, 6);
+}
+
 int	execute_builtin(t_cmd_data *cmd, char *line, t_info *info)
 {
 	int	stat;
@@ -69,30 +119,20 @@ int	execute_builtin(t_cmd_data *cmd, char *line, t_info *info)
 	else if (cmd->builtin == 3)
 		pwd();
 	else if (cmd->builtin == 4)
-	{
-		create_ordered_envlst(info->env_lst);
-		print_envlst(info->env_lst);
-	}
+		export(cmd, info);
 	else if (cmd->builtin == 5)
-		unset_envlst(info->env_lst, line);
+		unset_envlst(info->env_lst, &cmd->pars_out->args[1]);
 	else if (cmd->builtin == 6)
-		print_envlst(info->env_lst);
+		print_envlst(info->env_lst, 6);
 	else if (cmd->builtin == 7)
 		execute_exit(cmd, line, info);
 	return (stat);
 }
 /*
-	builtin == 4 (export)
-		need to add thing to the env_lst if they were given in the command line
-		i have a funcction add to ordered list that could do that
-		and then it needs to be printed to the screen
-		maybe create a different function for printing ordered list
-		cause i imagine env_lst will never actually change to an ordered list
-		create ordered list function will return an ordered list that i can print, 
-		but maybe i should be saving it somewhere?
 	builtin == 5 (unset)
-		instead of line i need to send cmd->pars_out->args
-		and unset everything like bash would with whats given to me at args[0]...
+		- instead of line i need to send cmd->pars_out->args
+			and unset everything like bash would with whats given to me at args[0]...
+		- micha is currently working on unset
 	builtin == 6 (env)
 		same goes here, the list should be already created and i just want to add to it
 		doesn't make any sense to create it every single time... 

@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/30 15:05:30 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/16 16:41:19 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/21 13:43:02 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,8 @@ int	execution(t_list *head, t_info *info, char *line)
 		info->error = exec_one_builtin(cmd_lst, line, info);
 	else
 	{
-		stat = cmd_pipeline(head, info, line, cmd);
+		stat = cmd_pipeline(head, info, line);
 		info->error = WEXITSTATUS(stat);
 	}
 	return (free_cmd_lst((void *)cmd_lst), info->error);
 }
-
-/*
-talk to micha cause i'm completely lost why i can not access args[0]
-when i try running minishell with env
-*/

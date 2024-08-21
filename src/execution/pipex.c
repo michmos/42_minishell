@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 09:50:20 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/16 16:40:57 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/21 13:42:57 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,12 @@ int	parent_process(t_info *info)
 	return (status);
 }
 
-int	cmd_pipeline(t_list *head, t_info *info, char *line, t_cmd *test)
+int	cmd_pipeline(t_list *head, t_info *info, char *line)
 {
 	int	i;
 	int	status;
 
 	i = -1;
-	printf("%s\n", test->args[0]);
 	while (++i < info->num_cmd - 1)
 		if (pipe(info->fd[i]) == -1)
 			wait_free_exit(head, EXIT_FAILURE);
