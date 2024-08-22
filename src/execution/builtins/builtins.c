@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/25 09:25:29 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/21 15:49:49 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/22 14:04:40 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,19 @@ void	print_envlst(t_list *head, int order)
 	{
 		while (tmp != NULL)
 		{
-			if (((t_env_var *)(tmp->as_ptr))->key)
-				printf("declare -x %s", ((t_env_var *)(tmp->as_ptr))->key);
-			if (((t_env_var *)(tmp->as_ptr))->equal)
-				printf("=");
-			if (((t_env_var *)(tmp->as_ptr))->value)
-				printf("\"%s\"\n", ((t_env_var *)(tmp->as_ptr))->value);
+			if (!((t_env_var *)(tmp->as_ptr))->equal)
+			{
+				printf("declare -x %s\n", ((t_env_var *)(tmp->as_ptr))->key);
+			}
+			else
+			{
+				if (((t_env_var *)(tmp->as_ptr))->key)
+					printf("declare -x %s", ((t_env_var *)(tmp->as_ptr))->key);
+				if (((t_env_var *)(tmp->as_ptr))->equal)
+					printf("=");
+				if (((t_env_var *)(tmp->as_ptr))->value)
+					printf("\"%s\"\n", ((t_env_var *)(tmp->as_ptr))->value);
+			}
 			tmp = tmp->next;
 		}
 	}
@@ -34,11 +41,18 @@ void	print_envlst(t_list *head, int order)
 	{
 		while (tmp != NULL)
 		{
-			printf("%s", ((t_env_var *)(tmp->as_ptr))->key);
-			if (((t_env_var *)(tmp->as_ptr))->equal)
-				printf("=");
-			printf("%s\n", ((t_env_var *)(tmp->as_ptr))->value);
-			tmp = tmp->next;
+			if (!((t_env_var *)(tmp->as_ptr))->equal)
+			{
+				tmp = tmp->next;
+			}
+			else
+			{
+				printf("%s", ((t_env_var *)(tmp->as_ptr))->key);
+				if (((t_env_var *)(tmp->as_ptr))->equal)
+					printf("=");
+				printf("%s\n", ((t_env_var *)(tmp->as_ptr))->value);
+				tmp = tmp->next;
+			}
 		}
 	}
 }
@@ -66,46 +80,46 @@ int	check_builtins(t_list *head, t_cmd	*cmd)
 	return (i);
 }
 
-/*
-	in the function aboce it is impossible for the program to access memory
-	in cmd->pars_out->args[0]
-	why is this happening? is my malloc bad?
-	or something with dereferencing?
-*/
-
 void	export(t_cmd_data *cmd, t_info *info)
 {
-	t_list	*ordered;
+	int	i;
 
-	ordered = NULL;
-	info->ordered_lst = create_ordered_envlst(info->env_lst); // maybe we want to already have this in info or shell struct
-	if (cmd->pars_out->args[1])
-		ordered = add_to_ordered_envlst(info->ordered_lst, &cmd->pars_out->args[1]);
-	else
+	i = 1;
+	if (cmd->pars_out->args[i])
 	{
-		if (ordered)
-			print_envlst(ordered, 4);
-		else
-			print_envlst(info->ordered_lst, 4);
+		while (cmd->pars_out->args[i])
+		{
+			info->env_lst = \
+			add_to_envlst(info->env_lst, &cmd->pars_out->args[i]);
+			i++;
+		}
 	}
+	else
+		print_envlst(create_ordered_envlst(info->env_lst), 4);
 }
-/*
-	it works now almost as intended:
-	- when only export is typed, it prints everything
-	- when more thing are given it doesn't print, but for some reason it doesn't add
-		things to the ordered list
-	- the ordered list has to be saved, so that every time i type export i could access it
-
-	same thing below with the env
-*/
 
 void	env(t_cmd_data *cmd, t_info *info)
 {
-	if (cmd->pars_out->args[1])
-		info->env_lst = add_to_envlst(info->env_lst, &cmd->pars_out->args[1]);
+	int	i;
+
+	i = 1;
+	if (cmd->pars_out->args[i])
+	{
+		while (cmd->pars_out->args[i])
+		{
+			info->env_lst = \
+			add_to_envlst(info->env_lst, &cmd->pars_out->args[i]);
+			i++;
+		}
+	}
 	else
 		print_envlst(info->env_lst, 6);
 }
+/*
+	export now only works if you first give it and argument, if you don't it won't work
+
+	env gives everything as it should, but need to work on the thing that would replace the node if you give the same key
+*/
 
 int	execute_builtin(t_cmd_data *cmd, char *line, t_info *info)
 {
@@ -123,7 +137,7 @@ int	execute_builtin(t_cmd_data *cmd, char *line, t_info *info)
 	else if (cmd->builtin == 5)
 		unset_envlst(info->env_lst, &cmd->pars_out->args[1]);
 	else if (cmd->builtin == 6)
-		print_envlst(info->env_lst, 6);
+		env(cmd, info);
 	else if (cmd->builtin == 7)
 		execute_exit(cmd, line, info);
 	return (stat);
