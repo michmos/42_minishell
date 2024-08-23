@@ -1,0 +1,10 @@
+some comment here:
+
+- something with redir lst doesn't work in in file and out file
+	it can't access what is needed properly, and gives errors for last_in last_output
+	so focus on that and hopefully the rest would fall in
+
+- if that helps, but not fully. i'll have to take a look at pipes and redirections in other places
+
+- last but not least, signals are still not working as they should, so after everything else is fixed 
+	focus on signals

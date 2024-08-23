@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/24 16:05:11 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/30 11:48:25 by mmoser           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parsing.c                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/04/24 16:05:11 by mmoser        #+#    #+#                 */
+/*   Updated: 2024/08/23 13:48:54 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,5 @@ t_error	parsing(t_list **cmd_lst, char *str)
 		ft_lstclear(&token_lst, free_token);
 		return (error);
 	}
-
 	return (NO_ERR);
 }

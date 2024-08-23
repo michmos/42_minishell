@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/17 14:19:35 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/16 15:47:37 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/23 14:43:21 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	main(int argc, char **argv, char **env)
 		cmd_line = readline("minishell> ");
 		if (!cmd_line)
 			break ;
-		else if (!*cmd_line) // i don't understand this line
+		else if (!*cmd_line)
 		{
 			free(cmd_line);
 			continue ;
