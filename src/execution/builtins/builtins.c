@@ -95,7 +95,9 @@ void	export(t_cmd_data *cmd, t_info *info)
 		}
 	}
 	else
-		print_envlst(create_ordered_envlst(info->env_lst), 4);
+	{
+		print_ordered_lst();
+	}
 }
 
 void	env(t_cmd_data *cmd, t_info *info)

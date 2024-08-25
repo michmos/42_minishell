@@ -219,6 +219,7 @@ t_list *add_to_ordered_envlst(t_list *head, char **argv);
 t_list *add_to_envlst(t_list *head, char **argv);
 
 // builtins.c --------------------------------------------------------------- //
+void	print_ordered_lst(void);
 void print_envlst(t_list *head, int order);
 int check_builtins(t_list *head, t_cmd *cmd);
 int execute_builtin(t_cmd_data *cmd, char *line, t_info *info);
