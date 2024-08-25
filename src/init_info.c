@@ -41,7 +41,7 @@ void	init_info(t_info **ptr, char **env)
 	info->env_lst = create_envlst(env);
 	if (!info->env_lst)
 		clean_exit(EXIT_FAILURE);
-	info->std_in = dup(STDIN_FILENO);
+	info->std_in = dup(STDIN_FILENO); //TODO: protect these calls
 	info->std_out = dup(STDOUT_FILENO);
 	assign_env_values(&info->cur_dir, info->env_lst, "PWD");
 	assign_env_values(&info->old_dir, info->env_lst, "OLDPWD");

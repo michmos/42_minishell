@@ -12,9 +12,9 @@
 
 #include "../minishell.h"
 
-static int	get_length(t_list *node)
+static int get_length(t_list *node)
 {
-	int	length;
+	int length;
 
 	length = 0;
 	length += ft_strlen(((t_env_var *)(node->as_ptr))->key);
@@ -24,27 +24,26 @@ static int	get_length(t_list *node)
 	return (length);
 }
 
-char	**converter(t_list *head)
+char **converter(t_list *head)
 {
-	t_list	*temp;
-	char	**array;
-	int		length;
-	int		i;
+	char *temp;
+	char **array;
+	int length;
+	int i;
 
-	temp = head;
 	i = 0;
-	array = (char **) malloc((ft_lstsize(temp) + 1) * sizeof(char *));
+	array = (char **)malloc((ft_lstsize(head) + 1) * sizeof(char *));
 	// if (!array)
 	// 	exit ; // need an error function or smth here
-	temp = head;
-	while (temp != NULL)
+	while (head != NULL)
 	{
-		length = get_length(temp);
-		array[i] = (char *) malloc((length + 1) * sizeof(char));
-		array[i] = ft_strjoin(ft_strjoin(((t_env_var *) \
-		(temp->as_ptr))->key, "="), ((t_env_var *)(temp->as_ptr))->value);
+		length = get_length(head);
+		temp = ft_strjoin(((t_env_var *)(head->as_ptr))->key, "=");
+		if (temp == NULL)
+			return (0); // TODO: maybe want to free array as well?
+		array[i] = ft_strjoin(temp, ((t_env_var *)(head->as_ptr))->value);
 		i++;
-		temp = temp->next;
+		head = head->next;
 	}
 	array[i] = 0;
 	return (array);

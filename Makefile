@@ -12,10 +12,12 @@ OBJS		:= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 OBJS_WO_MAIN:= $(filter-out $(OBJ_DIR)/main.o, $(OBJS))
 
 CC			:= cc
-CFLAGS		:= -Wall -Wextra -Werror -Wunused -Wuninitialized -Wunreachable-code -g -MMD
+CFLAGS		:=  -g -MMD -I/usr/local/opt/readline/include
+LDFLAGS 	:= -L/usr/local/opt/readline/lib -lreadline -lncurses
 LIB_FLAGS	:= -lreadline
 RM			:= rm -rf
 
+# -Wall -Wextra -Werror -Wunused -Wuninitialized -Wunreachable-code
 TESTS_DIR	:= tests
 TESTS_SRCS	:= $(shell find $(TESTS_DIR) -iname "*.c")
 TESTS_OBJS	:= $(TESTS_SRCS:$(TESTS_DIR)/%.c=$(OBJ_DIR)/%.o)
@@ -30,7 +32,7 @@ all: $(NAME)
 
 # rule to make shell
 $(NAME): $(OBJS) $(SUBMOD_FLAG) $(LIBFT)
-	$(CC) $(OBJS) $(LIBFT) $(LIB_FLAGS) -o $@
+	$(CC) $(OBJS) $(LIBFT) $(LIB_FLAGS) $(LDFLAGS) -o $@
 	@printf "$(CREATED)" $@ $(CUR_DIR)
 
 $(SUBMOD_FLAG):
