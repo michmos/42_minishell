@@ -160,11 +160,8 @@ int	exec_one_builtin(t_cmd_data *cmd, char *line, t_info *info)
 
 	if (open_files(cmd, PARENT, info) == 1)
 		return (1);
-	cmd->fd_array = malloc((sizeof(int) * (2 * info->num_cmd)) + 1);
-	if (!cmd->fd_array)
-		return (1);
-	cmd->last_input = in_file(cmd->pars_out);
-	cmd->last_output = out_file(cmd->pars_out);
+	cmd->last_input = in_file(cmd->pars_out->redir_lst);
+	cmd->last_output = out_file(cmd->pars_out->redir_lst);
 	if (cmd->last_input > -1)
 	{
 		dup2_copy(cmd->fd_array[cmd->last_input], STDIN_FILENO, info);

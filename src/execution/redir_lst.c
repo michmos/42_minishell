@@ -12,42 +12,38 @@
 
 #include "../minishell.h"
 
-int	in_file(t_cmd *cmd)
+int	in_file(t_list *redir_lst)
 {
-	t_cmd	*temp;
 	int		result;
 	int		i;
 
-	temp = cmd;
 	i = 0;
 	result = -1;
-	while (temp->redir_lst)
+	while (redir_lst)
 	{
-		if (((t_redir *)(temp->redir_lst))->type == I_RD \
-		|| ((t_redir *)(temp->redir_lst))->type == I_RD_HD)
+		if (((t_redir *)(redir_lst->as_ptr))->type == I_RD \
+		|| ((t_redir *)(redir_lst->as_ptr))->type == I_RD_HD)
 			result = i;
 		i++;
-		temp->redir_lst = temp->redir_lst->next;
+		redir_lst= redir_lst->next;
 	}
 	return (result);
 }
 
-int	out_file(t_cmd *cmd)
+int	out_file(t_list *redir_lst)
 {
-	t_cmd	*temp;
 	int		result;
 	int		i;
 
-	temp = cmd;
 	i = 0;
 	result = -1;
-	while (temp->redir_lst)
+	while (redir_lst)
 	{
-		if (((t_redir *)(temp->redir_lst))->type == O_RD \
-		|| ((t_redir *)(temp->redir_lst))->type == O_RD_APP)
+		if (((t_redir *)(redir_lst->as_ptr))->type == O_RD \
+		|| ((t_redir *)(redir_lst->as_ptr))->type == O_RD_APP)
 			result = i;
 		i++;
-		temp->redir_lst = temp->redir_lst->next;
+		redir_lst = redir_lst->next;
 	}
 	return (result);
 }

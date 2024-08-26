@@ -49,13 +49,13 @@ int	open_one_file(t_cmd_data *cmd, int process, t_info *info, int i)
 	t_tag	type;
 
 	(void)process; // TODO: see where i use it, or if i need it here
-	type = ((t_redir *)(cmd->pars_out->redir_lst))->type;
+	type = ((t_redir *)(cmd->pars_out->redir_lst->as_ptr))->type;
 	if (type == I_RD)
-		fd = open(((t_redir *)(cmd->pars_out->redir_lst))->filename, O_RDONLY);
+		fd = open(((t_redir *)(cmd->pars_out->redir_lst->as_ptr))->filename, O_RDONLY);
 	else if (type == O_RD)
-		fd = open(((t_redir *)(cmd->pars_out->redir_lst))->filename, O_CREAT | O_RDWR | O_TRUNC, 0777);
+		fd = open(((t_redir *)(cmd->pars_out->redir_lst->as_ptr))->filename, O_CREAT | O_RDWR | O_TRUNC, 0777);
 	else if (type == O_RD_APP)
-		fd = open(((t_redir *)(cmd->pars_out->redir_lst))->filename, O_CREAT | O_RDWR | O_APPEND, 0777);
+		fd = open(((t_redir *)(cmd->pars_out->redir_lst->as_ptr))->filename, O_CREAT | O_RDWR | O_APPEND, 0777);
 	else if (type == I_RD_HD)
 		heredoc(cmd, info, i);
 	return (fd);
@@ -65,22 +65,22 @@ int	open_files(t_cmd_data *cmd, int process, t_info *info)
 {
 	int			i;
 	int			status;
-	t_cmd_data	*temp;
+	t_list		*temp;
 
-	temp = cmd;
-	cmd->redir_count = ft_lstsize(temp->pars_out->redir_lst);
+	cmd->redir_count = ft_lstsize(cmd->pars_out->redir_lst);
 	if (cmd->redir_count == 0)
 		return (0);
-	cmd->fd_array = (int *)malloc((cmd->redir_count * sizeof(int)) + 1);
+	cmd->fd_array = (int *)malloc((cmd->redir_count * sizeof(int)));
 	if (cmd->fd_array == NULL)
 		return (ERROR);
 	i = 0;
+	temp = cmd->pars_out->redir_lst;
 	while (i < cmd->redir_count)
 	{
 		cmd->fd_array[i] = open_one_file(cmd, process, info, i);
 		if (cmd->fd_array[i] == -1)
 			return (1); // TODO: error opening file, will put an error function here probably can use this one -> (error_open(cmd, proc, info)), but lets see
-		cmd->pars_out->redir_lst = cmd->pars_out->redir_lst->next;
+		temp = temp->next;
 		i++;
 	}
 	return (0);

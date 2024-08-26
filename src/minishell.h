@@ -355,8 +355,8 @@ int parent_process(t_info *info);
 void child_process(t_list *head, t_info *info, int child_i, char *line);
 
 // redir_list.c -----------------------------------------------------------//
-int in_file(t_cmd *cmd);
-int out_file(t_cmd *cmd);
+int	in_file(t_list *redir_lst);
+int out_file(t_list *redir_lst);
 void check_last_in_out(t_cmd_data *cmd);
 void check_type(t_cmd_data *cmd, t_tag type, int i);
 // signals.c -----------------------------------------------------------//

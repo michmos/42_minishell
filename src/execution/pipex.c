@@ -29,8 +29,8 @@ void	child_process(t_list *head, t_info *info, int child_i, char *line)
 	close(info->std_out);
 	test = get_cmd(head);
 	cmd->pars_out = test;
-	cmd->last_input = in_file(cmd->pars_out);
-	cmd->last_output = out_file(cmd->pars_out);
+	cmd->last_input = in_file(cmd->pars_out->redir_lst);
+	cmd->last_output = out_file(cmd->pars_out->redir_lst);
 	open_files(cmd, CHILD, info);
 	pipe_cmd(cmd, info, child_i);
 	close_fd_array(cmd, info);

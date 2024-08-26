@@ -12,8 +12,7 @@ OBJS		:= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 OBJS_WO_MAIN:= $(filter-out $(OBJ_DIR)/main.o, $(OBJS))
 
 CC			:= cc
-CFLAGS		:=  -g -MMD -I/usr/local/opt/readline/include
-LDFLAGS 	:= -L/usr/local/opt/readline/lib -lreadline -lncurses
+CFLAGS		:= -g -MMD
 LIB_FLAGS	:= -lreadline
 RM			:= rm -rf
 
