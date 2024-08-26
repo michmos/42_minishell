@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+#include <unistd.h>
 
 void	print_envlst(t_list *head, int order)
 {
@@ -57,11 +58,10 @@ void	print_envlst(t_list *head, int order)
 	}
 }
 
-int	check_builtins(t_list *head, t_cmd	*cmd)
+int	check_builtins(t_cmd	*cmd)
 {
 	int			i;
 
-	(void)head;
 	i = 0;
 	if (ft_strncmp(cmd->args[0], "echo", 5) == 0) // doesn't work yet
 		i = 1;
@@ -154,24 +154,76 @@ int	execute_builtin(t_cmd_data *cmd, char *line, t_info *info)
 		doesn't make any sense to create it every single time... 
 */
 
-int	exec_one_builtin(t_cmd_data *cmd, char *line, t_info *info)
+int	reset_io(int og_stdin, int og_stdout)
+{
+	dup2(og_stdin, STDIN_FILENO); // TODO: protect
+	dup2(og_stdout, STDOUT_FILENO);
+	return (0);
+}
+
+// TODO: maybe change input parameters
+t_error set_io_files(t_list	*redir_lst)
+{
+	int	last_input;
+	int	last_output;
+	int	*fd_array;
+	size_t	redir_count;
+
+	// create fd array
+	redir_count = ft_lstsize(redir_lst);
+	if (redir_count == 0)
+		return (0);
+	fd_array = (int *)malloc((redir_count * sizeof(int)));
+	if (fd_array == NULL)
+	{
+		perror("malloc");
+		return (SYS_ERR);
+	}
+
+	// init fd array
+	if (open_files(fd_array, redir_lst) != NO_ERR)
+	{
+		sfree((void **) &fd_array);
+		return (SYS_ERR);
+	}
+
+	// redirect
+	last_input = in_file(redir_lst);
+	last_output = out_file(redir_lst);
+	if (last_input > -1)
+	{
+		if (dup2(fd_array[last_input], STDIN_FILENO) == -1)
+			; // TODO: protect
+	}
+	if (last_output > -1)
+	{
+		if (dup2(fd_array[last_output], STDOUT_FILENO) == -1)
+			; // TODO: protect
+	}
+	if (close_fd_array(fd_array, redir_count) != NO_ERR)
+	{
+		sfree((void **) &fd_array);
+		return (SYS_ERR);
+	}
+	sfree((void **) &fd_array);
+	return (NO_ERR);
+}
+
+t_error	exec_one_builtin(t_cmd *cmd, char *line, t_info *info)
 {
 	int			stat;
+	t_cmd_data	*cmd_data;
 
-	if (open_files(cmd, PARENT, info) == 1)
-		return (1);
-	cmd->last_input = in_file(cmd->pars_out->redir_lst);
-	cmd->last_output = out_file(cmd->pars_out->redir_lst);
-	if (cmd->last_input > -1)
+
+	cmd_data = get_cmd_data(cmd);
+	if (!cmd_data)
 	{
-		dup2_copy(cmd->fd_array[cmd->last_input], STDIN_FILENO, info);
+		return (SYS_ERR);
 	}
-	if (cmd->last_output > -1)
-	{
-		dup2_copy(cmd->fd_array[cmd->last_output], STDOUT_FILENO, info);
-	}
-	close_fd_array(cmd, info);
-	stat = execute_builtin(cmd, line, info);
+	if (set_io_files(cmd_data->pars_out->redir_lst) != NO_ERR)
+		; // TODO: protect
+	stat = execute_builtin(cmd_data, line, info);
+	reset_io(info->std_in, info->std_out); // TODO: protect
 	return (stat);
 }
 

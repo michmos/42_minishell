@@ -221,9 +221,10 @@ t_list *add_to_envlst(t_list *head, char **argv);
 // builtins.c --------------------------------------------------------------- //
 void	print_ordered_lst(void);
 void print_envlst(t_list *head, int order);
-int check_builtins(t_list *head, t_cmd *cmd);
+int	check_builtins(t_cmd	*cmd);
 int execute_builtin(t_cmd_data *cmd, char *line, t_info *info);
-int exec_one_builtin(t_cmd_data *cmd, char *line, t_info *info);
+t_error	exec_one_builtin(t_cmd *cmd, char *line, t_info *info);
+t_error set_io_files(t_list	*redir_lst);
 
 // cd_sec_1_to_6.c ---------------------------------------------------------- //
 t_error init_curpath(char **curpath, char *arg);
@@ -328,17 +329,16 @@ void wait_free_exit(t_list *head, int exit_status);
 
 // pipex_helper.c ---------------------------------------------------------//
 t_cmd *get_cmd(t_list *lst);
-t_cmd_data *get_cmd_data(t_list *lst);
+t_cmd_data	*get_cmd_data(t_cmd *cmd);
 t_redir *get_redir(t_list *lst);
 void err_exit(char *str);
 void close_pipes(t_info *info);
-void close_fd_array(t_cmd_data *cmd, t_info *info);
+t_error	close_fd_array(int *fd_array, size_t size);
 
 // pipex_open_files.c -----------------------------------------------------//
 int open_append(t_cmd_data *cmd, t_info *info, int i, int proc);
 int open_input_output(t_cmd_data *cmd, t_info *info, int i, int proc);
-int open_one_file(t_cmd_data *cmd, int process, t_info *info, int i);
-int open_files(t_cmd_data *cmd, int process, t_info *info);
+t_error	open_files(int *fd_array, t_list *redir_lst);
 
 // pipex_paths.c ----------------------------------------------------------//
 char *find_command_path(char *command, char **env);
@@ -352,7 +352,6 @@ void pipe_cmd(t_cmd_data *cmd, t_info *info, int i);
 // pipex.c ----------------------------------------------------------------//
 int cmd_pipeline(t_list *head, t_info *info, char *line);
 int parent_process(t_info *info);
-void child_process(t_list *head, t_info *info, int child_i, char *line);
 
 // redir_list.c -----------------------------------------------------------//
 int	in_file(t_list *redir_lst);

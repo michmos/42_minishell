@@ -12,28 +12,34 @@
 
 #include "../minishell.h"
 
+t_cmd_data	*get_cmd_data(t_cmd *cmd)
+{
+	t_cmd_data	*cmd_data;
+
+	cmd_data = (t_cmd_data*)malloc(sizeof(t_cmd_data));
+	if (!cmd_data)
+	{
+		perror("malloc");
+		return (NULL);
+	}
+	cmd_data->pars_out = cmd;
+	cmd_data->builtin = check_builtins(cmd);
+	return (cmd_data);
+}
+
 int	execution(t_list *pars_out, t_info *info, char *line)
 {
-	t_cmd		*frst_cmd;
-	t_cmd_data	*cmd_data;
 	int			stat;
 
-	frst_cmd = NULL;
 	info->num_cmd = ft_lstsize(pars_out);
 	if (info->num_cmd == 0)
 		return (ERROR);
-	cmd_data = (t_cmd_data*)malloc(sizeof(t_cmd_data));
-	if (!cmd_data)
-		return (free_info(info), 1);
-	frst_cmd = get_cmd(pars_out);
-	cmd_data->pars_out = frst_cmd;
-	cmd_data->builtin = check_builtins(pars_out, frst_cmd);
-	if (info->num_cmd == 1 && cmd_data->builtin > 0)
-		info->error = exec_one_builtin(cmd_data, line, info);
+	if (info->num_cmd == 1 && check_builtins(get_cmd(pars_out)) > 0)
+		info->error = exec_one_builtin(get_cmd(pars_out), line, info);
 	else
 	{
 		stat = cmd_pipeline(pars_out, info, line);
 		info->error = WEXITSTATUS(stat);
 	}
-	return (free_cmd_lst((void *)cmd_data), info->error);
+	return (info->error);
 }

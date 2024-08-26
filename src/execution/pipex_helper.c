@@ -18,11 +18,6 @@ t_cmd	*get_cmd(t_list *lst)
 	return ((t_cmd *)(lst->as_ptr));
 }
 
-t_cmd_data	*get_cmd_data(t_list *lst)
-{
-	return ((t_cmd_data *)(lst->as_ptr));
-}
-
 t_redir	*get_redir(t_list *lst)
 {
 	return ((t_redir *)(lst->as_ptr));
@@ -47,15 +42,19 @@ void	close_pipes(t_info *info)
 	}
 }
 
-void	close_fd_array(t_cmd_data *cmd, t_info *info)
+t_error	close_fd_array(int *fd_array, size_t size)
 {
 	int	i;
 
 	i = 0;
-	while (i < cmd->redir_count)
+	while (i < size)
 	{
-		if (cmd->fd_array[i] > 0 && close(cmd->fd_array[i]) == -1)
-			error(ERR_CLOSE, info);
+		if (fd_array[i] > 0 && close(fd_array[i]) == -1)
+		{
+			perror("close");
+			return (SYS_ERR);
+		}
 		i++;
 	}
+	return (NO_ERR);
 }

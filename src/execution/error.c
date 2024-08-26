@@ -92,7 +92,7 @@ int	error_open(t_cmd_data *cmd, int process, t_info *info)
 {
 	ft_putstr_fd(strerror(errno), 2);
 	ft_putstr_fd("\n", 2);
-	close_fd_array(cmd, info);
+	// close_fd_array(cmd, info);
 	close_pipes(info);
 	if (process == CHILD)
 		exit(EXIT_FAILURE);
