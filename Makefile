@@ -22,11 +22,6 @@ TESTS_SRCS	:= $(shell find $(TESTS_DIR) -iname "*.c")
 TESTS_OBJS	:= $(TESTS_SRCS:$(TESTS_DIR)/%.c=$(OBJ_DIR)/%.o)
 TESTS_BINS	:= $(TESTS_SRCS:%.c=%)
 
-.PRECIOUS: $(OBJ_DIR)/%.o
-
--include $(OBJS:.o=.d)
--include $(TESTS_OBJS:.o=.d)
-
 all: $(NAME)
 
 # rule to make shell
@@ -77,6 +72,9 @@ dry-%:
 
 print-%:
 	$(info $($*))
+
+-include $(OBJS:.o=.d)
+-include $(TESTS_OBJS:.o=.d)
 
 .PHONY: clean fclean re all
 
