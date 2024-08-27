@@ -113,23 +113,23 @@ int execute_builtin(t_cmd_data *cmd, char *line, t_info *info)
 	return (stat);
 }
 
-int exec_one_builtin(t_list *head, char *line, t_info *info)
-{
-	int stat;
-	t_cmd_data *cmd;
-
-	cmd = get_cmd(head);
-	if (open_files(cmd, PARENT, info) == 1)
-		return (1);
-	if (cmd->last_input > -1)
-	{
-		dup2(cmd->fd_array[cmd->last_input], STDIN_FILENO);
-	}
-	if (cmd->last_output > -1)
-	{
-		dup2(cmd->fd_array[cmd->last_output], STDOUT_FILENO);
-	}
-	close_fd_array(cmd, info);
-	stat = execute_builtin(cmd, line, info);
-	return (stat);
-}
+// int exec_one_builtin(t_list *head, char *line, t_info *info)
+// {
+// 	int stat;
+// 	t_cmd_data *cmd;
+//
+// 	cmd = get_cmd(head);
+// 	if (open_files(cmd, PARENT, info) == 1)
+// 		return (1);
+// 	if (cmd->last_input > -1)
+// 	{
+// 		dup2(cmd->fd_array[cmd->last_input], STDIN_FILENO);
+// 	}
+// 	if (cmd->last_output > -1)
+// 	{
+// 		dup2(cmd->fd_array[cmd->last_output], STDOUT_FILENO);
+// 	}
+// 	close_fd_array(cmd, info);
+// 	stat = execute_builtin(cmd, line, info);
+// 	return (stat);
+// }

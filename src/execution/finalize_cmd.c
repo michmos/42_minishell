@@ -10,21 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+// #include "../minishell.h"
 
-void	finalize_cmd(t_info *info, t_cmd_data *cmd)
-{
-	int	i;
-
-	i = 0;
-	while (i < info->num_cmd)
-	{
-		check_last_in_out(cmd);
-		if (cmd->hd_count > 0)
-			init_heredoc(cmd, info);
-		i++;
-	}
-}
+// void	finalize_cmd(t_info *info, t_cmd_data *cmd)
+// {
+// 	int	i;
+//
+// 	i = 0;
+// 	while (i < info->num_cmd)
+// 	{
+// 		check_last_in_out(cmd);
+// 		if (cmd->hd_count > 0)
+// 			init_heredoc(cmd, info);
+// 		i++;
+// 	}
+// }
 
         /*
             we can check if cmd is builtin

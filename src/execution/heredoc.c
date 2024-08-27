@@ -19,80 +19,80 @@ static void	print_msg(char *str)
 	ft_putstr_fd("\n", 1);
 }
 
-void	get_hd_str(t_cmd_data *cmd, t_info *info)
-{
-	char	*input;
-	char	*result;
-	char	*str;
-	int		i;
-	int		g_signal;
+// void	get_hd_str(t_cmd_data *cmd, t_info *info)
+// {
+// 	char	*input;
+// 	char	*result;
+// 	char	*str;
+// 	int		i;
+// 	int		g_signal;
+//
+// 	i = 0;
+// 	g_signal = 0;
+// 	result = NULL;
+// 	while (i < cmd->hd_count)
+// 	{
+// 		signal(SIGINT, sigint_handle);
+// 		input = readline("> ");
+// 		if (g_signal == 42 /*&& exit_signal(str) == 1*/)
+// 			return ;
+// 		if (!input && g_signal == 0)
+// 			print_msg(cmd->hd_array[i++]);
+// 		else if (input)
+// 		{
+// 			if (ft_strncmp(input, cmd->hd_array[i], ft_strlen(input)) == 0)
+// 				i++;
+// 			else if (i == cmd->hd_count - 1)
+// 				hd_utils(&str, input, info, &result);
+// 		}
+// 		if (input)
+// 			free(input);
+// 	}
+// 	cmd->hd_str = str;
+// }
 
-	i = 0;
-	g_signal = 0;
-	result = NULL;
-	while (i < cmd->hd_count)
-	{
-		signal(SIGINT, sigint_handle);
-		input = readline("> ");
-		if (g_signal == 42 /*&& exit_signal(str) == 1*/)
-			return ;
-		if (!input && g_signal == 0)
-			print_msg(cmd->hd_array[i++]);
-		else if (input)
-		{
-			if (ft_strncmp(input, cmd->hd_array[i], ft_strlen(input)) == 0)
-				i++;
-			else if (i == cmd->hd_count - 1)
-				hd_utils(&str, input, info, &result);
-		}
-		if (input)
-			free(input);
-	}
-	cmd->hd_str = str;
-}
-
-void	init_heredoc(t_cmd_data *cmd, t_info *info)
-{
-	int		i;
-	int		j;
-	t_cmd	*temp;
-	t_redir	*redir_lst;
-
-	i = 0;
-	j = 0;
-	cmd->hd_array = malloc((cmd->hd_count + 1) * sizeof(char *));
-	if (cmd->hd_array == NULL)
-		return ;
-	temp = cmd->pars_out;
-	while (i < cmd->redir_count)
-	{
-		redir_lst = get_redir(temp->redir_lst);
-		if (redir_lst->type == I_RD_HD)
-			cmd->hd_array[j++] = ft_strdup(redir_lst->filename); // might need to add the NULL terminator // TODO: protection missing
-		temp->redir_lst = temp->redir_lst->next; // is it actually redir_lst or i made a mistake?
-		i++;
-	}
-	get_hd_str(cmd, info);
-}
-
-void	get_hd_fd(t_cmd_data *cmd, t_info *info)
-{
-	int	fd[2];
-
-	if (pipe(fd) == -1)
-		error(ERR_PIPE, info);
-	write(fd[1], cmd->hd_str, ft_strlen(cmd->hd_str));
-	close(fd[1]);
-	cmd->fd_array[cmd->last_input] = fd[0];
-}
-
-void	heredoc(t_cmd_data *cmd, t_info *info, int i)
-{
-	if (cmd->last_input == i)
-		get_hd_fd(cmd, info);
-	else
-		cmd->fd_array[i] = -2;
-}
+// void	init_heredoc(t_cmd_data *cmd, t_info *info)
+// {
+// 	int		i;
+// 	int		j;
+// 	t_cmd	*temp;
+// 	t_redir	*redir_lst;
+//
+// 	i = 0;
+// 	j = 0;
+// 	cmd->hd_array = malloc((cmd->hd_count + 1) * sizeof(char *));
+// 	if (cmd->hd_array == NULL)
+// 		return ;
+// 	temp = cmd->pars_out;
+// 	while (i < cmd->redir_count)
+// 	{
+// 		redir_lst = get_redir(temp->redir_lst);
+// 		if (redir_lst->type == I_RD_HD)
+// 			cmd->hd_array[j++] = ft_strdup(redir_lst->filename); // might need to add the NULL terminator // TODO: protection missing
+// 		temp->redir_lst = temp->redir_lst->next; // is it actually redir_lst or i made a mistake?
+// 		i++;
+// 	}
+// 	get_hd_str(cmd, info);
+// }
+//
+// void	get_hd_fd(t_cmd_data *cmd, t_info *info)
+// {
+// 	int	fd[2];
+//
+// 	if (pipe(fd) == -1)
+// 		error(ERR_PIPE, info);
+// 	write(fd[1], cmd->hd_str, ft_strlen(cmd->hd_str));
+// 	close(fd[1]);
+// 	cmd->fd_array[cmd->last_input] = fd[0];
+// }
+//
+// void	heredoc(t_cmd_data *cmd, t_info *info, int i)
+// {
+// 	if (cmd->last_input == i)
+// 		get_hd_fd(cmd, info);
+// 	else
+// 		cmd->fd_array[i] = -2;
+// }
 
 /*
 	basically we are checking if heredoc is the last input

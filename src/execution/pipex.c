@@ -111,6 +111,92 @@ t_error	set_io_pipes(int pipe[2], int last_rd_end, int child_i, size_t num_child
 	return (NO_ERR);
 }
 
+t_error	get_hd_str(char **hd_str, char *delimiter)
+{
+	char	*tmp;
+	char	*tmp2;
+	char	*result;
+
+	result = NULL;
+	while (true)
+	{
+		tmp = readline("> "); // TODO: protect
+		if (ft_strncmp(tmp, delimiter, ft_strlen(tmp) + 1) == 0)
+		{
+			break;
+		}
+		tmp2 = ft_strjoin(tmp, "\n");
+		free(tmp);
+		if (!tmp2)
+		{
+			perror("malloc");
+			free(result);
+			return (SYS_ERR);
+		}
+		tmp = ft_strjoin(result, tmp2);
+		free(tmp2);
+		free(result);
+		if (!tmp)
+		{
+			perror("malloc");
+			return (SYS_ERR);
+		}
+		result = tmp;
+	}
+	*hd_str = result;
+	return (NO_ERR);
+}
+
+t_error	exec_hd(char **hd_str, t_list *redir_lst)
+{
+	char	*result;
+
+	// get heredoc string
+	result = NULL;
+	while (redir_lst)
+	{
+		if (get_redir(redir_lst)->type == I_RD_HD)
+		{
+			free(result);
+			if (get_hd_str(&result, get_redir(redir_lst)->filename) != NO_ERR)
+			{
+				return (SYS_ERR);
+			}
+		}
+		redir_lst = redir_lst->next;
+	}
+	*hd_str = result;
+	return (NO_ERR);
+}
+
+t_error	set_i_hd(char *hd_str)
+{
+	int	fds[2];
+
+	if (pipe(fds) == -1)
+	{
+		perror("pipe");
+		return (SYS_ERR);
+	}
+	write(fds[1], hd_str, ft_strlen(hd_str));
+	if (close(fds[1]) == -1)
+	{
+		perror("close");
+		return (SYS_ERR);
+	}
+	if (dup2(fds[0], STDIN_FILENO) == -1)
+	{
+		perror("dup2");
+		return (SYS_ERR);
+	}
+	if (close(fds[0]) == -1)
+	{
+		perror("close");
+		return (SYS_ERR);
+	}
+	return (NO_ERR);
+}
+
 int	cmd_pipeline(t_list *cmd_lst, t_info *info, char *line)
 {
 	int	i;
@@ -118,12 +204,16 @@ int	cmd_pipeline(t_list *cmd_lst, t_info *info, char *line)
 	pid_t	pid;
 	int		fds[2];
 	int		last_rd_end;
+	char	*hd_str;
 
 	i = 0;
 	while (i < info->num_cmd)
 	{
 		if (pipe(fds) == -1)
 			wait_free_exit(cmd_lst, EXIT_FAILURE);
+		// execute heredocs
+		if (exec_hd(&hd_str, get_cmd(cmd_lst)->redir_lst) != NO_ERR)
+			return (SYS_ERR);
 		pid = fork();
 		if (pid == ERROR)
 			wait_free_exit(cmd_lst, EXIT_FAILURE);
@@ -132,7 +222,9 @@ int	cmd_pipeline(t_list *cmd_lst, t_info *info, char *line)
 			// set in out
 			if (set_io_pipes(fds,	last_rd_end, i, info->num_cmd) != NO_ERR)
 				; // TODO: protect
-			if (set_io_files(((t_cmd *)(cmd_lst->as_ptr))->redir_lst) != NO_ERR)
+			// if (hd_str && set_i_hd(hd_str))
+			// 	;
+			if (set_io_files(get_cmd(cmd_lst)->redir_lst, hd_str) != NO_ERR)
 				; // TODO: protect
 
 			signal(SIGQUIT, sigquit_handle);

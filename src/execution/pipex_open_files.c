@@ -43,12 +43,31 @@
 // 	return (0);
 // }
 
+static int	get_hd_fd(char *hd_str)
+{
+	int	fds[2];
+
+	if (pipe(fds) == -1)
+	{
+		perror("pipe");
+		return (-1);
+	}
+	write(fds[1], hd_str, ft_strlen(hd_str));
+	if (close(fds[1]) == -1)
+	{
+		perror("close");
+		return (-1);
+	}
+	return (fds[0]);
+}
+
 static int	open_one_file(t_redir *redir)
 {
 	int		fd;
 	t_tag	type;
 
 	// (void)process; // TODO: see where i use it, or if i need it here
+	fd = 0;
 	type = redir->type;
 	if (type == I_RD)
 		fd = open(redir->filename, O_RDONLY);
@@ -56,12 +75,15 @@ static int	open_one_file(t_redir *redir)
 		fd = open(redir->filename, O_CREAT | O_RDWR | O_TRUNC, 0777);
 	else if (type == O_RD_APP)
 		fd = open(redir->filename, O_CREAT | O_RDWR | O_APPEND, 0777);
-	// else if (type == I_RD_HD)
-	// 	heredoc(cmd, info, i);
+
+	if (fd == -1)
+	{
+		perror("open");
+	}
 	return (fd);
 }
 
-t_error	open_files(int *fd_array, t_list *redir_lst)
+t_error	init_fd_arr(int *fd_array, t_list *redir_lst, char *hd_str)
 {
 	int	i;
 	int	status;
@@ -69,10 +91,17 @@ t_error	open_files(int *fd_array, t_list *redir_lst)
 	i = 0;
 	while (redir_lst)
 	{
-		fd_array[i] = open_one_file((t_redir *)(redir_lst->as_ptr));
+		if (get_redir(redir_lst)->type == I_RD_HD)
+		{
+			fd_array[i] = get_hd_fd(hd_str);
+		}
+		else
+		{
+			fd_array[i] = open_one_file(get_redir(redir_lst));
+		}
+
 		if (fd_array[i] == -1)
 		{
-			perror("open");
 			if (close_fd_array(fd_array, i) != NO_ERR)
 			{
 				return (SYS_ERR);

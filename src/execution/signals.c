@@ -55,6 +55,7 @@ void	sigquit_handle(int signal)
 {
 	if (signal == SIGQUIT)
 	{
+		// printf("signal caught:")
 	}
 }
 
