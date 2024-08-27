@@ -224,7 +224,7 @@ void print_envlst(t_list *head, int order);
 int	check_builtins(t_cmd	*cmd);
 int execute_builtin(t_cmd_data *cmd, char *line, t_info *info);
 t_error	exec_one_builtin(t_cmd *cmd, char *line, t_info *info);
-t_error set_io_files(t_list	*redir_lst);
+t_error set_io_redirs(t_list	*redir_lst, char *hd_str);
 
 // cd_sec_1_to_6.c ---------------------------------------------------------- //
 t_error init_curpath(char **curpath, char *arg);
@@ -307,10 +307,7 @@ int execution(t_list *head, t_info *info, char *line);
 void finalize_cmd(t_info *info, t_cmd_data *cmd);
 
 // heredoc.c ---------------------------------------------------------//
-void get_hd_str(t_cmd_data *cmd, t_info *info);
-void init_heredoc(t_cmd_data *cmd, t_info *info);
-void get_hd_fd(t_cmd_data *cmd, t_info *info);
-void heredoc(t_cmd_data *cmd, t_info *info, int i);
+t_error	exec_hd(char **hd_str, t_list *redir_lst);
 
 // heredoc2.c ---------------------------------------------------------//
 char *hd_strjoin(char *s1, char *s2, t_info *info);
@@ -338,7 +335,6 @@ t_error	close_fd_array(int *fd_array, size_t size);
 // pipex_open_files.c -----------------------------------------------------//
 int open_append(t_cmd_data *cmd, t_info *info, int i, int proc);
 int open_input_output(t_cmd_data *cmd, t_info *info, int i, int proc);
-t_error	open_files(int *fd_array, t_list *redir_lst);
 
 // pipex_paths.c ----------------------------------------------------------//
 char *find_command_path(char *command, char **env);
@@ -354,8 +350,8 @@ int cmd_pipeline(t_list *head, t_info *info, char *line);
 int parent_process(t_info *info);
 
 // redir_list.c -----------------------------------------------------------//
-int	in_file(t_list *redir_lst);
-int out_file(t_list *redir_lst);
+int	get_in_idx(t_list *redir_lst);
+int get_out_idx(t_list *redir_lst);
 void check_last_in_out(t_cmd_data *cmd);
 void check_type(t_cmd_data *cmd, t_tag type, int i);
 // signals.c -----------------------------------------------------------//

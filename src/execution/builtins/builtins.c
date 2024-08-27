@@ -161,75 +161,11 @@ int	reset_io(int og_stdin, int og_stdout)
 	return (0);
 }
 
-t_error	redir_io(int *fd_array, t_list *redir_lst)
-{
-	int	last_input;
-	int	last_output;
-
-	last_input = get_in_idx(redir_lst);
-	last_output = get_out_idx(redir_lst);
-	if (get_in_idx(redir_lst) > -1)
-	{
-		if (dup2(fd_array[last_input], STDIN_FILENO) == -1)
-		{
-			perror("dup2");
-			return (SYS_ERR);
-		}
-	}
-	if (last_output > -1)
-	{
-		if (dup2(fd_array[last_output], STDOUT_FILENO) == -1)
-		{
-			perror("dup2");
-			return (SYS_ERR);
-		}
-	}
-	return (NO_ERR);
-}
-
-t_error set_io_files(t_list	*redir_lst, char *hd_str)
-{
-	int	*fd_array;
-	size_t	redir_count;
-	t_error	error;
-
-	error = NO_ERR;
-	redir_count = ft_lstsize(redir_lst);
-	if (redir_count == 0)
-		return (0);
-
-	// create fd array
-	fd_array = (int *)malloc((redir_count * sizeof(int)));
-	if (fd_array == NULL)
-	{
-		perror("malloc");
-		return (SYS_ERR);
-	}
-
-	// init fd array
-	if (init_fd_arr(fd_array, redir_lst, hd_str) != NO_ERR)
-	{
-		sfree((void **) &fd_array);
-		return (SYS_ERR);
-	}
-
-	// redirect
-	error = redir_io(fd_array, redir_lst);
-
-	// close
-	if (close_fd_array(fd_array, redir_count) != NO_ERR)
-	{
-		sfree((void **) &fd_array);
-		return (SYS_ERR);
-	}
-	sfree((void **) &fd_array);
-	return (error);
-}
-
 t_error	exec_one_builtin(t_cmd *cmd, char *line, t_info *info)
 {
 	int			stat;
 	t_cmd_data	*cmd_data;
+	char		*hd_str;
 
 
 	cmd_data = get_cmd_data(cmd);
@@ -237,9 +173,13 @@ t_error	exec_one_builtin(t_cmd *cmd, char *line, t_info *info)
 	{
 		return (SYS_ERR);
 	}
-	// TODO: heredoc must also work for builtins
-	if (set_io_files(cmd->redir_lst, NULL) != NO_ERR)
-		; // TODO: protect
+	if (exec_hd(&hd_str, cmd->redir_lst) != NO_ERR)
+			return (SYS_ERR);
+	if (set_io_redirs(cmd->redir_lst, hd_str) != NO_ERR)
+	{
+		; // TODO: free cmd_data stuff
+		return (SYS_ERR);
+	}
 	stat = execute_builtin(cmd_data, line, info);
 	reset_io(info->std_in, info->std_out); // TODO: protect
 	return (stat);
