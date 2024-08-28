@@ -291,7 +291,7 @@ char *get_env_path(char **env);
 // static char *concat_path(char *dir, char *command);
 
 // pipex.c ----------------------------------------------------------------//
-int	cmd_pipeline(t_list *cmd_lst);
+t_error	cmd_pipeline(t_list *cmd_lst);
 
 // signals.c -----------------------------------------------------------//
 void handle_sig(int signal);

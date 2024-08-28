@@ -112,7 +112,7 @@ t_error	set_io_pipes(int pipe[2], int last_rd_end, int child_i, size_t num_child
 	return (NO_ERR);
 }
 
-int	cmd_pipeline(t_list *cmd_lst)
+t_error	cmd_pipeline(t_list *cmd_lst)
 {
 	int	i;
 	int	status;
@@ -160,5 +160,5 @@ int	cmd_pipeline(t_list *cmd_lst)
 	}
 	wait_for_childs(pid, &status);
 	set_exit_code(WEXITSTATUS(status));
-	return (status);
+	return (NO_ERR);
 }
