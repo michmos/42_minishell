@@ -11,15 +11,16 @@
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+#include <unistd.h>
 
 
 
 void	pwd(void)
 {
-	t_info	*shell;
+	t_shell	*shell;
 
-	shell = get_info_struct();
-	printf("%s\n", shell->cur_dir);
+	shell = get_shell_struct();
+	printf("%s\n", shell->cwd);
 	return ;
 }
 

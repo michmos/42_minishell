@@ -29,19 +29,6 @@ void	err_exit(char *str)
 	exit(EXIT_FAILURE);
 }
 
-void	close_pipes(t_info *info)
-{
-	int	i;
-
-	i = 0;
-	while (i < info->num_cmd - 1)
-	{
-		close(info->fd[i][0]);
-		close(info->fd[i][1]);
-		i++;
-	}
-}
-
 t_error	close_fd(int fd)
 {
 	if (fd >= 0)

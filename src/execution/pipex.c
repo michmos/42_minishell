@@ -11,24 +11,37 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <stdlib.h>
 #include <unistd.h>
 
-static t_error	child_process(t_cmd *cmd, t_info *info, int child_i, char *line)
+static void	child_process(t_cmd *cmd)
 {
-	t_cmd_data	*cmd_data;
+	t_shell	*shell;
+	char	*path;
 
-	cmd_data = get_cmd_data(cmd);
-	if (!cmd_data)
+	shell = get_shell_struct();
+
+	if (get_builtin_type(cmd->args[0]) != NO_BUILTIN)
 	{
-		return (SYS_ERR);
+		execute_builtin(cmd->args);
 	}
-	if (cmd_data->builtin > 0)
-		execute_builtin(cmd_data, line, info);
-	info->our_env = converter(info->env_lst);
-	cmd_data->cmd_path = find_command_path(cmd_data->pars_out->args[0], info->our_env);
-	check_dir(cmd_data, info);
-	check_cmd(cmd_data, info);
-	return (NO_ERR);
+	if (init_cmd_path(&path, cmd->args[0], shell->env) != NO_ERR)
+	{
+		clean_exit(EXIT_FAILURE);
+	}
+	if (!path)
+	{
+		path = ft_strdup(cmd->args[0]);
+		if (!path)
+		{
+			perror("malloc");
+			clean_exit(EXIT_FAILURE);
+		}
+	}
+	check_cmd(path, cmd->args[0]); // TODO: currently exits - needs to free stuff maybe
+	execve(path, cmd->args, shell->env);
+	perror("execve");
+	clean_exit(127);
 }
 
 void	wait_for_childs(pid_t last_child, int *status)
@@ -60,18 +73,6 @@ t_error	close_unused_fds(int pipe[2], int last_rd_end, size_t i, size_t num_chil
 	}
 	return (NO_ERR);
 }
-
-// t_error	set_io(t_list *redir_lst, int last_rd_end, int fds[2])
-// {
-// 	int	in_fd;
-// 	int	out_fd;
-//
-//
-// 	in_fd = in_file(redir_lst);
-// 	out_fd = out_file(redir_lst);
-//
-//
-// }
 
 t_error	set_io_pipes(int pipe[2], int last_rd_end, int child_i, size_t num_childs)
 {
@@ -111,7 +112,7 @@ t_error	set_io_pipes(int pipe[2], int last_rd_end, int child_i, size_t num_child
 	return (NO_ERR);
 }
 
-int	cmd_pipeline(t_list *cmd_lst, t_info *info, char *line)
+int	cmd_pipeline(t_list *cmd_lst)
 {
 	int	i;
 	int	status;
@@ -119,9 +120,11 @@ int	cmd_pipeline(t_list *cmd_lst, t_info *info, char *line)
 	int		fds[2];
 	int		last_rd_end;
 	char	*hd_str;
+	int	num_cmd;
 
 	i = 0;
-	while (i < info->num_cmd)
+	num_cmd = ft_lstsize(cmd_lst);
+	while (i < num_cmd)
 	{
 		if (pipe(fds) == -1)
 			wait_free_exit(cmd_lst, EXIT_FAILURE);
@@ -134,7 +137,7 @@ int	cmd_pipeline(t_list *cmd_lst, t_info *info, char *line)
 		else if (pid == 0)
 		{
 			// set in out
-			if (set_io_pipes(fds,	last_rd_end, i, info->num_cmd) != NO_ERR)
+			if (set_io_pipes(fds,	last_rd_end, i, num_cmd) != NO_ERR)
 				; // TODO: protect
 			if (set_io_redirs(get_cmd(cmd_lst)->redir_lst, hd_str) != NO_ERR)
 			{
@@ -142,12 +145,12 @@ int	cmd_pipeline(t_list *cmd_lst, t_info *info, char *line)
 				; // TODO: protect
 			}
 
-			signal(SIGQUIT, sigquit_handle);
-			child_process((t_cmd *)(cmd_lst->as_ptr), info, i, line); // TODO: protect
+			// signal(SIGQUIT, sigquit_handle);
+			child_process((t_cmd *)(cmd_lst->as_ptr)); // TODO: protect
 			// free head and move to next node, good representation is in lstclear in while loop
 		}
 		// parent
-		if (close_unused_fds(fds, last_rd_end, i, info->num_cmd) != NO_ERR)
+		if (close_unused_fds(fds, last_rd_end, i, num_cmd) != NO_ERR)
 		{
 			; // TODO: protect
 		}
@@ -156,5 +159,6 @@ int	cmd_pipeline(t_list *cmd_lst, t_info *info, char *line)
 		i++;
 	}
 	wait_for_childs(pid, &status);
+	set_exit_code(WEXITSTATUS(status));
 	return (status);
 }

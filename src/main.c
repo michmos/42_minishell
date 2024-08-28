@@ -10,59 +10,57 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "minishell.h"
+#include "minishell.h"
 
-// static void	process_cmd_line(char *cmd_line)
-// {
-// 	t_error	error;
-// 	t_list	*cmd_lst;
-// 	t_info	*info;
+static void	process_cmd_line(char *cmd_line)
+{
+	t_error	error;
+	t_list	*cmd_lst;
 
-// 	info = NULL; // remove this after info and shell structs are fixed
-// 	cmd_lst = NULL;
-// 	add_history(cmd_line);
-// 	error = parsing(&cmd_lst, cmd_line);
-// 	free(cmd_line);
-// 	if (error == SYS_ERR)
-// 	{
-// 		clean_exit(EXIT_FAILURE);
-// 	}
-// 	else if (error == SYN_ERR)
-// 	{
-// 		ft_lstclear(&cmd_lst, free_cmd);
-// 		return ;
-// 	}
-// 	error = execution(cmd_lst, info, cmd_line);
-// 	ft_lstclear(&cmd_lst, free_cmd);
-// 	if (error)
-// 	{
-// 		clean_exit(EXIT_FAILURE);
-// 	}
-// }
+	cmd_lst = NULL;
+	add_history(cmd_line);
+	error = parsing(&cmd_lst, cmd_line);
+	free(cmd_line);
+	if (error == SYS_ERR)
+	{
+		clean_exit(EXIT_FAILURE);
+	}
+	else if (error == SYN_ERR)
+	{
+		ft_lstclear(&cmd_lst, free_cmd);
+		return ;
+	}
+	error = execution(cmd_lst);
+	ft_lstclear(&cmd_lst, free_cmd);
+	if (error || reset_io() != NO_ERR)
+	{
+		clean_exit(EXIT_FAILURE);
+	}
+}
 
-// int	main(int argc, char *argv[], char **env)
-// {
-// 	t_shell	*shell;
-// 	char	*cmd_line;
-// 	t_error	error;
+int	main(int argc, char *argv[], char **env)
+{
+	t_shell	*shell;
+	char	*cmd_line;
+	t_error	error;
 
-// 	(void)error;
-// 	(void)argc;
-// 	(void)argv;
-// 	init_shell(&shell, env);
-// 	while (1)
-// 	{
-// 		cmd_line = readline("minishell> "); /*SHELLNAME*/
-// 		if (!cmd_line)
-// 		{
-// 			break ;
-// 		}
-// 		else if (!*cmd_line)
-// 		{
-// 			free(cmd_line);
-// 			continue ;
-// 		}
-// 		process_cmd_line(cmd_line);
-// 	}
-// 	clean_exit(shell->ex_code);
-// }
+	(void)error;
+	(void)argc;
+	(void)argv;
+	init_shell(&shell, env);
+	while (1)
+	{
+		cmd_line = readline("minishell> "); /*SHELLNAME*/
+		if (!cmd_line)
+		{
+			break ;
+		}
+		else if (!*cmd_line)
+		{
+			free(cmd_line);
+			continue ;
+		}
+		process_cmd_line(cmd_line);
+	}
+	clean_exit(shell->ex_code);
+}

@@ -37,28 +37,21 @@ typedef enum e_error
 	// Bad function input
 	INP_ERR,
 	// Other error
-	OTH_ERR,
-	ERR_PIPE,
-	ERR_MALLOC,
-	ERR_OPEN,
-	ERR_CLOSE,
-	ERR_DUP,
-	ERR_EXEC,
-	ERR_FORK,
-	ERR_PRINT,
-	ERR_CWD,
-	CHILD,
-	PARENT
+	OTH_ERR
 } t_error;
 
 typedef struct s_shell
 {
-	char *cwd;
-	char *old_wd;
-	t_list *env_lst;
-	int ex_code;
+	char 	*cwd;
+	char 	*old_wd;
+	t_list	*env_lst;
+	char	**env;
+	int		ex_code;
+	int		std_in;
+	int		std_out;
 	t_error error;
 } t_shell;
+
 
 // init_shell.c ------------------------------------------------------------- //
 void init_shell(t_shell **ptr, char **env);
@@ -175,38 +168,17 @@ typedef struct s_parse_env // TODO: we already have parse_str - remove double
 	size_t cursor_pos;
 } t_parse_env;
 
-typedef struct s_cmd_data
+typedef enum e_builtins
 {
-	t_cmd *pars_out;
-	int *fd_array;
-	int redir_count;
-	int builtin;
-	char *path; // 1-------
-	int last_input;
-	int last_output;
-	char *hd_str;
-	char **hd_array;
-	int hd_count;
-	char *cmd_path; //1--------
-
-} t_cmd_data;
-// why do i have path and cmd_path, what is the difference and where do i use it???
-
-typedef struct s_info
-{
-	int num_cmd;
-	int **fd;
-	int *pid;
-	int error;
-	int prev_error;
-	char *cur_dir;
-	char *old_dir;
-	int std_in;
-	int std_out;
-	t_list *env_lst;
-	t_list *ordered_lst;
-	char **our_env;
-} t_info;
+	NO_BUILTIN,
+	ECHO,
+	CD,
+	PWD,
+	EXPORT,
+	UNSET,
+	ENV,
+	EXIT
+} t_builtins;
 
 /*
 	1------
@@ -215,15 +187,15 @@ typedef struct s_info
 */
 
 // add_to_list.c ------------------------------------------------------------ //
-t_list *add_to_ordered_envlst(t_list *head, char **argv);
-t_list *add_to_envlst(t_list *head, char **argv);
+t_error add_to_envlst(t_list *head, char **argv);
 
 // builtins.c --------------------------------------------------------------- //
 void	print_ordered_lst(void);
 void print_envlst(t_list *head, int order);
-int	check_builtins(t_cmd	*cmd);
-int execute_builtin(t_cmd_data *cmd, char *line, t_info *info);
-t_error	exec_one_builtin(t_cmd *cmd, char *line, t_info *info);
+t_builtins	get_builtin_type(char *cmd);
+t_error	execute_builtin(char **args);
+t_error	reset_io(void);
+t_error	exec_one_builtin(t_cmd *cmd);
 t_error set_io_redirs(t_list	*redir_lst, char *hd_str);
 
 // cd_sec_1_to_6.c ---------------------------------------------------------- //
@@ -254,11 +226,11 @@ t_list *create_envlst(char **env);
 void free_env_var(void *node);
 
 // exit.c -------------------------------------------------------------------- //
-void exit_err(char *str, char *line, t_info *info);
-void print_num_arg_err(char *str);
+void	cleanup_shell();
+void exit_err(char *str);
+void	exit_err(char *str);
 int str_is_num(char *str);
-long long exit_value(char *str, char *line, t_info *info);
-int execute_exit(t_cmd_data *cmd, char *line, t_info *info);
+void	execute_exit(char **args);
 
 // ordered_env.c ------------------------------------------------------------ //
 t_list *create_ordered_envlst(t_list *env);
@@ -294,31 +266,14 @@ t_error set_pwd(char *new_path);
 // convert_tlist_2d.c ----------------------------------------------------//
 char	**converter(t_list *head);
 
-// error.c ------------------------------------------------------------//
-void	free_info(t_info *info);
-void error(int error, t_info *info);
-int error_open(t_cmd_data *cmd, int process, t_info *info);
-void free_info_line(t_info *info, char *line);
-
 // execution.c ------------------------------------------------------------//
-int execution(t_list *head, t_info *info, char *line);
-
-// finalize_cmd.c ------------------------------------------------------------//
-void finalize_cmd(t_info *info, t_cmd_data *cmd);
+t_error	execution(t_list *pars_out);
 
 // heredoc.c ---------------------------------------------------------//
 t_error	exec_hd(char **hd_str, t_list *redir_lst);
 
-// heredoc2.c ---------------------------------------------------------//
-char *hd_strjoin(char *s1, char *s2, t_info *info);
-void hd_utils(char **str, char *input, t_info *info, char **result);
-
 // pipex_check.c ---------------------------------------------------------//
-void check_dir_utils(t_cmd_data *cmd, t_info *info, struct stat file_stat);
-void check_dir(t_cmd_data *cmd, t_info *info);
-void check_cmd_utils(t_cmd_data *cmd, t_info *info, struct stat file_stat);
-void check_cmd(t_cmd_data *cmd, t_info *info);
-int check_executable(t_cmd_data *cmd, t_info *info);
+void	check_cmd(char *path, char *arg);
 
 // pipex_free.c ---------------------------------------------------------//
 void free_ar2(void **array);
@@ -326,37 +281,21 @@ void wait_free_exit(t_list *head, int exit_status);
 
 // pipex_helper.c ---------------------------------------------------------//
 t_cmd *get_cmd(t_list *lst);
-t_cmd_data	*get_cmd_data(t_cmd *cmd);
 t_redir *get_redir(t_list *lst);
 void err_exit(char *str);
-void close_pipes(t_info *info);
 t_error	close_fd(int fd);
 
-// pipex_open_files.c -----------------------------------------------------//
-int open_append(t_cmd_data *cmd, t_info *info, int i, int proc);
-int open_input_output(t_cmd_data *cmd, t_info *info, int i, int proc);
-
 // pipex_paths.c ----------------------------------------------------------//
-char *find_command_path(char *command, char **env);
+t_error	init_cmd_path(char **cmd_path, char *command, char **env);
 char *get_env_path(char **env);
 // static char *concat_path(char *dir, char *command);
 
-// pipex_pipe.c ----------------------------------------------------------------//
-void dup2_copy(int old_fd, int new_fd, t_info *info);
-void pipe_cmd(t_cmd_data *cmd, t_info *info, int i);
-
 // pipex.c ----------------------------------------------------------------//
-int cmd_pipeline(t_list *head, t_info *info, char *line);
-int parent_process(t_info *info);
+int	cmd_pipeline(t_list *cmd_lst);
 
-// redir_list.c -----------------------------------------------------------//
-int	get_in_idx(t_list *redir_lst);
-int get_out_idx(t_list *redir_lst);
-void check_last_in_out(t_cmd_data *cmd);
-void check_type(t_cmd_data *cmd, t_tag type, int i);
 // signals.c -----------------------------------------------------------//
 void handle_sig(int signal);
-void	signal_ctrl_d(t_info *info, char **line);
+// void	signal_ctrl_d(t_info *info, char **line);
 void	sigint_handle(int signal);
 void	sigquit_handle(int signal);
 int	init_signals(void);
@@ -381,14 +320,5 @@ void set_exit_code(int code);
 // cleanup.c ----------------------------------------------------------------- //
 void clean_exit(int exit_code);
 
-/*for testing puroses my own struct init and etc...*/
-// init_info.c -------- //
-void	init_info(t_info **ptr, char **env);
-
-// info_struct.c -------- //
-t_info	*get_info_struct(void);
-void	set_info_struct(t_info *new_shell);
-
-void	free_cmd_lst(void *node);
 
 #endif

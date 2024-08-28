@@ -12,34 +12,22 @@
 
 #include "../minishell.h"
 
-t_cmd_data	*get_cmd_data(t_cmd *cmd)
-{
-	t_cmd_data	*cmd_data;
-
-	cmd_data = (t_cmd_data*)malloc(sizeof(t_cmd_data));
-	if (!cmd_data)
-	{
-		perror("malloc");
-		return (NULL);
-	}
-	cmd_data->pars_out = cmd;
-	cmd_data->builtin = check_builtins(cmd);
-	return (cmd_data);
-}
-
-int	execution(t_list *pars_out, t_info *info, char *line)
+t_error	execution(t_list *pars_out)
 {
 	int			stat;
+	int			num_cmd;
+	t_error		error;
 
-	info->num_cmd = ft_lstsize(pars_out);
-	if (info->num_cmd == 0)
+	num_cmd = ft_lstsize(pars_out);
+	if (num_cmd == 0)
 		return (ERROR);
-	if (info->num_cmd == 1 && check_builtins(get_cmd(pars_out)) > 0)
-		info->error = exec_one_builtin(get_cmd(pars_out), line, info);
+	if (num_cmd == 1 && get_builtin_type(get_cmd(pars_out)->args[0]) != NO_BUILTIN)
+	{
+		error = exec_one_builtin(get_cmd(pars_out));
+	}
 	else
 	{
-		stat = cmd_pipeline(pars_out, info, line);
-		info->error = WEXITSTATUS(stat);
+		error = cmd_pipeline(pars_out);
 	}
-	return (info->error);
+	return (error);
 }

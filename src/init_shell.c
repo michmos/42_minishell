@@ -6,11 +6,12 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 14:44:58 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/06 15:41:35 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/28 15:57:45 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <unistd.h>
 
 static void	assign_env_values(char **ptr, t_list *env_lst, const char *env_key)
 {
@@ -43,6 +44,13 @@ void	init_shell(t_shell **ptr, char **env)
 	{
 		clean_exit(EXIT_FAILURE);
 	}
+	shell->env = converter(shell->env_lst);
+	if (!shell->env)
+	{
+		clean_exit(EXIT_FAILURE);
+	}
+	shell->std_in = dup(STDIN_FILENO);
+	shell->std_out = dup(STDOUT_FILENO); // TODO: protect
 	assign_env_values(&shell->cwd, shell->env_lst, "PWD");
 	assign_env_values(&shell->old_wd, shell->env_lst, "OLDPWD");
 	*ptr = shell;

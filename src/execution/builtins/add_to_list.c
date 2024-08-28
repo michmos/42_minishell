@@ -12,10 +12,9 @@
 
 #include "../../minishell.h"
 
-t_list	*add_to_envlst(t_list *head, char **argv)
+t_error add_to_envlst(t_list *head, char **argv)
 {
 	t_list		*new;
-	t_list		*cur;
 	t_env_var	*env_var;
 	t_list		*last;
 
@@ -24,81 +23,14 @@ t_list	*add_to_envlst(t_list *head, char **argv)
 	env_var = get_env_var(*argv);
 	if (!env_var)
 	{
-		ft_lstclear(&head, free_env_var);
-		return (NULL);
+		return (SYS_ERR);
 	}
 	new = ft_lstnew(env_var);
 	if (!new)
-		return (perror("malloc"), ft_lstclear(&head, free_env_var), NULL);
-	cur = head;
-	while (cur && ft_strncmp(key(cur), key(new), ft_strlen(key(cur))) != 0)
 	{
-		last = cur;
-		cur = cur->next;
+		perror("malloc");
+		return (SYS_ERR);
 	}
-	if (cur && ft_strncmp(key(cur), key(new), ft_strlen(key(cur))) == 0)
-	{
-		last->next = new;
-		new->next = cur->next;
-		ft_lstdelone(cur, free_env_var);
-	}
-	else
-		ft_lstadd_back(&head, new);
-	return (head);
-}
-
-// t_list	*add_to_envlst(t_list *head, char **argv)
-// {
-// 	t_list		*new;
-// 	t_env_var	*env_var;
-
-// 	// if (*argv == NULL)
-// 	// 	return (head);
-// 	env_var = get_env_var(*argv);
-// 	if (!env_var)
-// 	{
-// 		ft_lstclear(&head, free_env_var);
-// 		return (NULL);
-// 	}
-// 	new = ft_lstnew(env_var);
-// 	if (!new)
-// 		return (perror("malloc"), ft_lstclear(&head, free_env_var), NULL);
-// 	ft_lstadd_back(&head, new);
-// 	return (head);
-// }
-
-t_list	*add_to_ordered_envlst(t_list *head, char **argv)
-{
-	t_list		*new;
-	t_env_var	*env_var;
-	t_list		*cur;
-	t_list		*last;
-
-	// if (*argv == NULL)
-	// 	return (head);
-	env_var = get_env_var(*argv);
-	if (!env_var)
-	{
-		ft_lstclear(&head, free_env_var);
-		return (NULL);
-	}
-	new = ft_lstnew(env_var);
-	if (!new)
-		return (perror("malloc"), ft_lstclear(&head, free_env_var), NULL);
-	cur = head;
-	while (cur && ft_strncmp(key(cur), key(new), ft_strlen(key(cur))) < 0)
-	{
-		last = cur;
-		cur = cur->next;
-	}
-	if (cur == head)
-		ft_lstadd_front(&head, new);
-	else if (!cur)
-		ft_lstadd_back(&head, new);
-	else
-	{
-		last->next = new;
-		new->next = cur;
-	}
-	return (head);
+	ft_lstadd_back(&head, new);
+	return (NO_ERR);
 }

@@ -21,20 +21,7 @@
 // 	free(env_var->value);
 // 	free(env_var);
 // }
-void	free_ar2(void **array)
-{
-	size_t	i;
 
-	i = 0;
-	if (!array)
-		return ;
-	while (array[i] != NULL)
-	{
-		free(array[i]);
-		i++;
-	}
-	free(array);
-}
 
 // static void	free_redir_lst(void *node)
 // {
@@ -45,22 +32,6 @@ void	free_ar2(void **array)
 // 	free(redir_lst);
 // }
 
-void	free_cmd_lst(void *node)
-{
-	t_cmd_data	*cmd;
-
-	cmd = (t_cmd_data *) node;
-	// free_ar2((void **) cmd->pars_out->args);
-	// ft_lstclear(&cmd->pars_out->redir_lst, free_redir_lst);
-	// if (cmd->path)
-	// 	free(cmd->path);
-	// free_ar2((void **) cmd->hd_array);
-	// if (cmd->hd_str)
-	// 	free(cmd->hd_str);
-	// if (cmd->cmd_path)
-	// 	free(cmd->cmd_path);
-	free(cmd);
-}
 /*
 	do i need a while loop and go through every node and free them?
 	i guess that's logical
@@ -79,7 +50,7 @@ void	free_cmd_lst(void *node)
 
 void	wait_free_exit(t_list *head, int exit_status)
 {
-	ft_lstclear(&head, free_cmd_lst);
+	ft_lstclear(&head, free_cmd);
 	exit (exit_status);
 }
 

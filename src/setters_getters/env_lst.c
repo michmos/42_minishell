@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 11:09:54 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/25 11:01:11 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/28 15:37:19 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 t_list *get_env_lst(void)
 {
-	t_info	*info;
+	t_shell	*shell;
 
-	info = get_info_struct();
-	if (!info)
+	shell = get_shell_struct();
+	if (!shell)
 		return (NULL);
-	return (info->env_lst);
+	return (shell->env_lst);
 }
 
 void	set_env_lst(t_list *new_lst)

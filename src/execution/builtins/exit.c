@@ -11,22 +11,27 @@
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+#include <unistd.h>
 
-void	exit_err(char *str, char *line, t_info *info)
+void	cleanup_shell(void)
 {
-	(void)line;
-	print_num_arg_err(str);
-	close(info->std_in);
-	close(info->std_out);
-	free_info(info);
-	exit(255);
-}
+	t_shell *shell;
 
-void	print_num_arg_err(char *str)
-{
-	ft_putstr_fd("exit\nMinishell: exit: ", 2);
-	ft_putstr_fd(str, 2);
-	ft_putstr_fd(": numeric argument required\n", 2); // looks like it exits bash after this, might be because i'm on os now
+	shell = get_shell_struct();
+	free(shell->cwd);
+	free(shell->old_wd);
+	ft_lstclear(&(shell->env_lst), free_env_var);
+	ft_free_2d_array((void **) shell->env);
+	if (close(shell->std_in) == -1)
+	{
+		perror("close");
+	}
+	if (close(shell->std_out) == -1)
+	{
+		perror("close");
+	}
+	free(shell);
+	// TODO: clear history
 }
 
 int	str_is_num(char *str)
@@ -45,7 +50,7 @@ int	str_is_num(char *str)
 	return (1);
 }
 
-long long	exit_value(char *str, char *line, t_info *info)
+static t_error 	init_ex_val(unsigned char *result, char *input)
 {
 	unsigned long long	res;
 	int					sign;
@@ -54,49 +59,50 @@ long long	exit_value(char *str, char *line, t_info *info)
 	res = 0;
 	sign = 1;
 	i = 0;
-	if (str[i] == '+' || str[i] == '-')
-		if (str[i++] == '-')
+	if (input[i] == '+' || input[i] == '-')
+		if (input[i++] == '-')
 			sign = -1;
-	while (str[i])
+	while (input[i])
 	{
 		if (res > ULLONG_MAX / 10)
 		{
-			print_num_arg_err(str);
-			return (255);
+			ft_printf_fd(STDERR_FILENO, "exit\n%s: exit: %s: numeric argument required\n", SHELLNAME, input);
+			*result = 2;
+			return (OTH_ERR);
 		}
-		res = (res * 10) + (str[i] - 48);
+		res = (res * 10) + (input[i] - '0');
 		i++;
 	}
-	if ((sign == 1 && res > LLONG_MAX) || (sign == -1 /*&& res - 1 < LLONG_MIN*/))
-		exit_err(str, line, info);
-	return (res * sign);
+	*result = res * sign;
+	return (NO_ERR);
 }
 
-int	execute_exit(t_cmd_data *cmd, char *line, t_info *info)
+void	execute_exit(char **args)
 {
-	int	i;
+	unsigned char	exit_val;
+	t_shell	*shell;
 
-	(void)line;
-	if (!cmd->pars_out->args[1])
+	if (!args[1])
 	{
-		i = 0;
+		exit_val = 0;
 		ft_putstr_fd("exit\n", 1);
 	}
-	else if (!str_is_num(cmd->pars_out->args[1]))
+	else if (!str_is_num(args[1]))
 	{
-		i = 255;
-		print_num_arg_err(cmd->pars_out->args[1]);
+		exit_val = 255;
+		ft_printf_fd(STDERR_FILENO, "exit\n%s: exit: %s: numeric argument required\n", SHELLNAME, args[1]);
 	}
-	else if (cmd->pars_out->args[2])
+	else if (args[2])
 	{
-		info->error = 1;
-		return (ft_putstr_fd("exit\nMinishell: exit: too many arguments\n", 2), 0);
+		exit_val = 1;
+		ft_printf_fd(STDERR_FILENO, "exit\%s: exit: too many arguments\n", SHELLNAME);
 	}
 	else
 	{
-		i = exit_value(cmd->pars_out->args[1], line, info);
-		ft_putstr_fd("exit\n", 1);
+		if (init_ex_val(&exit_val, args[1]) == NO_ERR)
+		{
+			ft_printf("exit\n");
+		}
 	}
-	return (close(info->std_in), close(info->std_out),
-		free_info(info), exit(i), 0);
+	clean_exit(exit_val);
 }

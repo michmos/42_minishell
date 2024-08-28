@@ -61,7 +61,7 @@ t_env_var	*get_env_var(char *env)
 	env_parse.cursor_pos = 0;
 	env_parse.buffer_len = ft_strlen(env);
 
-	env_var = malloc(sizeof(t_env_var));
+	env_var = ft_calloc(1, sizeof(t_env_var));
 	if (!env_var)
 	{
 		perror("malloc");
@@ -73,17 +73,18 @@ t_env_var	*get_env_var(char *env)
 		free(env_var);
 		return (NULL);
 	}
-	if (!env[env_parse.cursor_pos])
-		return (env_var); // TODO: need error message here
+	if (env[env_parse.cursor_pos] != '=')
+	{
+		return (env_var);
+	}
 	env_var->equal = (env[env_parse.cursor_pos] == '=');
 	env_parse.cursor_pos++;
 	env_var->value = get_value(env_var, &env_parse);
 	if (!env_var->value)
 	{
-		free(env_var);
+		free_env_var((void *) env_var);
 		return (NULL);
 	}
-
 	return (env_var);
 }
 /*

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+#include <stdio.h>
 #include <unistd.h>
 
 void	print_envlst(t_list *head, int order)
@@ -58,64 +59,56 @@ void	print_envlst(t_list *head, int order)
 	}
 }
 
-int	check_builtins(t_cmd	*cmd)
+t_builtins	get_builtin_type(char *cmd)
 {
-	int			i;
-
-	i = 0;
-	if (ft_strncmp(cmd->args[0], "echo", 5) == 0) // doesn't work yet
-		i = 1;
-	else if (ft_strncmp(cmd->args[0], "cd", 3) == 0) // doesn't work yet
-		i = 2;
-	else if (ft_strncmp(cmd->args[0], "pwd", 4) == 0)
-		i = 3;
-	else if (ft_strncmp(cmd->args[0], "export", 7) == 0) // doesn't work yet
-		i = 4;
-	else if (ft_strncmp(cmd->args[0], "unset", 6) == 0) // doesn't work yet
-		i = 5;
-	else if (ft_strncmp(cmd->args[0], "env", 4) == 0) // doesn't work yet
-		i = 6;
-	else if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
-		i = 7;
-	return (i);
+	if (ft_strncmp(cmd, "echo", 5) == 0) // doesn't work yet
+		return (ECHO);
+	else if (ft_strncmp(cmd, "cd", 3) == 0) // doesn't work yet
+		return (CD);
+	else if (ft_strncmp(cmd, "pwd", 4) == 0)
+		return (PWD);
+	else if (ft_strncmp(cmd, "export", 7) == 0) // doesn't work yet
+		return (EXPORT);
+	else if (ft_strncmp(cmd, "unset", 6) == 0) // doesn't work yet
+		return (UNSET);
+	else if (ft_strncmp(cmd, "env", 4) == 0) // doesn't work yet
+		return (ENV);
+	else if (ft_strncmp(cmd, "exit", 5) == 0)
+		return (EXIT);
+	else
+		return (NO_BUILTIN);
 }
 
-void	export(t_cmd_data *cmd, t_info *info)
+t_error	export(char **args)
 {
-	int	i;
+	t_shell	*shell;
 
-	i = 1;
-	if (cmd->pars_out->args[i])
+	shell = get_shell_struct();
+	if (args[0] && args[1])
 	{
-		while (cmd->pars_out->args[i])
+		if (add_to_envlst(shell->env_lst, args) != NO_ERR)
 		{
-			info->env_lst = \
-			add_to_envlst(info->env_lst, &cmd->pars_out->args[i]);
-			i++;
+			return (SYS_ERR);
 		}
 	}
 	else
 	{
 		print_ordered_lst();
 	}
+	return (NO_ERR);
 }
 
-void	env(t_cmd_data *cmd, t_info *info)
+t_error	env(char **args)
 {
-	int	i;
+	t_shell	*shell;
 
-	i = 1;
-	if (cmd->pars_out->args[i])
+	shell = get_shell_struct();
+	if (add_to_envlst(shell->env_lst, args) != NO_ERR)
 	{
-		while (cmd->pars_out->args[i])
-		{
-			info->env_lst = \
-			add_to_envlst(info->env_lst, &cmd->pars_out->args[i]);
-			i++;
-		}
+		return (SYS_ERR);
 	}
-	else
-		print_envlst(info->env_lst, 6);
+	print_envlst(shell->env_lst, 6);
+	return (NO_ERR);
 }
 /*
 	export now only works if you first give it and argument, if you don't it won't work
@@ -123,26 +116,40 @@ void	env(t_cmd_data *cmd, t_info *info)
 	env gives everything as it should, but need to work on the thing that would replace the node if you give the same key
 */
 
-int	execute_builtin(t_cmd_data *cmd, char *line, t_info *info)
+t_error	execute_builtin(char **args)
 {
-	int	stat;
+	t_error	error;
+	t_shell	*shell;
+	t_builtins type;
 
-	stat = 0;
-	if (cmd->builtin == 1)
-		echo(cmd->pars_out->args);
-	else if (cmd->builtin == 2)
-		cd(cmd->pars_out->args);
-	else if (cmd->builtin == 3)
-		pwd();
-	else if (cmd->builtin == 4)
-		export(cmd, info);
-	else if (cmd->builtin == 5)
-		unset_envlst(info->env_lst, &cmd->pars_out->args[1]);
-	else if (cmd->builtin == 6)
-		env(cmd, info);
-	else if (cmd->builtin == 7)
-		execute_exit(cmd, line, info);
-	return (stat);
+	error = NO_ERR;
+	type = get_builtin_type(args[0]);
+	if (type == ECHO)
+		echo(args);
+	else if (type == CD)
+		error = cd(args);
+	else if (type == PWD)
+		pwd(); // TODO: should throw error in case of too many arguments
+	else if (type == EXPORT)
+		error = export(args);
+	// else if (type == UNSET)
+	// 	error = unset_envlst(args);
+	else if (type == ENV)
+		error = env(args);
+	else if (type == EXIT)
+		execute_exit(args);
+
+	if (type == CD || type == EXPORT || type == UNSET || type == ENV)
+	{
+		shell = get_shell_struct();
+		ft_free_2d_array((void **) shell->env);
+		shell->env = converter(shell->env_lst);
+		if (!shell->env)
+		{
+			return (SYS_ERR);
+		}
+	}
+	return (error);
 }
 /*
 	builtin == 5 (unset)
@@ -154,34 +161,37 @@ int	execute_builtin(t_cmd_data *cmd, char *line, t_info *info)
 		doesn't make any sense to create it every single time... 
 */
 
-int	reset_io(int og_stdin, int og_stdout)
+t_error	reset_io(void)
 {
-	dup2(og_stdin, STDIN_FILENO); // TODO: protect
-	dup2(og_stdout, STDOUT_FILENO);
+	t_shell	*shell;
+
+	shell = get_shell_struct();
+	if (dup2(shell->std_in, STDIN_FILENO) == -1)
+	{
+		perror("dup2");
+		return (SYS_ERR);
+	}
+	if (dup2(shell->std_out, STDOUT_FILENO) == -1)
+	{
+		perror("dup2");
+		return (SYS_ERR);
+	}
 	return (0);
 }
 
-t_error	exec_one_builtin(t_cmd *cmd, char *line, t_info *info)
+t_error	exec_one_builtin(t_cmd *cmd)
 {
 	int			stat;
-	t_cmd_data	*cmd_data;
 	char		*hd_str;
 
-
-	cmd_data = get_cmd_data(cmd);
-	if (!cmd_data)
-	{
-		return (SYS_ERR);
-	}
 	if (exec_hd(&hd_str, cmd->redir_lst) != NO_ERR)
 			return (SYS_ERR);
 	if (set_io_redirs(cmd->redir_lst, hd_str) != NO_ERR)
 	{
-		; // TODO: free cmd_data stuff
+		free(hd_str);
 		return (SYS_ERR);
 	}
-	stat = execute_builtin(cmd_data, line, info);
-	reset_io(info->std_in, info->std_out); // TODO: protect
+	stat = execute_builtin(cmd->args);
 	return (stat);
 }
 
