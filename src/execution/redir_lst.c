@@ -11,42 +11,42 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	get_in_idx(t_list *redir_lst)
-{
-	int		result;
-	int		i;
-
-	i = 0;
-	result = -1;
-	while (redir_lst)
-	{
-		if(get_redir(redir_lst)->type == I_RD
-			|| get_redir(redir_lst)->type == I_RD_HD)
-			result = i;
-		i++;
-		redir_lst= redir_lst->next;
-	}
-	return (result);
-}
-
-int	get_out_idx(t_list *redir_lst)
-{
-	int		result;
-	int		i;
-
-	i = 0;
-	result = -1;
-	while (redir_lst)
-	{
-		if (((t_redir *)(redir_lst->as_ptr))->type == O_RD \
-		|| ((t_redir *)(redir_lst->as_ptr))->type == O_RD_APP)
-			result = i;
-		i++;
-		redir_lst = redir_lst->next;
-	}
-	return (result);
-}
+//
+// int	get_in_idx(t_list *redir_lst)
+// {
+// 	int		result;
+// 	int		i;
+//
+// 	i = 0;
+// 	result = -1;
+// 	while (redir_lst)
+// 	{
+// 		if(get_redir(redir_lst)->type == I_RD
+// 			|| get_redir(redir_lst)->type == I_RD_HD)
+// 			result = i;
+// 		i++;
+// 		redir_lst= redir_lst->next;
+// 	}
+// 	return (result);
+// }
+//
+// int	get_out_idx(t_list *redir_lst)
+// {
+// 	int		result;
+// 	int		i;
+//
+// 	i = 0;
+// 	result = -1;
+// 	while (redir_lst)
+// 	{
+// 		if (((t_redir *)(redir_lst->as_ptr))->type == O_RD \
+// 		|| ((t_redir *)(redir_lst->as_ptr))->type == O_RD_APP)
+// 			result = i;
+// 		i++;
+// 		redir_lst = redir_lst->next;
+// 	}
+// 	return (result);
+// }
 
 void	check_last_in_out(t_cmd_data *cmd)
 {

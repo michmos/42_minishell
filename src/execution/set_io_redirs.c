@@ -6,30 +6,26 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 11:45:20 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/27 11:48:07 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/28 10:04:56 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <unistd.h>
 
-static t_error	redir_io(int *fd_array, t_list *redir_lst)
+static t_error	redir_io(int fds[2])
 {
-	int	last_input;
-	int	last_output;
-
-	last_input = get_in_idx(redir_lst);
-	last_output = get_out_idx(redir_lst);
-	if (get_in_idx(redir_lst) > -1)
+	if (fds[0] >= 0)
 	{
-		if (dup2(fd_array[last_input], STDIN_FILENO) == -1)
+		if (dup2(fds[0], STDIN_FILENO) == -1)
 		{
 			perror("dup2");
 			return (SYS_ERR);
 		}
 	}
-	if (last_output > -1)
+	if (fds[1] >= 0)
 	{
-		if (dup2(fd_array[last_output], STDOUT_FILENO) == -1)
+		if (dup2(fds[1], STDOUT_FILENO) == -1)
 		{
 			perror("dup2");
 			return (SYS_ERR);
@@ -56,51 +52,66 @@ static int	get_hd_fd(char *hd_str)
 	return (fds[0]);
 }
 
-static int	open_one_file(t_redir *redir)
-{
-	int		fd;
-	t_tag	type;
-
-	// (void)process; // TODO: see where i use it, or if i need it here
-	fd = 0;
-	type = redir->type;
-	if (type == I_RD)
-		fd = open(redir->filename, O_RDONLY);
-	else if (type == O_RD)
-		fd = open(redir->filename, O_CREAT | O_RDWR | O_TRUNC, 0777);
-	else if (type == O_RD_APP)
-		fd = open(redir->filename, O_CREAT | O_RDWR | O_APPEND, 0777);
-
-	if (fd == -1)
-	{
-		perror("open");
-	}
-	return (fd);
-}
-
-static t_error	init_fd_arr(int *fd_array, t_list *redir_lst, char *hd_str)
+static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 {
 	int	i;
 	int	status;
+	t_redir	*redir;
 
 	i = 0;
+	fds[0] = -2;
+	fds[1] = -2;
+
 	while (redir_lst)
 	{
-		if (get_redir(redir_lst)->type == I_RD_HD)
+		redir = get_redir(redir_lst);
+		if (redir->type == I_RD_HD)
 		{
-			fd_array[i] = get_hd_fd(hd_str);
-		}
-		else
-		{
-			fd_array[i] = open_one_file(get_redir(redir_lst));
-		}
-
-		if (fd_array[i] == -1)
-		{
-			if (close_fd_array(fd_array, i) != NO_ERR)
+			if (close_fd(fds[0]) != NO_ERR)
 			{
 				return (SYS_ERR);
 			}
+			fds[0] = get_hd_fd(hd_str);
+		}
+		else if (redir->type == I_RD)
+		{
+			if (close_fd(fds[0]) != NO_ERR)
+			{
+				return (SYS_ERR);
+			}
+			fds[0] = open(redir->filename, O_RDONLY);
+		}
+		else if (redir->type == O_RD)
+		{
+			if (close_fd(fds[1]) != NO_ERR)
+			{
+				return (SYS_ERR);
+			}
+			fds[1] = open(redir->filename, O_CREAT | O_RDWR | O_TRUNC, 0777);
+		}
+		else if (redir->type == O_RD_APP)
+		{
+			if (close_fd(fds[1]) != NO_ERR)
+			{
+				return (SYS_ERR);
+			}
+			fds[1] = open(redir->filename, O_CREAT | O_RDWR | O_APPEND, 0777);
+		}
+
+
+
+
+		if (fds[0] == -1 || fds[1] == -1)
+		{
+			if (close_fd(fds[0]) != NO_ERR)
+			{
+				return (SYS_ERR);
+			}
+			if (close_fd(fds[1]) != NO_ERR)
+			{
+				return (SYS_ERR);
+			}
+			ft_printf_fd(STDERR_FILENO, "%s: %s: %s\n", SHELLNAME, redir->filename, strerror(errno));
 			return (SYS_ERR);
 		}
 		redir_lst = redir_lst->next;
@@ -111,40 +122,29 @@ static t_error	init_fd_arr(int *fd_array, t_list *redir_lst, char *hd_str)
 
 t_error set_io_redirs(t_list	*redir_lst, char *hd_str)
 {
-	int	*fd_array;
-	size_t	redir_count;
 	t_error	error;
+	int		fds[2];
 
 	error = NO_ERR;
-	redir_count = ft_lstsize(redir_lst);
-	if (redir_count == 0)
-		return (0);
-
-	// create fd array
-	fd_array = (int *)malloc((redir_count * sizeof(int)));
-	if (fd_array == NULL)
-	{
-		perror("malloc");
-		return (SYS_ERR);
-	}
 
 	// init fd array
-	if (init_fd_arr(fd_array, redir_lst, hd_str) != NO_ERR)
+	if (get_io(fds, redir_lst, hd_str) != NO_ERR)
 	{
-		sfree((void **) &fd_array);
 		return (SYS_ERR);
 	}
 
 	// redirect
-	error = redir_io(fd_array, redir_lst);
+	error = redir_io(fds);
 
 	// close
-	if (close_fd_array(fd_array, redir_count) != NO_ERR)
+	if (close_fd(fds[0]) != NO_ERR)
 	{
-		sfree((void **) &fd_array);
 		return (SYS_ERR);
 	}
-	sfree((void **) &fd_array);
+	if (close_fd(fds[1]) != NO_ERR)
+	{
+		return (SYS_ERR);
+	}
 	return (error);
 }
 

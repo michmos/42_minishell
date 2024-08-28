@@ -42,19 +42,15 @@ void	close_pipes(t_info *info)
 	}
 }
 
-t_error	close_fd_array(int *fd_array, size_t size)
+t_error	close_fd(int fd)
 {
-	int	i;
-
-	i = 0;
-	while (i < size)
+	if (fd >= 0)
 	{
-		if (fd_array[i] > 0 && close(fd_array[i]) == -1)
+		if (close(fd) == -1)
 		{
 			perror("close");
 			return (SYS_ERR);
 		}
-		i++;
 	}
 	return (NO_ERR);
 }

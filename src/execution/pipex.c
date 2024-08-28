@@ -137,7 +137,10 @@ int	cmd_pipeline(t_list *cmd_lst, t_info *info, char *line)
 			if (set_io_pipes(fds,	last_rd_end, i, info->num_cmd) != NO_ERR)
 				; // TODO: protect
 			if (set_io_redirs(get_cmd(cmd_lst)->redir_lst, hd_str) != NO_ERR)
+			{
+				exit(EXIT_FAILURE);
 				; // TODO: protect
+			}
 
 			signal(SIGQUIT, sigquit_handle);
 			child_process((t_cmd *)(cmd_lst->as_ptr), info, i, line); // TODO: protect

@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 14:35:12 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/26 14:37:27 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/28 10:02:25 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ static void	cleanup_shell(t_shell *shell)
 
 void	clean_exit(int exit_code)
 {
-	t_shell	*shell;
-
-	shell = get_shell_struct();
-	cleanup_shell(shell);
-	if (shell->error == SYS_ERR)
-	{
-		; // TODO: print error
-	}
-	exit(exit_code);
+	// t_shell	*shell;
+	//
+	// shell = get_shell_struct();
+	// cleanup_shell(shell);
+	// if (shell->error == SYS_ERR)
+	// {
+	// 	; // TODO: print error
+	// }
+	// exit(exit_code);
 }
 

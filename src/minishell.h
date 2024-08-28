@@ -330,7 +330,7 @@ t_cmd_data	*get_cmd_data(t_cmd *cmd);
 t_redir *get_redir(t_list *lst);
 void err_exit(char *str);
 void close_pipes(t_info *info);
-t_error	close_fd_array(int *fd_array, size_t size);
+t_error	close_fd(int fd);
 
 // pipex_open_files.c -----------------------------------------------------//
 int open_append(t_cmd_data *cmd, t_info *info, int i, int proc);
