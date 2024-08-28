@@ -12,51 +12,38 @@
 
 #include "../../minishell.h"
 
-static void	unset_envlst_util(t_list *prev, t_list *cur, t_list *last)
+bool	is_same_key(char *key, t_list *cur)
 {
-	prev->next = cur;
-	cur = cur->next;
-	last = cur;
+	return (ft_strncmp(key, ((t_env_var *)(cur->as_ptr))->key, ft_strlen(key) + 1) == 0);
 }
 
-static void	unset_envlst_util_2(t_list *prev, t_list *cur, t_list *last)
+t_error	unset(char *argv[])
 {
-	cur = cur->next;
-	ft_lstdelone(last, free_env_var);
-	prev->next->next = cur;
-}
-
-t_list	*unset_envlst(t_list *head, char **argv)
-{
-	t_env_var	*env_var;
 	t_list		*cur;
-	t_list		*last;
-	t_list		*new;
 	t_list		*prev;
+	t_shell		*shell;
 
+	shell = get_shell_struct();
 	prev = NULL;
-	last = NULL;
-	env_var = get_env_var(*argv);
-	if (!env_var)
-		return (ft_lstclear(&head, free_env_var), NULL);
-	new = ft_lstnew(env_var);
-	if (!new)
-		return (perror("malloc"), ft_lstclear(&head, free_env_var), NULL);
-	cur = head;
-	if (env_var->equal || env_var->value)
-		return (head);
+	cur = shell->env_lst;
+	while (cur && !is_same_key(argv[1], cur))
+	{
+		prev = cur;
+		cur = cur->next;
+	}
+	if (!cur)
+	{
+		return (NO_ERR);
+	}
+	free_env_var((t_env_var *) cur->as_ptr);
+	if (cur == shell->env_lst)
+	{
+		shell->env_lst = cur->next;
+	}
 	else
 	{
-		while (cur && ft_strncmp(key(cur), key(new), ft_strlen(key(cur))))
-			unset_envlst_util(prev, cur, last);
-		if (!ft_strncmp(key(cur), key(new), ft_strlen(key(cur))))
-			unset_envlst_util_2(prev, cur, last);
+		prev->next = cur->next;
 	}
-	return (head);
+	free(cur);
+	return (NO_ERR);
 }
-
-/*
-	if !new
-		currently i put everything in one line, but it needs different
-		function calling instead of the perror
-*/
