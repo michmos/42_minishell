@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 14:44:58 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/28 15:57:45 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/29 11:00:48 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	init_shell(t_shell **ptr, char **env)
 	}
 	shell->std_in = dup(STDIN_FILENO);
 	shell->std_out = dup(STDOUT_FILENO); // TODO: protect
+	shell->open_fd = -1;
 	assign_env_values(&shell->cwd, shell->env_lst, "PWD");
 	assign_env_values(&shell->old_wd, shell->env_lst, "OLDPWD");
 	*ptr = shell;

@@ -42,14 +42,15 @@ typedef enum e_error
 
 typedef struct s_shell
 {
-	char 	*cwd;
-	char 	*old_wd;
-	t_list	*env_lst;
-	char	**env;
-	int		ex_code;
-	int		std_in;
-	int		std_out;
-	t_error error;
+	char 	*cwd;		// cur working dir
+	char 	*old_wd;	// last working dir
+	t_list	*env_lst;	// env_lst
+	char	**env;		// env array
+	int		ex_code;	// ex_code of last command
+	int		std_in;		// stdin backup
+	int		std_out;	// stdout backup
+	int		open_fd;	// additional fd
+	t_list	*cur_cmdlst;// cur command list
 } t_shell;
 
 
@@ -194,9 +195,13 @@ void	print_ordered_lst(void);
 void print_envlst(t_list *head, int order);
 t_builtins	get_builtin_type(char *cmd);
 t_error	execute_builtin(char **args);
-t_error	reset_io(void);
 t_error	exec_one_builtin(t_cmd *cmd);
+
+// fds.c
+t_error	reset_io(void);
 t_error set_io_redirs(t_list	*redir_lst, char *hd_str);
+t_error	set_io_pipes(int child_i, size_t num_childs);
+t_error	close_unused_fds(size_t i, size_t num_childs);
 
 // cd_sec_1_to_6.c ---------------------------------------------------------- //
 t_error init_curpath(char **curpath, char *arg);
@@ -226,7 +231,6 @@ t_list *create_envlst(char **env);
 void free_env_var(void *node);
 
 // exit.c -------------------------------------------------------------------- //
-void	cleanup_shell();
 void exit_err(char *str);
 void	exit_err(char *str);
 int str_is_num(char *str);
@@ -277,7 +281,7 @@ void	check_cmd(char *path, char *arg);
 
 // pipex_free.c ---------------------------------------------------------//
 void free_ar2(void **array);
-void wait_free_exit(t_list *head, int exit_status);
+void	wait_free_exit(int exit_status);
 
 // pipex_helper.c ---------------------------------------------------------//
 t_cmd *get_cmd(t_list *lst);
@@ -291,6 +295,7 @@ char *get_env_path(char **env);
 // static char *concat_path(char *dir, char *command);
 
 // pipex.c ----------------------------------------------------------------//
+void	wait_for_childs(pid_t last_child, int *status);
 t_error	cmd_pipeline(t_list *cmd_lst);
 
 // signals.c -----------------------------------------------------------//

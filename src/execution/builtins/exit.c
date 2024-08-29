@@ -13,26 +13,6 @@
 #include "../../minishell.h"
 #include <unistd.h>
 
-void	cleanup_shell(void)
-{
-	t_shell *shell;
-
-	shell = get_shell_struct();
-	free(shell->cwd);
-	free(shell->old_wd);
-	ft_lstclear(&(shell->env_lst), free_env_var);
-	ft_free_2d_array((void **) shell->env);
-	if (close(shell->std_in) == -1)
-	{
-		perror("close");
-	}
-	if (close(shell->std_out) == -1)
-	{
-		perror("close");
-	}
-	free(shell);
-	// TODO: clear history
-}
 
 int	str_is_num(char *str)
 {

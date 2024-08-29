@@ -6,16 +6,58 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 14:35:12 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/28 16:13:23 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/08/29 11:00:16 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 #include <readline/readline.h>
+#include <stdlib.h>
 #include <unistd.h>
+
+static void	cleanup_shell(void)
+{
+	t_shell *shell;
+
+	shell = get_shell_struct();
+	free(shell->cwd);
+	free(shell->old_wd);
+	if (shell->env_lst)
+	{
+		ft_lstclear(&(shell->env_lst), free_env_var);
+	}
+	if (shell->cur_cmdlst)
+	{
+		ft_lstclear(&(shell->cur_cmdlst), free_cmd);
+	}
+	ft_free_2d_array((void **) shell->env);
+	if (close(shell->std_in) == -1)
+	{
+		perror("close");
+	}
+	if (close(shell->std_out) == -1)
+	{
+		perror("close");
+	}
+	if (shell->open_fd != -1)
+	{
+		if (close(shell->open_fd) == -1)
+		{
+			perror("close");
+		}
+	}
+	free(shell);
+}
 
 void	clean_exit(int exit_code)
 {
+	int	stat;
+
+	wait_for_childs(-1, &stat);
+	if (WEXITSTATUS(stat) == SYS_ERR)
+	{
+		exit_code = SYS_ERR;
+	}
 	cleanup_shell();
 	rl_clear_history();
 	if (close(STDIN_FILENO) == -1)

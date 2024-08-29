@@ -48,11 +48,6 @@
 // 	free(cmd);
 // }
 
-void	wait_free_exit(t_list *head, int exit_status)
-{
-	ft_lstclear(&head, free_cmd);
-	exit (exit_status);
-}
 
 /*
 	not particularly happy with the free functions

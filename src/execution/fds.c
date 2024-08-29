@@ -1,17 +1,111 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   set_io_redirs.c                                    :+:      :+:    :+:   */
+/*   fds.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/27 11:45:20 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/28 10:04:56 by mmoser           ###   ########.fr       */
+/*   Created: 2024/08/29 10:02:34 by mmoser            #+#    #+#             */
+/*   Updated: 2024/08/29 11:24:13 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 #include <unistd.h>
+
+t_error	reset_io(void)
+{
+	t_shell	*shell;
+
+	shell = get_shell_struct();
+	if (dup2(shell->std_in, STDIN_FILENO) == -1)
+	{
+		perror("dup2");
+		return (SYS_ERR);
+	}
+	if (dup2(shell->std_out, STDOUT_FILENO) == -1)
+	{
+		perror("dup2");
+		return (SYS_ERR);
+	}
+	return (0);
+}
+
+
+t_error	close_unused_fds(size_t i, size_t num_childs)
+{
+	t_shell	*shell;
+
+	shell = get_shell_struct();
+	if (close(STDOUT_FILENO) == -1)
+	{
+		perror("close");
+		return (SYS_ERR);
+	}
+	if (close(STDIN_FILENO) == -1)
+	{
+		perror("close");
+		return (SYS_ERR);
+	}
+	if (i == num_childs - 1 && shell->open_fd != -1)
+	{
+		if (close(shell->open_fd) == -1)
+		{
+			perror("close");
+			return (SYS_ERR);
+		}
+	}
+	return (NO_ERR);
+}
+
+t_error	redir(int old_fd, int new_fd)
+{
+	if (dup2(old_fd, new_fd) == -1)
+	{
+		perror("dup2");
+		return (SYS_ERR);
+	}
+	if (close(old_fd) == -1)
+	{
+		perror("close");
+		return (SYS_ERR);
+	}
+	return (NO_ERR);
+}
+
+t_error	set_io_pipes(int child_i, size_t num_childs)
+{
+	int	fds[2];
+	t_shell	*shell;
+
+	shell = get_shell_struct();
+	reset_io();
+	// redirect stdin to pipe if not first child
+	if (child_i > 0)
+	{
+		if (redir(shell->open_fd, STDIN_FILENO) != NO_ERR)
+		{
+			return (SYS_ERR);
+		}
+		shell->open_fd = -1;
+	}
+	// redirect stdout to pipe if not last child
+	if (child_i < num_childs -1)
+	{
+		if (pipe(fds) == -1)
+		{
+			perror("pipe");
+			return (SYS_ERR);
+		}
+		if (redir(fds[1], STDOUT_FILENO) != NO_ERR)
+		{
+			return (SYS_ERR);
+		}
+		// close unused read end
+		shell->open_fd = fds[0];
+	}
+	return (NO_ERR);
+}
 
 static t_error	redir_io(int fds[2])
 {

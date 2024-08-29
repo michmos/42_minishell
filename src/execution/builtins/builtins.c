@@ -161,24 +161,6 @@ t_error	execute_builtin(char **args)
 		doesn't make any sense to create it every single time... 
 */
 
-t_error	reset_io(void)
-{
-	t_shell	*shell;
-
-	shell = get_shell_struct();
-	if (dup2(shell->std_in, STDIN_FILENO) == -1)
-	{
-		perror("dup2");
-		return (SYS_ERR);
-	}
-	if (dup2(shell->std_out, STDOUT_FILENO) == -1)
-	{
-		perror("dup2");
-		return (SYS_ERR);
-	}
-	return (0);
-}
-
 t_error	exec_one_builtin(t_cmd *cmd)
 {
 	int			stat;
