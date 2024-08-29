@@ -23,22 +23,16 @@ static void	child_process(t_cmd *cmd)
 
 	if (get_builtin_type(cmd->args[0]) != NO_BUILTIN)
 	{
-		execute_builtin(cmd->args);
+		if (execute_builtin(cmd->args) != NO_ERR)
+		{
+			clean_exit(SYS_ERR);
+		}
 	}
 	if (init_cmd_path(&path, cmd->args[0], shell->env) != NO_ERR)
 	{
-		clean_exit(EXIT_FAILURE);
+		clean_exit(SYS_ERR);
 	}
-	if (!path)
-	{
-		path = ft_strdup(cmd->args[0]);
-		if (!path)
-		{
-			perror("malloc");
-			clean_exit(EXIT_FAILURE);
-		}
-	}
-	check_cmd(path, cmd->args[0]); // TODO: currently exits - needs to free stuff maybe
+	check_cmd(path, cmd->args[0]);
 	execve(path, cmd->args, shell->env);
 	perror("execve");
 	clean_exit(127);
@@ -141,7 +135,7 @@ t_error	cmd_pipeline(t_list *cmd_lst)
 				; // TODO: protect
 			if (set_io_redirs(get_cmd(cmd_lst)->redir_lst, hd_str) != NO_ERR)
 			{
-				exit(EXIT_FAILURE);
+				exit(SYS_ERR);
 				; // TODO: protect
 			}
 

@@ -31,7 +31,7 @@ typedef enum e_error
 	// No error
 	NO_ERR,
 	// Syscall fails
-	SYS_ERR,
+	SYS_ERR = 200,
 	// Syntax error
 	SYN_ERR,
 	// Bad function input

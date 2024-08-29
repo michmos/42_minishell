@@ -47,54 +47,81 @@ char	*get_env_path(char **env)
 	return (NULL);
 }
 
-t_error	init_cmd_path(char **cmd_path, char *command, char **env)
+t_error	get_bin_paths(char ***bin_paths, char **env)
 {
 	char	*env_path;
-	char	*full_path;
-	char	**bin_paths;
-	int		i;
 
-	// check current path
-	if (access(command, X_OK) == 0)
-	{
-		full_path = ft_strdup(command);
-		if (!full_path)
-		{
-			perror("malloc");
-			return (SYS_ERR);
-		}
-		*cmd_path = full_path;
-		return (NO_ERR);
-	}
-
-	*cmd_path = NULL;
+	*bin_paths = NULL;
 	env_path = get_env_path(env);
 	if (!env_path)
 	{
 		return (NO_ERR);
 	}
-	bin_paths = ft_split(env_path + 5, ':');
-	if (!bin_paths)
+	*bin_paths = ft_split(env_path + 5, ':');
+	if (!*bin_paths)
+	{
+		perror("malloc");
+		return (SYS_ERR);
+	}
+	return (NO_ERR);
+}
+
+static t_error	get_full_path(char **full_path, char *cmd, char **env)
+{
+	size_t	i;
+	char	**bin_paths;
+	t_error	error;
+
+	*full_path = NULL;
+	error = NO_ERR;
+	if (get_bin_paths(&bin_paths, env) != NO_ERR)
 	{
 		return (SYS_ERR);
 	}
-
+	else if (!bin_paths)
+	{
+		return (NO_ERR);
+	}
 	i = 0;
 	while (bin_paths[i])
 	{
-		full_path = concat_path(bin_paths[i], command);
-		if (!full_path)
+		*full_path = concat_path(bin_paths[i], cmd);
+		if (!*full_path)
 		{
-			ft_free_2d_array((void **) bin_paths);
+			error = SYS_ERR;
+			break;
+		}
+		if (access(*full_path, X_OK) == 0)
+		{
+			break;
+		}
+		sfree((void **) full_path);
+		i++;
+	}
+	ft_free_2d_array((void **) bin_paths);
+	return (error);
+}
+
+t_error	init_cmd_path(char **cmd_path, char *cmd, char **env)
+{
+	*cmd_path = NULL;
+	if (access(cmd, X_OK) != 0)
+	{
+		if (get_full_path(cmd_path, cmd, env) != NO_ERR)
+		{
 			return (SYS_ERR);
 		}
-		if (access(full_path, X_OK) == 0)
+		else if (*cmd_path)
 		{
-			*cmd_path = full_path;
 			return (NO_ERR);
 		}
-		free(full_path);
-		i++;
+	}
+
+	*cmd_path = ft_strdup(cmd);
+	if (!*cmd_path)
+	{
+		perror("malloc");
+		return (SYS_ERR);
 	}
 	return (NO_ERR);
 }
