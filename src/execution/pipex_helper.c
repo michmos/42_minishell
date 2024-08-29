@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 13:32:12 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/16 15:03:34 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/29 12:04:17 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 t_cmd	*get_cmd(t_list *lst)
 {
-
 	return ((t_cmd *)(lst->as_ptr));
 }
 

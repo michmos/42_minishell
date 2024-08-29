@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/25 09:25:29 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/22 14:04:40 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/29 16:35:40 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,17 +61,19 @@ void	print_envlst(t_list *head, int order)
 
 t_builtins	get_builtin_type(char *cmd)
 {
-	if (ft_strncmp(cmd, "echo", 5) == 0) // doesn't work yet
+	if (cmd == NULL)
+		return (NO_BUILTIN);
+	else if (ft_strncmp(cmd, "echo", 5) == 0) // doesn't work yet
 		return (ECHO);
 	else if (ft_strncmp(cmd, "cd", 3) == 0) // doesn't work yet
 		return (CD);
 	else if (ft_strncmp(cmd, "pwd", 4) == 0)
 		return (PWD);
-	else if (ft_strncmp(cmd, "export", 7) == 0) // doesn't work yet
+	else if (ft_strncmp(cmd, "export", 7) == 0) // with export it cannot begin with a special character
 		return (EXPORT);
 	else if (ft_strncmp(cmd, "unset", 6) == 0) // doesn't work yet
 		return (UNSET);
-	else if (ft_strncmp(cmd, "env", 4) == 0) // doesn't work yet
+	else if (ft_strncmp(cmd, "env", 4) == 0) // prints the args but doesn't add them to the list
 		return (ENV);
 	else if (ft_strncmp(cmd, "exit", 5) == 0)
 		return (EXIT);

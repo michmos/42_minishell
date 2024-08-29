@@ -6,18 +6,11 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/17 11:16:48 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/15 09:37:52 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/29 17:13:37 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-static void	print_msg(char *str)
-{
-	ft_putstr_fd("Wanted: ", 1);
-	ft_putstr_fd(str, 1);
-	ft_putstr_fd("\n", 1);
-}
 
 static t_error	get_hd_str(char **hd_str, char *delimiter)
 {
@@ -28,10 +21,17 @@ static t_error	get_hd_str(char **hd_str, char *delimiter)
 	result = NULL;
 	while (true)
 	{
+		signal(SIGINT, SIG_IGN);
 		tmp = readline("> "); // TODO: protect
+		if (!tmp)
+		{
+			ft_printf_fd(STDERR_FILENO, "%s: warning: here-document \
+			delimited by signal (wanted `%s')\n", SHELLNAME, delimiter);
+			break ;
+		}
 		if (ft_strncmp(tmp, delimiter, ft_strlen(tmp) + 1) == 0)
 		{
-			break;
+			break ;
 		}
 		tmp2 = ft_strjoin(tmp, "\n");
 		free(tmp);
@@ -57,7 +57,7 @@ static t_error	get_hd_str(char **hd_str, char *delimiter)
 
 t_error	exec_hd(char **hd_str, t_list *redir_lst)
 {
-	char	*result;
+	char		*result;
 
 	// get heredoc string
 	result = NULL;

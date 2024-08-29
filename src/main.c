@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/23 15:56:13 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/08/15 11:26:25 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/08/29 11:06:12 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,11 @@ int	main(int argc, char *argv[], char **env)
 	init_shell(&shell, env);
 	while (1)
 	{
-		cmd_line = readline("minishell> "); /*SHELLNAME*/
+		init_signals();
+		cmd_line = readline("minishell> ");
 		if (!cmd_line)
 		{
+			signal_ctrl_d(cmd_line);
 			break ;
 		}
 		else if (!*cmd_line)

@@ -181,12 +181,6 @@ typedef enum e_builtins
 	EXIT
 } t_builtins;
 
-/*
-	1------
-	all three things marked with 1----- aren't they the same thing?
-	why do i have all of them?
-*/
-
 // add_to_list.c ------------------------------------------------------------ //
 t_error add_to_envlst(t_list *head, char **argv);
 
@@ -231,8 +225,6 @@ t_list *create_envlst(char **env);
 void free_env_var(void *node);
 
 // exit.c -------------------------------------------------------------------- //
-void exit_err(char *str);
-void	exit_err(char *str);
 int str_is_num(char *str);
 void	execute_exit(char **args);
 
@@ -300,7 +292,7 @@ t_error	cmd_pipeline(t_list *cmd_lst);
 
 // signals.c -----------------------------------------------------------//
 void handle_sig(int signal);
-// void	signal_ctrl_d(t_info *info, char **line);
+void	signal_ctrl_d(char *line);
 void	sigint_handle(int signal);
 void	sigquit_handle(int signal);
 int	init_signals(void);
