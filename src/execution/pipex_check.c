@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/17 11:02:09 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/21 14:09:39 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/04 15:22:11 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	check_cmd(char *path, char *arg)
 	stat_result = stat(path, &file_stat);
 	if (stat_result == -1)
 	{
-		ft_printf_fd(STDERR_FILENO, "%s: %s: no such file or directory\n", SHELLNAME, arg);
+		ft_printf_fd(STDERR_FILENO, "%s: %s: No such file or directory\n", SHELLNAME, arg);
 		clean_exit(127);
 	}
 	else if (S_ISDIR(file_stat.st_mode))
@@ -45,7 +45,7 @@ void	check_cmd(char *path, char *arg)
 	}
 	else if (S_ISREG(file_stat.st_mode) && !(file_stat.st_mode & S_IXUSR))
 	{
-		ft_printf_fd(STDERR_FILENO, "%s: %s: permission denied\n", SHELLNAME, arg);
+		ft_printf_fd(STDERR_FILENO, "%s: %s: Permission denied\n", SHELLNAME, arg);
 		clean_exit(126);
 	}
 	else if (access(path, F_OK) == -1)
@@ -55,7 +55,7 @@ void	check_cmd(char *path, char *arg)
 	}
 	else if (access(path, X_OK) == -1)
 	{
-		ft_printf_fd(STDERR_FILENO, "%s: %s: permission denied\n", SHELLNAME, arg);
+		ft_printf_fd(STDERR_FILENO, "%s: %s: Permission denied\n", SHELLNAME, arg);
 		clean_exit(126);
 	}
 }

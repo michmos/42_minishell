@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   fds.c                                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/29 10:02:34 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/29 11:24:13 by mmoser           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   fds.c                                              :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/08/29 10:02:34 by mmoser        #+#    #+#                 */
+/*   Updated: 2024/09/04 15:54:11 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ t_error	set_io_pipes(int child_i, size_t num_childs)
 	t_shell	*shell;
 
 	shell = get_shell_struct();
-	reset_io();
+	// reset_io();
 	// redirect stdin to pipe if not first child
 	if (child_i > 0)
 	{
@@ -206,6 +206,7 @@ static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 				return (SYS_ERR);
 			}
 			ft_printf_fd(STDERR_FILENO, "%s: %s: %s\n", SHELLNAME, redir->filename, strerror(errno));
+			// return (OPEN_ERR);
 			return (SYS_ERR);
 		}
 		redir_lst = redir_lst->next;
@@ -242,3 +243,10 @@ t_error set_io_redirs(t_list	*redir_lst, char *hd_str)
 	return (error);
 }
 
+/*
+	if error == OPEN_ERR
+		we want to close fds and return OPeN_ERR
+		the following function checks if OPEN_ERR and then does something to deal with it
+		basically runs the program again
+
+*/

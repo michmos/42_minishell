@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/26 14:44:58 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/08/29 16:26:31 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/04 10:46:12 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ void	init_shell(t_shell **ptr, char **env)
 	{
 		clean_exit(EXIT_FAILURE);
 	}
-	shell->std_in = dup(STDIN_FILENO);
-	shell->std_out = dup(STDOUT_FILENO); // TODO: protect
 	shell->open_fd = -1;
 	shell->ex_code = 0;
 	assign_env_values(&shell->cwd, shell->env_lst, "PWD");

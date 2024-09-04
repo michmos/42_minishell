@@ -37,7 +37,8 @@ typedef enum e_error
 	// Bad function input
 	INP_ERR,
 	// Other error
-	OTH_ERR
+	OTH_ERR,
+	// OPEN_ERR
 } t_error;
 
 typedef struct s_shell
@@ -49,6 +50,7 @@ typedef struct s_shell
 	int		ex_code;	// ex_code of last command
 	int		std_in;		// stdin backup
 	int		std_out;	// stdout backup
+	int		std_err;	// stderr backup
 	int		open_fd;	// additional fd
 	t_list	*cur_cmdlst;// cur command list
 } t_shell;
@@ -292,9 +294,9 @@ t_error	cmd_pipeline(t_list *cmd_lst);
 
 // signals.c -----------------------------------------------------------//
 void handle_sig(int signal);
+void	handle_sig_child(int signal);
+void	handle_sig_hd(int signal);
 void	signal_ctrl_d(char *line);
-void	sigint_handle(int signal);
-void	sigquit_handle(int signal);
 int	init_signals(void);
 
 // -------------------------------------------------------------------------- //

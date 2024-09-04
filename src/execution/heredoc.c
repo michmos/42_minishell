@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/17 11:16:48 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/29 17:13:37 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/04 09:37:15 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ static t_error	get_hd_str(char **hd_str, char *delimiter)
 	result = NULL;
 	while (true)
 	{
-		signal(SIGINT, SIG_IGN);
+		signal(SIGINT, handle_sig_hd);
 		tmp = readline("> "); // TODO: protect
 		if (!tmp)
 		{
 			ft_printf_fd(STDERR_FILENO, "%s: warning: here-document \
-			delimited by signal (wanted `%s')\n", SHELLNAME, delimiter);
+delimited by signal (wanted `%s')\n", SHELLNAME, delimiter);
 			break ;
 		}
 		if (ft_strncmp(tmp, delimiter, ft_strlen(tmp) + 1) == 0)

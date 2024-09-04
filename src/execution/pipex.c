@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 09:50:20 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/29 17:13:53 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/04 15:39:52 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,15 @@ static void	child_process(t_cmd *cmd, char *hd_str)
 // or of any other child in case an error occurred in another child
 void	wait_for_childs(pid_t last_child, int *status)
 {
+	// signal(SIGINT, handle_sig_child);
+	// waitpid(last_child, status, 0);  // TODO: protection required?
+	// while (wait(NULL) != -1)
+	// 	;
+	// if (*status == 131)
+	// 	ft_printf_fd(STDERR_FILENO, "Quit (core dumped)\n");
 	int		stat;
 
-	signal(SIGINT, SIG_IGN);
+	signal(SIGINT, handle_sig_child);
 	if (last_child > 0)
 	{
 		waitpid(last_child, status, 0);
@@ -74,12 +80,12 @@ t_error	cmd_pipeline(t_list *cmd_lst)
 	num_cmd = ft_lstsize(cmd_lst);
 	while (i < num_cmd)
 	{
-		if (set_io_pipes( i, num_cmd) != NO_ERR)
+		// execute heredocs
+		if (exec_hd(&hd_str, get_cmd(cmd_lst)->redir_lst) != NO_ERR)
 		{
 			clean_exit(EXIT_FAILURE);
 		}
-		// execute heredocs
-		if (exec_hd(&hd_str, get_cmd(cmd_lst)->redir_lst) != NO_ERR)
+		if (set_io_pipes(i, num_cmd) != NO_ERR)
 		{
 			clean_exit(EXIT_FAILURE);
 		}
@@ -91,7 +97,6 @@ t_error	cmd_pipeline(t_list *cmd_lst)
 		}
 		else if (pid == 0)
 		{
-			signal(SIGQUIT, SIG_IGN);
 			child_process((t_cmd *)(cmd_lst->as_ptr), hd_str);
 			// free head and move to next node, good representation is in lstclear in while loop
 		}
@@ -102,6 +107,7 @@ t_error	cmd_pipeline(t_list *cmd_lst)
 		}
 		cmd_lst = cmd_lst->next;
 		i++;
+		reset_io();
 	}
 	wait_for_childs(pid, &status);
 	if (WEXITSTATUS(status) == SYS_ERR)
