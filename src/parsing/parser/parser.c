@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/07 11:33:33 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/06 15:48:59 by mmoser           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parser.c                                           :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/05/07 11:33:33 by mmoser        #+#    #+#                 */
+/*   Updated: 2024/09/05 10:47:57 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ static t_error	parse_pipe(t_list **rem_tokens)
 	if (get_token_tag(*rem_tokens) != PIPE)
 	{
 		ft_printf_fd(STDERR_FILENO, "syntax error: unexpected token: %s\n", ((t_token *)((*rem_tokens)->as_ptr))->lexeme);
-		return (SYN_ERR);
+		return (ERR);
 	}
 	consume_token(rem_tokens);
 	if (!*rem_tokens)
 	{
 		ft_printf_fd(STDERR_FILENO, "syntax error: unexpected token: %s\n", "new line");
-		return (SYN_ERR);
+		return (ERR);
 	}
 	return (NO_ERR);
 }
@@ -39,7 +39,7 @@ static t_error	parse_cmd(t_cmd **cmd, t_list **rem_tokens)
 	if (!new_cmd)
 	{
 		perror("malloc");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 
 	error = NO_ERR;
@@ -66,7 +66,7 @@ static t_error	parse_cmd(t_cmd **cmd, t_list **rem_tokens)
 		if (!new_cmd->args)
 		{
 			perror("malloc");
-			error = SYS_ERR;
+			error = DEADLY_ERR;
 		}
 	}
 	
@@ -91,7 +91,7 @@ static t_error	extend_cmd_lst(t_list **cmd_lst, t_list **rem_tokens)
 	if (get_token_tag(*rem_tokens) == PIPE)
 	{
 		ft_printf_fd(STDERR_FILENO, "syntax error: unexpected token: %s\n", "pipe");;
-		return (SYN_ERR);
+		return (ERR);
 	}
 	error = parse_cmd(&cmd, rem_tokens);
 	if (error)
@@ -103,7 +103,7 @@ static t_error	extend_cmd_lst(t_list **cmd_lst, t_list **rem_tokens)
 	{
 		perror("malloc");
 		free_cmd(cmd);
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	ft_lstadd_back(cmd_lst, new);
 	return (NO_ERR);

@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/08/29 10:02:34 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/04 15:54:11 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/05 10:52:21 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ t_error	reset_io(void)
 	if (dup2(shell->std_in, STDIN_FILENO) == -1)
 	{
 		perror("dup2");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	if (dup2(shell->std_out, STDOUT_FILENO) == -1)
 	{
 		perror("dup2");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	return (0);
 }
@@ -40,19 +40,19 @@ t_error	close_unused_fds(size_t i, size_t num_childs)
 	if (close(STDOUT_FILENO) == -1)
 	{
 		perror("close");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	if (close(STDIN_FILENO) == -1)
 	{
 		perror("close");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	if (i == num_childs - 1 && shell->open_fd != -1)
 	{
 		if (close(shell->open_fd) == -1)
 		{
 			perror("close");
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 	}
 	return (NO_ERR);
@@ -63,12 +63,12 @@ t_error	redir(int old_fd, int new_fd)
 	if (dup2(old_fd, new_fd) == -1)
 	{
 		perror("dup2");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	if (close(old_fd) == -1)
 	{
 		perror("close");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	return (NO_ERR);
 }
@@ -85,7 +85,7 @@ t_error	set_io_pipes(int child_i, size_t num_childs)
 	{
 		if (redir(shell->open_fd, STDIN_FILENO) != NO_ERR)
 		{
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 		shell->open_fd = -1;
 	}
@@ -95,11 +95,11 @@ t_error	set_io_pipes(int child_i, size_t num_childs)
 		if (pipe(fds) == -1)
 		{
 			perror("pipe");
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 		if (redir(fds[1], STDOUT_FILENO) != NO_ERR)
 		{
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 		// close unused read end
 		shell->open_fd = fds[0];
@@ -114,7 +114,7 @@ static t_error	redir_io(int fds[2])
 		if (dup2(fds[0], STDIN_FILENO) == -1)
 		{
 			perror("dup2");
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 	}
 	if (fds[1] >= 0)
@@ -122,7 +122,7 @@ static t_error	redir_io(int fds[2])
 		if (dup2(fds[1], STDOUT_FILENO) == -1)
 		{
 			perror("dup2");
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 	}
 	return (NO_ERR);
@@ -148,8 +148,8 @@ static int	get_hd_fd(char *hd_str)
 
 static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 {
-	int	i;
-	int	status;
+	int		i;
+	int		status;
 	t_redir	*redir;
 
 	i = 0;
@@ -163,7 +163,7 @@ static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 		{
 			if (close_fd(fds[0]) != NO_ERR)
 			{
-				return (SYS_ERR);
+				return (DEADLY_ERR);
 			}
 			fds[0] = get_hd_fd(hd_str);
 		}
@@ -171,7 +171,7 @@ static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 		{
 			if (close_fd(fds[0]) != NO_ERR)
 			{
-				return (SYS_ERR);
+				return (DEADLY_ERR);
 			}
 			fds[0] = open(redir->filename, O_RDONLY);
 		}
@@ -179,7 +179,7 @@ static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 		{
 			if (close_fd(fds[1]) != NO_ERR)
 			{
-				return (SYS_ERR);
+				return (DEADLY_ERR);
 			}
 			fds[1] = open(redir->filename, O_CREAT | O_RDWR | O_TRUNC, 0777);
 		}
@@ -187,7 +187,7 @@ static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 		{
 			if (close_fd(fds[1]) != NO_ERR)
 			{
-				return (SYS_ERR);
+				return (DEADLY_ERR);
 			}
 			fds[1] = open(redir->filename, O_CREAT | O_RDWR | O_APPEND, 0777);
 		}
@@ -199,15 +199,14 @@ static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 		{
 			if (close_fd(fds[0]) != NO_ERR)
 			{
-				return (SYS_ERR);
+				return (DEADLY_ERR);
 			}
 			if (close_fd(fds[1]) != NO_ERR)
 			{
-				return (SYS_ERR);
+				return (DEADLY_ERR);
 			}
 			ft_printf_fd(STDERR_FILENO, "%s: %s: %s\n", SHELLNAME, redir->filename, strerror(errno));
-			// return (OPEN_ERR);
-			return (SYS_ERR);
+			return (ERR);
 		}
 		redir_lst = redir_lst->next;
 		i++;
@@ -218,14 +217,21 @@ static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 t_error set_io_redirs(t_list	*redir_lst, char *hd_str)
 {
 	t_error	error;
+	t_error	err;
 	int		fds[2];
 
 	error = NO_ERR;
+	err = NO_ERR;
 
 	// init fd array
-	if (get_io(fds, redir_lst, hd_str) != NO_ERR)
+	err = get_io(fds, redir_lst, hd_str);
+	if (err != NO_ERR && err == DEADLY_ERR)
 	{
-		return (SYS_ERR);
+		return (DEADLY_ERR);
+	}
+	else if (err != NO_ERR && err == ERR)
+	{
+		return (ERR);
 	}
 
 	// redirect
@@ -234,11 +240,11 @@ t_error set_io_redirs(t_list	*redir_lst, char *hd_str)
 	// close
 	if (close_fd(fds[0]) != NO_ERR)
 	{
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	if (close_fd(fds[1]) != NO_ERR)
 	{
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	return (error);
 }

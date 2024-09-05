@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   test_parser.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/02 11:51:51 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/30 11:50:43 by mmoser           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   test_parser.c                                      :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/05/02 11:51:51 by mmoser        #+#    #+#                 */
+/*   Updated: 2024/09/05 10:47:57 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,13 +99,13 @@ int main(int argc, char *argv[], char **env)
 			break;
 		}
 		error = parsing(&cmd_lst, cmd_line);
-		if (error == SYS_ERR)
+		if (error == DEADLY_ERR)
 		{
-			printf("SYS_ERR occurred\n");
+			printf("DEADLY_ERR occurred\n");
 			free(cmd_line);
 			clean_exit(EXIT_FAILURE);
 		}
-		else if (error == SYN_ERR)
+		else if (error == ERR)
 		{
 			free(cmd_line);
 			continue;

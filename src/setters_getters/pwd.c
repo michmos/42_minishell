@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/22 14:56:17 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/06 15:43:11 by mmoser           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   pwd.c                                              :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/07/22 14:56:17 by mmoser        #+#    #+#                 */
+/*   Updated: 2024/09/05 10:45:53 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static t_error	update_shell_struct(t_shell *shell, char *new_path)
 	if (!shell->cwd)
 	{
 		perror("malloc");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	return (NO_ERR);
 }
@@ -38,7 +38,7 @@ static t_error	update_env_lst(t_list *env_lst, char *cwd_ptr, char *old_wd_ptr)
 		if (!(((t_env_var *) pwd_node->as_ptr)->value))
 		{
 			perror("malloc");
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 	}
 	oldpwd_node = ft_lstfind(env_lst, has_key, "OLDPWD");
@@ -49,7 +49,7 @@ static t_error	update_env_lst(t_list *env_lst, char *cwd_ptr, char *old_wd_ptr)
 		if (!(((t_env_var *) oldpwd_node->as_ptr)->value))
 		{
 			perror("malloc");
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 	}
 	return (NO_ERR);
@@ -66,11 +66,11 @@ t_error	set_pwd(char *new_path)
 
 	if (update_shell_struct(shell, new_path) != NO_ERR)
 	{
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	if (update_env_lst(shell->env_lst, shell->cwd, shell->old_wd) != NO_ERR)
 	{
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	return (NO_ERR);
 }

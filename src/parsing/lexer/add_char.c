@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   add_char.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/02 10:16:59 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/06 15:33:07 by mmoser           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   add_char.c                                         :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/05/02 10:16:59 by mmoser        #+#    #+#                 */
+/*   Updated: 2024/09/05 10:45:53 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static t_error	extend_vec(t_vec *vector)
 	if (!temp)
 	{
 		perror("malloc");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	ft_bzero(&temp[vector->size], vector->size);
 	vector->buf = temp;
@@ -40,8 +40,8 @@ t_error	add_char(char c, t_vec *vector)
 {
 	if (vec_is_full(vector))
 	{
-		if (extend_vec(vector) == SYS_ERR)
-			return (SYS_ERR);
+		if (extend_vec(vector) == DEADLY_ERR)
+			return (DEADLY_ERR);
 	}
 	vector->buf[ft_strlen(vector->buf)] = c;
 	return (NO_ERR);

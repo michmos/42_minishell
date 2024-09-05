@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   pipex_paths.c                                      :+:    :+:            */
+/*   get_cmd_path.c                                     :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 14:52:41 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/06/27 10:31:20 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/05 10:45:53 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ t_error	get_bin_paths(char ***bin_paths, char **env)
 	if (!*bin_paths)
 	{
 		perror("malloc");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	return (NO_ERR);
 }
@@ -76,7 +76,7 @@ static t_error	get_full_path(char **full_path, char *cmd, char **env)
 	error = NO_ERR;
 	if (get_bin_paths(&bin_paths, env) != NO_ERR)
 	{
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	else if (!bin_paths)
 	{
@@ -88,7 +88,7 @@ static t_error	get_full_path(char **full_path, char *cmd, char **env)
 		*full_path = concat_path(bin_paths[i], cmd);
 		if (!*full_path)
 		{
-			error = SYS_ERR;
+			error = DEADLY_ERR;
 			break;
 		}
 		if (access(*full_path, X_OK) == 0)
@@ -109,7 +109,7 @@ t_error	init_cmd_path(char **cmd_path, char *cmd, char **env)
 	{
 		if (get_full_path(cmd_path, cmd, env) != NO_ERR)
 		{
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 		else if (*cmd_path)
 		{
@@ -121,7 +121,7 @@ t_error	init_cmd_path(char **cmd_path, char *cmd, char **env)
 	if (!*cmd_path)
 	{
 		perror("malloc");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	return (NO_ERR);
 }

@@ -31,9 +31,9 @@ typedef enum e_error
 	// No error
 	NO_ERR,
 	// Syscall fails
-	SYS_ERR = 200,
+	DEADLY_ERR = 200,
 	// Syntax error
-	SYN_ERR,
+	ERR,
 	// Bad function input
 	INP_ERR,
 	// Other error
@@ -238,7 +238,7 @@ char *key(t_list *node);
 void pwd(void);
 
 // unset.c ------------------------------------------------------------ //
-t_list *unset_envlst(t_list *head, char **argv);
+t_error	unset(char *argv[]);
 
 // -------------------------------------------------------------------------- //
 // ------------------------ SETTERS_GETTERS/ -------------------------------- //

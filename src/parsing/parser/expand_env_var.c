@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   expand_env_var.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/01 17:46:04 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/06 15:36:59 by mmoser           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   expand_env_var.c                                   :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/07/01 17:46:04 by mmoser        #+#    #+#                 */
+/*   Updated: 2024/09/05 10:47:57 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static bool	is_valid_key_char(char c)
 	return (ft_isalnum(c) || c == '_');
 }
 
-static t_error	has_syn_error(char *str)
+static t_error	has_ERRor(char *str)
 {
 	size_t	i;
 	bool	bad_substition;
@@ -69,12 +69,12 @@ static t_error	has_syn_error(char *str)
 	if (str[i] != '}')
 	{
 		ft_printf_fd(STDERR_FILENO, "syntax error: closing } is missing\n");
-		return (SYN_ERR);
+		return (ERR);
 	}
 	else if (bad_substition)
 	{
 		ft_printf_fd(STDERR_FILENO, "syntax error: %s: bad substition\n", str);
-		return (SYN_ERR);
+		return (ERR);
 	}
 	return (NO_ERR);
 }
@@ -113,7 +113,7 @@ static t_error	get_var_key(char **key, char *ref_start)
 	if (!*key)
 	{
 		perror("malloc");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	return (NO_ERR);
 }
@@ -142,7 +142,7 @@ static t_error	get_var_value(char **value, char *key)
 		if (!value)
 		{
 			perror("malloc");
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 	}
 	return (NO_ERR);
@@ -155,12 +155,12 @@ static t_error	get_insertion(char	**insertion, char *ref_start)
 
 	if (get_var_key(&key, ref_start) != NO_ERR)
 	{
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	if (get_var_value(&value, key) != NO_ERR)
 	{
 		free(key);
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	free(key);
 	*insertion = value;
@@ -181,20 +181,20 @@ t_error	expand_env_var(char **str_ptr, size_t *dollar_pos)
 	{
 		return (NO_ERR);
 	}
-	if (brackets && has_syn_error(&str[*dollar_pos]))
+	if (brackets && has_ERRor(&str[*dollar_pos]))
 	{
-		return (SYN_ERR);
+		return (ERR);
 	}
 	if (get_insertion(&insertion, &str[*dollar_pos + brackets]) != NO_ERR)
 	{
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	end_pos = get_end_pos(str, *dollar_pos, brackets);
 	new_str = get_new_str(str, *dollar_pos, insertion, end_pos);
 	if (!new_str)
 	{
 		free(insertion);
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	*dollar_pos = *dollar_pos + ft_strlen(insertion) - 1;
 	free(insertion);

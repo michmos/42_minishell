@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/26 14:35:12 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/04 15:17:56 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/05 10:45:53 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,9 @@ void	clean_exit(int exit_code)
 	int	stat;
 
 	wait_for_childs(-1, &stat);
-	if (WEXITSTATUS(stat) == SYS_ERR)
+	if (WEXITSTATUS(stat) == DEADLY_ERR)
 	{
-		exit_code = SYS_ERR;
+		exit_code = DEADLY_ERR;
 	}
 	cleanup_shell();
 	rl_clear_history();

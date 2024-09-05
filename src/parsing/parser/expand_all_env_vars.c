@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   expand_all_env_vars.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/15 13:22:17 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/06 15:39:31 by mmoser           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   expand_all_env_vars.c                              :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/05/15 13:22:17 by mmoser        #+#    #+#                 */
+/*   Updated: 2024/09/05 10:45:53 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static	t_error	cut_out_backslash(char **str_ptr, size_t pos)
 	if (!new_str)
 	{
 		perror("malloc");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	ft_memcpy(new_str, str, pos);
 	ft_strlcat(new_str, &str[pos + 1], len + 1);

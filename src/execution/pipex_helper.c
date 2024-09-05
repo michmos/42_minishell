@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 13:32:12 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/29 12:04:17 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/05 10:45:53 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_error	close_fd(int fd)
 		if (close(fd) == -1)
 		{
 			perror("close");
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 	}
 	return (NO_ERR);

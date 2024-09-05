@@ -63,9 +63,9 @@ fclean:
 	$(RM) $(TESTS_BINS)
 	@printf "$(REMOVED)" "tests" $(CUR_DIR)
 
-re:
+re:	
 	$(MAKE) clean
-	$(MAKE) flean
+	$(MAKE) fclean
 
 dry-%:
 	$(MAKE) --dry-run --always-make $*

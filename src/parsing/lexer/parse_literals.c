@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parse_literals.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/15 21:11:23 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/06 15:35:13 by mmoser           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parse_literals.c                                   :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/06/15 21:11:23 by mmoser        #+#    #+#                 */
+/*   Updated: 2024/09/05 10:47:57 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,13 @@ t_error	parse_str_dq(char **lexeme, t_parse_str *cmd_line)
 	advance_char(cmd_line, 1);
 	*lexeme = get_substr_until(cmd_line, "\"");
 	if (!*lexeme)
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 
 	if (cur_char(cmd_line) != '\"')
 	{
 		sfree((void **) lexeme);
 		ft_printf_fd(STDERR_FILENO, "syntax error: missing closing double quotation mark\n");
-		return (SYN_ERR);
+		return (ERR);
 	}
 	advance_char(cmd_line, 2);
 	return (NO_ERR);
@@ -66,13 +66,13 @@ t_error	parse_str_sq(char **lexeme, t_parse_str *cmd_line)
 	advance_char(cmd_line, 1);
 	*lexeme = get_substr_until(cmd_line, "\'");
 	if (!*lexeme)
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 
 	if (cur_char(cmd_line) != '\'')
 	{
 		sfree((void **) lexeme);
 		ft_printf_fd(STDERR_FILENO, "syntax error: missing closing single quotation mark\n");
-		return (SYN_ERR);
+		return (ERR);
 	}
 	advance_char(cmd_line, 2);
 	return (NO_ERR);
@@ -83,7 +83,7 @@ t_error	parse_word(char **lexeme, t_parse_str *cmd_line)
 	*lexeme = get_substr_until(cmd_line, " <>|\"\'");
 	if (!*lexeme)
 	{
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	return (NO_ERR);
 }

@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/17 11:16:48 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/04 09:37:15 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/05 10:45:53 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ delimited by signal (wanted `%s')\n", SHELLNAME, delimiter);
 		{
 			perror("malloc");
 			free(result);
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 		tmp = ft_strjoin(result, tmp2);
 		free(tmp2);
@@ -47,7 +47,7 @@ delimited by signal (wanted `%s')\n", SHELLNAME, delimiter);
 		if (!tmp)
 		{
 			perror("malloc");
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 		result = tmp;
 	}
@@ -68,7 +68,7 @@ t_error	exec_hd(char **hd_str, t_list *redir_lst)
 			free(result);
 			if (get_hd_str(&result, get_redir(redir_lst)->filename) != NO_ERR)
 			{
-				return (SYS_ERR);
+				return (DEADLY_ERR);
 			}
 		}
 		redir_lst = redir_lst->next;

@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 09:50:20 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/04 15:39:52 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/05 16:11:50 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,24 +17,31 @@
 static void	child_process(t_cmd *cmd, char *hd_str)
 {
 	t_shell	*shell;
+	t_error	error;
 	char	*path;
 
 	shell = get_shell_struct();
+	error = NO_ERR;
 	signal(SIGQUIT, SIG_DFL);
-	if (set_io_redirs(cmd->redir_lst, hd_str) != NO_ERR)
+	error = set_io_redirs(cmd->redir_lst, hd_str);
+	if (error != NO_ERR && error == DEADLY_ERR)
 	{
-		clean_exit(SYS_ERR);
+		clean_exit(DEADLY_ERR);
+	}
+	else if (error != NO_ERR && error == ERR)
+	{
+		clean_exit(ERR);
 	}
 	if (get_builtin_type(cmd->args[0]) != NO_BUILTIN)
 	{
-		if (execute_builtin(cmd->args) != NO_ERR)
-		{
-			clean_exit(SYS_ERR);
-		}
+		if (execute_builtin(cmd->args) == DEADLY_ERR)
+			clean_exit(DEADLY_ERR);
+		else
+			clean_exit(NO_ERR);
 	}
 	if (init_cmd_path(&path, cmd->args[0], shell->env) != NO_ERR || cmd->args[0] == NULL)
 	{
-		clean_exit(SYS_ERR);
+		clean_exit(DEADLY_ERR);
 	}
 	check_cmd(path, cmd->args[0]);
 	execve(path, cmd->args, shell->env);
@@ -63,8 +70,8 @@ void	wait_for_childs(pid_t last_child, int *status)
 		ft_printf_fd(STDERR_FILENO, "Quit (core dumped)\n");
 	while (wait(&stat) != -1)
 	{
-		if (WEXITSTATUS(stat) == SYS_ERR)
-			*status = SYS_ERR;
+		if (WEXITSTATUS(stat) == DEADLY_ERR)
+			*status = DEADLY_ERR;
 	}
 }
 
@@ -110,7 +117,7 @@ t_error	cmd_pipeline(t_list *cmd_lst)
 		reset_io();
 	}
 	wait_for_childs(pid, &status);
-	if (WEXITSTATUS(status) == SYS_ERR)
+	if (WEXITSTATUS(status) == DEADLY_ERR)
 	{
 		clean_exit(EXIT_FAILURE);
 	}

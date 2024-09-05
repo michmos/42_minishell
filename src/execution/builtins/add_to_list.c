@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/21 10:42:28 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/22 14:32:01 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/05 15:34:39 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ t_error add_to_envlst(t_list *head, char **argv)
 	env_var = get_env_var(*argv);
 	if (!env_var)
 	{
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	new = ft_lstnew(env_var);
 	if (!new)
 	{
 		perror("malloc");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	ft_lstadd_back(&head, new);
 	return (NO_ERR);

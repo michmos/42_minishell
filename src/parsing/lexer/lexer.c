@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   lexer.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/22 17:15:08 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/06 15:35:13 by mmoser           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   lexer.c                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/04/22 17:15:08 by mmoser        #+#    #+#                 */
+/*   Updated: 2024/09/05 10:45:53 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ static t_error	create_token(t_token **token, t_parse_str *cmd_line)
 	if (!new_token)
 	{
 		perror("malloc");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 
 	new_token->tag = get_tag(cmd_line);
@@ -128,7 +128,7 @@ t_error	create_token_lst(t_list **head, t_parse_str *cmd_line)
 			perror("malloc");
 			free_token(token);
 			ft_lstclear(head, free_token);
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 		ft_lstadd_back(head, new);
 	}

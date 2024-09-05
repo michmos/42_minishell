@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   extend_redir_lst.c                                 :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/23 15:47:10 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/06 15:39:31 by mmoser           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   extend_redir_lst.c                                 :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/05/23 15:47:10 by mmoser        #+#    #+#                 */
+/*   Updated: 2024/09/05 10:47:57 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static t_error	parse_redir(t_redir **redir, t_list **rem_tokens)
 	if (!*rem_tokens)
 	{
 		ft_printf_fd(STDERR_FILENO, "syntax error: missing redirection target\n");
-		return (SYN_ERR);
+		return (ERR);
 	}
 	else if (get_token_tag(*rem_tokens)== WHITESPACE)
 		consume_token(rem_tokens);
@@ -35,7 +35,7 @@ static t_error	parse_redir(t_redir **redir, t_list **rem_tokens)
 	if (!*rem_tokens || get_token_tag(*rem_tokens)!= WORD)
 	{
 		ft_printf_fd(STDERR_FILENO, "syntax error: missing redirection target\n");
-		return (SYN_ERR);
+		return (ERR);
 	}
 	token = pop_token(rem_tokens);
 	new_redir.filename = token.lexeme;
@@ -44,7 +44,7 @@ static t_error	parse_redir(t_redir **redir, t_list **rem_tokens)
 	if (!*redir)
 	{
 		perror("malloc");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	**redir = new_redir;
 	return (NO_ERR);
@@ -67,7 +67,7 @@ t_error	extend_redir_lst(t_list **head, t_list **rem_tokens)
 	{
 		free_redir(redir);
 		perror("malloc");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	ft_lstadd_back(head, new);
 	return (NO_ERR);

@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/25 09:25:29 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/29 16:35:40 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/05 16:06:37 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,9 @@ t_error	export(char **args)
 	shell = get_shell_struct();
 	if (args[0] && args[1])
 	{
-		if (add_to_envlst(shell->env_lst, args) != NO_ERR)
+		if (add_to_envlst(shell->env_lst, &args[1]) != NO_ERR)
 		{
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 	}
 	else
@@ -105,17 +105,17 @@ t_error	env(char **args)
 	t_shell	*shell;
 
 	shell = get_shell_struct();
-	if (add_to_envlst(shell->env_lst, args) != NO_ERR)
-	{
-		return (SYS_ERR);
-	}
-	print_envlst(shell->env_lst, 6);
+	if (args[1])
+		printf("Too many arguments, please type only env\n");
+	else
+		print_envlst(shell->env_lst, 6);
 	return (NO_ERR);
 }
 /*
 	export now only works if you first give it and argument, if you don't it won't work
 
 	env gives everything as it should, but need to work on the thing that would replace the node if you give the same key
+	if you give 
 */
 
 t_error	execute_builtin(char **args)
@@ -134,8 +134,8 @@ t_error	execute_builtin(char **args)
 		pwd(); // TODO: should throw error in case of too many arguments
 	else if (type == EXPORT)
 		error = export(args);
-	// else if (type == UNSET)
-	// 	error = unset_envlst(args);
+	else if (type == UNSET)
+		error = unset(args);
 	else if (type == ENV)
 		error = env(args);
 	else if (type == EXIT)
@@ -148,7 +148,7 @@ t_error	execute_builtin(char **args)
 		shell->env = converter(shell->env_lst);
 		if (!shell->env)
 		{
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 	}
 	return (error);
@@ -169,11 +169,11 @@ t_error	exec_one_builtin(t_cmd *cmd)
 	char		*hd_str;
 
 	if (exec_hd(&hd_str, cmd->redir_lst) != NO_ERR)
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 	if (set_io_redirs(cmd->redir_lst, hd_str) != NO_ERR)
 	{
 		free(hd_str);
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	stat = execute_builtin(cmd->args);
 	return (stat);

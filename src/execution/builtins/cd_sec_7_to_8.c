@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   cd_sec_7_to_8.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/18 16:12:45 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/06 15:55:45 by mmoser           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   cd_sec_7_to_8.c                                    :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/07/18 16:12:45 by mmoser        #+#    #+#                 */
+/*   Updated: 2024/09/05 10:45:53 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,7 @@ static t_error	cnvrt_to_canonical(char **curpath)
 	if (!og_path)
 	{
 		perror("malloc");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 
 	// section 8 c. part 1
@@ -224,7 +224,7 @@ static t_error	cnvrt_to_canonical(char **curpath)
 	if (!result)
 	{
 		perror("malloc");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	*curpath = result;
 	return (NO_ERR);
@@ -242,14 +242,14 @@ static t_error	concatenate_to_pwd(char **curpath)
 	if (!pwd)
 	{
 		perror("malloc");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	if (!ft_ends_on(pwd, '/'))
 	{
 		if (add_slash(&pwd)!= NO_ERR)
 		{
 			free(pwd);
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 	}
 	tmp = ft_strjoin(pwd, *curpath);
@@ -257,7 +257,7 @@ static t_error	concatenate_to_pwd(char **curpath)
 	if (!tmp)
 	{
 		perror("malloc");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	free(*curpath);
 	*curpath = tmp;
@@ -274,7 +274,7 @@ t_error	modify_curpath(char **curpath)
 	{
 		if (concatenate_to_pwd(curpath) != NO_ERR)
 		{
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 	}
 

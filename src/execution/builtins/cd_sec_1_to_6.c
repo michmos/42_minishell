@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/23 12:21:40 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/08/14 09:10:48 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/05 10:45:53 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static t_error	try_curdir(char **finding, char *dir)
 	if (!tmp)
 	{
 		perror("malloc");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	if (is_dir(tmp))
 	{
@@ -71,7 +71,7 @@ static t_error	try_pathname(char **finding, char *pathname, char *dir)
 	candidate = get_candidate(pathname, dir);
 	if (!candidate)
 	{
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 	if (is_dir(candidate))
 	{
@@ -103,7 +103,7 @@ static t_error	try_cdpaths(char **finding, char *dir)
 	if (!pathnames || !*pathnames)
 	{
 		perror("malloc");
-		return (SYS_ERR);
+		return (DEADLY_ERR);
 	}
 
 	i = 0;
@@ -127,7 +127,7 @@ static t_error set_dir(char **directory, char *arg)
 		if (!*directory)
 		{
 			perror("malloc");
-			return (SYS_ERR);
+			return (DEADLY_ERR);
 		}
 	}
 	else
@@ -144,7 +144,7 @@ static t_error set_dir(char **directory, char *arg)
 			if (!*directory)
 			{
 				perror("malloc");
-				return (SYS_ERR);
+				return (DEADLY_ERR);
 			}
 		}
 	}

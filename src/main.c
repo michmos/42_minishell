@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/23 15:56:13 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/04 10:45:35 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/05 10:47:57 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ static void	process_cmd_line(char *cmd_line)
 	add_history(cmd_line);
 	error = parsing(&cmd_lst, cmd_line);
 	free(cmd_line);
-	if (error == SYS_ERR)
+	if (error == DEADLY_ERR)
 	{
 		clean_exit(EXIT_FAILURE);
 	}
-	else if (error == SYN_ERR)
+	else if (error == ERR)
 	{
 		ft_lstclear(&cmd_lst, free_cmd);
 		return ;
