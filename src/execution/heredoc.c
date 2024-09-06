@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/17 11:16:48 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/05 10:45:53 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/06 13:58:12 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,25 +30,16 @@ delimited by signal (wanted `%s')\n", SHELLNAME, delimiter);
 			break ;
 		}
 		if (ft_strncmp(tmp, delimiter, ft_strlen(tmp) + 1) == 0)
-		{
 			break ;
-		}
 		tmp2 = ft_strjoin(tmp, "\n");
 		free(tmp);
 		if (!tmp2)
-		{
-			perror("malloc");
-			free(result);
-			return (DEADLY_ERR);
-		}
+			return (perror("malloc"), free(result), DEADLY_ERR);
 		tmp = ft_strjoin(result, tmp2);
 		free(tmp2);
 		free(result);
 		if (!tmp)
-		{
-			perror("malloc");
-			return (DEADLY_ERR);
-		}
+			return (perror("malloc"), DEADLY_ERR);
 		result = tmp;
 	}
 	*hd_str = result;

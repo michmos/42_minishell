@@ -193,12 +193,14 @@ t_builtins	get_builtin_type(char *cmd);
 t_error	execute_builtin(char **args);
 t_error	exec_one_builtin(t_cmd *cmd);
 
-// fds.c
+// fds.c--------------------------------------------------------------------//
 t_error	reset_io(void);
 t_error set_io_redirs(t_list	*redir_lst, char *hd_str);
 t_error	set_io_pipes(int child_i, size_t num_childs);
 t_error	close_unused_fds(size_t i, size_t num_childs);
 
+// fds2.c -------------------------------------------------------------------//
+t_error	redir(int old_fd, int new_fd);
 // cd_sec_1_to_6.c ---------------------------------------------------------- //
 t_error init_curpath(char **curpath, char *arg);
 

@@ -6,31 +6,58 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/21 10:42:28 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/05 15:34:39 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/06 16:48:42 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-t_error add_to_envlst(t_list *head, char **argv)
+t_error	add_to_envlst(t_list *head, char **argv)
 {
 	t_list		*new;
 	t_env_var	*env_var;
+	t_list		*cur;
 	t_list		*last;
+	int			i;
+	bool		found = false;
 
-	// if (*argv == NULL)
-	// 	return (head);
-	env_var = get_env_var(*argv);
-	if (!env_var)
+	i = -1;
+	while (argv[++i])
 	{
-		return (DEADLY_ERR);
+		found = false;
+		env_var = get_env_var(argv[i]);
+		if (!env_var)
+		{
+			return (DEADLY_ERR);
+		}
+		new = ft_lstnew(env_var);
+		if (!new)
+			return (perror("malloc"), DEADLY_ERR);
+		cur = head;
+		while (cur)
+		{
+			if (cur && ft_strncmp(key(new), key(cur), ft_strlen(key(cur)) + 1) == 0)
+			{
+				found = true;
+				cur = cur->next;
+				break;
+			}
+			last = cur;
+			cur = cur->next;
+		}
+		if (found && cur == NULL)
+		{
+			last->next = new;
+			new->next = last->next->next;
+			free(cur);
+		}
+		else if (found)
+		{
+			last->next = new;
+			new->next = cur;
+		}
+		else
+			ft_lstadd_back(&head, new);
 	}
-	new = ft_lstnew(env_var);
-	if (!new)
-	{
-		perror("malloc");
-		return (DEADLY_ERR);
-	}
-	ft_lstadd_back(&head, new);
 	return (NO_ERR);
 }

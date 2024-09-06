@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 14:52:41 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/05 10:45:53 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/06 13:48:40 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,9 @@ static t_error	get_full_path(char **full_path, char *cmd, char **env)
 	*full_path = NULL;
 	error = NO_ERR;
 	if (get_bin_paths(&bin_paths, env) != NO_ERR)
-	{
 		return (DEADLY_ERR);
-	}
 	else if (!bin_paths)
-	{
 		return (NO_ERR);
-	}
 	i = 0;
 	while (bin_paths[i])
 	{
@@ -89,17 +85,14 @@ static t_error	get_full_path(char **full_path, char *cmd, char **env)
 		if (!*full_path)
 		{
 			error = DEADLY_ERR;
-			break;
+			break ;
 		}
 		if (access(*full_path, X_OK) == 0)
-		{
-			break;
-		}
+			break ;
 		sfree((void **) full_path);
 		i++;
 	}
-	ft_free_2d_array((void **) bin_paths);
-	return (error);
+	return (ft_free_2d_array((void **) bin_paths), error);
 }
 
 t_error	init_cmd_path(char **cmd_path, char *cmd, char **env)

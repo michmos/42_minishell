@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 09:50:20 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/05 16:11:50 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/06 14:11:35 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,24 +25,17 @@ static void	child_process(t_cmd *cmd, char *hd_str)
 	signal(SIGQUIT, SIG_DFL);
 	error = set_io_redirs(cmd->redir_lst, hd_str);
 	if (error != NO_ERR && error == DEADLY_ERR)
-	{
 		clean_exit(DEADLY_ERR);
-	}
 	else if (error != NO_ERR && error == ERR)
-	{
 		clean_exit(ERR);
-	}
 	if (get_builtin_type(cmd->args[0]) != NO_BUILTIN)
 	{
-		if (execute_builtin(cmd->args) == DEADLY_ERR)
-			clean_exit(DEADLY_ERR);
-		else
-			clean_exit(NO_ERR);
+		error = execute_builtin(cmd->args);
+		clean_exit(error);
 	}
-	if (init_cmd_path(&path, cmd->args[0], shell->env) != NO_ERR || cmd->args[0] == NULL)
-	{
+	if (init_cmd_path(&path, cmd->args[0], shell->env) != NO_ERR || \
+	cmd->args[0] == NULL)
 		clean_exit(DEADLY_ERR);
-	}
 	check_cmd(path, cmd->args[0]);
 	execve(path, cmd->args, shell->env);
 	perror("execve");
@@ -53,13 +46,7 @@ static void	child_process(t_cmd *cmd, char *hd_str)
 // or of any other child in case an error occurred in another child
 void	wait_for_childs(pid_t last_child, int *status)
 {
-	// signal(SIGINT, handle_sig_child);
-	// waitpid(last_child, status, 0);  // TODO: protection required?
-	// while (wait(NULL) != -1)
-	// 	;
-	// if (*status == 131)
-	// 	ft_printf_fd(STDERR_FILENO, "Quit (core dumped)\n");
-	int		stat;
+	int	stat;
 
 	signal(SIGINT, handle_sig_child);
 	if (last_child > 0)

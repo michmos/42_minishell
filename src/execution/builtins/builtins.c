@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/25 09:25:29 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/05 16:06:37 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/06 14:25:07 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,17 +63,17 @@ t_builtins	get_builtin_type(char *cmd)
 {
 	if (cmd == NULL)
 		return (NO_BUILTIN);
-	else if (ft_strncmp(cmd, "echo", 5) == 0) // doesn't work yet
+	else if (ft_strncmp(cmd, "echo", 5) == 0)
 		return (ECHO);
-	else if (ft_strncmp(cmd, "cd", 3) == 0) // doesn't work yet
+	else if (ft_strncmp(cmd, "cd", 3) == 0)
 		return (CD);
 	else if (ft_strncmp(cmd, "pwd", 4) == 0)
 		return (PWD);
-	else if (ft_strncmp(cmd, "export", 7) == 0) // with export it cannot begin with a special character
+	else if (ft_strncmp(cmd, "export", 7) == 0)
 		return (EXPORT);
-	else if (ft_strncmp(cmd, "unset", 6) == 0) // doesn't work yet
+	else if (ft_strncmp(cmd, "unset", 6) == 0)
 		return (UNSET);
-	else if (ft_strncmp(cmd, "env", 4) == 0) // prints the args but doesn't add them to the list
+	else if (ft_strncmp(cmd, "env", 4) == 0)
 		return (ENV);
 	else if (ft_strncmp(cmd, "exit", 5) == 0)
 		return (EXIT);
@@ -111,18 +111,12 @@ t_error	env(char **args)
 		print_envlst(shell->env_lst, 6);
 	return (NO_ERR);
 }
-/*
-	export now only works if you first give it and argument, if you don't it won't work
-
-	env gives everything as it should, but need to work on the thing that would replace the node if you give the same key
-	if you give 
-*/
 
 t_error	execute_builtin(char **args)
 {
-	t_error	error;
-	t_shell	*shell;
-	t_builtins type;
+	t_error		error;
+	t_shell		*shell;
+	t_builtins	type;
 
 	error = NO_ERR;
 	type = get_builtin_type(args[0]);
@@ -153,15 +147,6 @@ t_error	execute_builtin(char **args)
 	}
 	return (error);
 }
-/*
-	builtin == 5 (unset)
-		- instead of line i need to send cmd->pars_out->args
-			and unset everything like bash would with whats given to me at args[0]...
-		- micha is currently working on unset
-	builtin == 6 (env)
-		same goes here, the list should be already created and i just want to add to it
-		doesn't make any sense to create it every single time... 
-*/
 
 t_error	exec_one_builtin(t_cmd *cmd)
 {
@@ -169,7 +154,7 @@ t_error	exec_one_builtin(t_cmd *cmd)
 	char		*hd_str;
 
 	if (exec_hd(&hd_str, cmd->redir_lst) != NO_ERR)
-			return (DEADLY_ERR);
+		return (DEADLY_ERR);
 	if (set_io_redirs(cmd->redir_lst, hd_str) != NO_ERR)
 	{
 		free(hd_str);
@@ -178,8 +163,3 @@ t_error	exec_one_builtin(t_cmd *cmd)
 	stat = execute_builtin(cmd->args);
 	return (stat);
 }
-
-/*
-	maybe i should call the dup2_copy function that has error handling implemented
-	instead of calling dup2
-*/

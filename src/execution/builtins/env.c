@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/16 10:00:03 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/22 13:35:56 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/06 14:27:04 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,20 +63,12 @@ t_env_var	*get_env_var(char *env)
 
 	env_var = ft_calloc(1, sizeof(t_env_var));
 	if (!env_var)
-	{
-		perror("malloc");
-		return (NULL);
-	}
+		return (perror("malloc"), NULL);
 	env_var->key = get_key(env_var, &env_parse);
 	if (!env_var->key)
-	{
-		free(env_var);
-		return (NULL);
-	}
+		return (free(env_var), NULL);
 	if (env[env_parse.cursor_pos] != '=')
-	{
 		return (env_var);
-	}
 	env_var->equal = (env[env_parse.cursor_pos] == '=');
 	env_parse.cursor_pos++;
 	env_var->value = get_value(env_var, &env_parse);
