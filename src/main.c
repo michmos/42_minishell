@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/23 15:56:13 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/11 10:16:39 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 11:12:23 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	main(int argc, char *argv[], char **env)
 	{
 		dup_in_out_err(shell);
 		init_signals();
-		cmd_line = readline("minishe	t_error	error;ll> ");
+		cmd_line = readline("minishell> ");
 		if (!cmd_line)
 		{
 			signal_ctrl_d(cmd_line);
