@@ -6,13 +6,13 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/08/14 09:31:22 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/06 14:12:17 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 15:19:06 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	g_signal;
+int	g_signal; //Check the global variable. This global variable cannot provide any other information or data access than the number of a received signal.
 
 void	handle_sig_hd(int signal)
 {
@@ -30,7 +30,6 @@ void	handle_sig_hd(int signal)
 		rl_on_new_line();
 		rl_replace_line("", 1);
 		rl_redisplay();
-		set_exit_code(130);
 	}
 }
 

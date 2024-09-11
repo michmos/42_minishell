@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/23 15:56:13 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/11 11:12:23 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 15:37:58 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ static void	process_cmd_line(char *cmd_line)
 	{
 		clean_exit(EXIT_FAILURE);
 	}
-	else if (error == ERR)
+	else if (error == ERR || (get_cmd(cmd_lst)->args[0] == NULL && \
+	get_redir(get_cmd(cmd_lst)->redir_lst)->type != I_RD_HD))
 	{
 		ft_lstclear(&cmd_lst, free_cmd);
 		return ;
