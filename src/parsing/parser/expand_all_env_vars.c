@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/15 13:22:17 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/05 10:45:53 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 10:53:24 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ static	t_error	cut_out_backslash(char **str_ptr, size_t pos)
 	char	*str;
 	size_t	len;
 
-	
 	str = *str_ptr;
 	len = ft_strlen(str) - 1;
 	new_str = ft_calloc((len + 1), sizeof(char));
@@ -68,7 +67,7 @@ t_error	expand_all_env_vars(char **str_ptr)
 	i = 0;
 	str = *str_ptr;
 	error = NO_ERR;
-	while(str[i] && !error)
+	while (str[i] && !error)
 	{
 		if (str[i] == '$')
 		{

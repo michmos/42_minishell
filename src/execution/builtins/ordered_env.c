@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/16 11:11:31 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/22 14:27:53 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 10:44:02 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ static void	put_var(t_env_var *env_var)
 
 static bool	is_bigger(t_env_var *a, t_env_var *b)
 {
-	return ((a && !b) || (a && b) &&  ((a->key && !b->key) || (ft_strncmp(a->key, b->key, ft_strlen(a->key) + 1)) > 0));
+	return ((a && !b) || (a && b) && ((a->key && !b->key) || \
+	(ft_strncmp(a->key, b->key, ft_strlen(a->key) + 1)) > 0));
 }
 
 static t_env_var	*get_next_bigger(t_env_var *last_var, t_list *env_lst)
@@ -42,7 +43,8 @@ static t_env_var	*get_next_bigger(t_env_var *last_var, t_list *env_lst)
 	t_env_var	*next_bigger;
 	
 	// find first variable with bigger key then last_var
-	while (env_lst && (is_bigger(last_var, (t_env_var *)(env_lst->as_ptr)) || (t_env_var *)(env_lst->as_ptr) == last_var))
+	while (env_lst && (is_bigger(last_var, (t_env_var *)(env_lst->as_ptr)) \
+	|| (t_env_var *)(env_lst->as_ptr) == last_var))
 	{
 		env_lst = env_lst->next;
 	}
@@ -52,7 +54,7 @@ static t_env_var	*get_next_bigger(t_env_var *last_var, t_list *env_lst)
 	while (env_lst)
 	{
 		if (is_bigger((t_env_var *)(env_lst->as_ptr), last_var)
-		&&  is_bigger(next_bigger, (t_env_var *)(env_lst)->as_ptr))
+		&& is_bigger(next_bigger, (t_env_var *)(env_lst)->as_ptr))
 		{
 			next_bigger = (t_env_var *)(env_lst->as_ptr);
 		}

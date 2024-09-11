@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/07 11:33:33 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/05 10:47:57 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 10:49:40 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,15 @@ static t_error	parse_pipe(t_list **rem_tokens)
 {
 	if (get_token_tag(*rem_tokens) != PIPE)
 	{
-		ft_printf_fd(STDERR_FILENO, "syntax error: unexpected token: %s\n", ((t_token *)((*rem_tokens)->as_ptr))->lexeme);
+		ft_printf_fd(STDERR_FILENO, "syntax error: unexpected token: %s\n", \
+		((t_token *)((*rem_tokens)->as_ptr))->lexeme);
 		return (ERR);
 	}
 	consume_token(rem_tokens);
 	if (!*rem_tokens)
 	{
-		ft_printf_fd(STDERR_FILENO, "syntax error: unexpected token: %s\n", "new line");
+		ft_printf_fd(STDERR_FILENO, "syntax error: unexpected token: %s\n", \
+		"new line");
 		return (ERR);
 	}
 	return (NO_ERR);
@@ -41,7 +43,6 @@ static t_error	parse_cmd(t_cmd **cmd, t_list **rem_tokens)
 		perror("malloc");
 		return (DEADLY_ERR);
 	}
-
 	error = NO_ERR;
 	arg_lst = NULL;
 	while (!error && *rem_tokens && get_token_tag(*rem_tokens) != PIPE)
@@ -59,7 +60,6 @@ static t_error	parse_cmd(t_cmd **cmd, t_list **rem_tokens)
 			error = extend_arg_lst(&arg_lst, rem_tokens);
 		}
 	}
-	
 	if (!error)
 	{
 		new_cmd->args = store_ptrs_in_arr(arg_lst);
@@ -69,7 +69,6 @@ static t_error	parse_cmd(t_cmd **cmd, t_list **rem_tokens)
 			error = DEADLY_ERR;
 		}
 	}
-	
 	if (error)
 	{
 		ft_lstclear(&arg_lst, free);
@@ -90,7 +89,8 @@ static t_error	extend_cmd_lst(t_list **cmd_lst, t_list **rem_tokens)
 	cmd = NULL;
 	if (get_token_tag(*rem_tokens) == PIPE)
 	{
-		ft_printf_fd(STDERR_FILENO, "syntax error: unexpected token: %s\n", "pipe");;
+		ft_printf_fd(STDERR_FILENO, "syntax error: unexpected token: %s\n", \
+		"pipe");
 		return (ERR);
 	}
 	error = parse_cmd(&cmd, rem_tokens);
@@ -123,7 +123,6 @@ t_error	create_cmd_lst(t_list **cmd_lst, t_list **token_lst)
 			error = parse_pipe(token_lst);
 		}
 	}
-
 	if (error)
 	{
 		ft_lstclear(cmd_lst, free_cmd);

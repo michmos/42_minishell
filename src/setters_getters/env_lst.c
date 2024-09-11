@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   env_lst.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/22 11:09:54 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/28 15:37:19 by mmoser           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   env_lst.c                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/07/22 11:09:54 by mmoser        #+#    #+#                 */
+/*   Updated: 2024/09/11 10:36:10 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_list *get_env_lst(void)
+t_list	*get_env_lst(void)
 {
 	t_shell	*shell;
 
@@ -28,11 +28,10 @@ void	set_env_lst(t_list *new_lst)
 	t_list	*lst;
 
 	if (!new_lst)
-		return;
-
+		return ;
 	shell = get_shell_struct();
 	if (!shell)
-		return;
+		return ;
 	lst = shell->env_lst;
 	free(lst);
 	shell->env_lst = new_lst;

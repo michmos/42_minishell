@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/22 14:56:17 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/05 10:45:53 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 10:47:49 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ static t_error	update_shell_struct(t_shell *shell, char *new_path)
 
 static t_error	update_env_lst(t_list *env_lst, char *cwd_ptr, char *old_wd_ptr)
 {
-	t_list *pwd_node;
-	t_list *oldpwd_node;
-	
+	t_list	*pwd_node;
+	t_list	*oldpwd_node;
+
 	pwd_node = ft_lstfind(env_lst, has_key, "PWD");
 	if (pwd_node)
 	{
@@ -37,8 +37,7 @@ static t_error	update_env_lst(t_list *env_lst, char *cwd_ptr, char *old_wd_ptr)
 		((t_env_var *) pwd_node->as_ptr)->value = ft_strdup(cwd_ptr);
 		if (!(((t_env_var *) pwd_node->as_ptr)->value))
 		{
-			perror("malloc");
-			return (DEADLY_ERR);
+			return (perror("malloc"), DEADLY_ERR);
 		}
 	}
 	oldpwd_node = ft_lstfind(env_lst, has_key, "OLDPWD");
@@ -48,13 +47,11 @@ static t_error	update_env_lst(t_list *env_lst, char *cwd_ptr, char *old_wd_ptr)
 		((t_env_var *) oldpwd_node->as_ptr)->value = ft_strdup(old_wd_ptr);
 		if (!(((t_env_var *) oldpwd_node->as_ptr)->value))
 		{
-			perror("malloc");
-			return (DEADLY_ERR);
+			return (perror("malloc"), DEADLY_ERR);
 		}
 	}
 	return (NO_ERR);
 }
-
 
 t_error	set_pwd(char *new_path)
 {
@@ -63,7 +60,6 @@ t_error	set_pwd(char *new_path)
 	shell = get_shell_struct();
 	if (!shell)
 		return (INP_ERR);
-
 	if (update_shell_struct(shell, new_path) != NO_ERR)
 	{
 		return (DEADLY_ERR);

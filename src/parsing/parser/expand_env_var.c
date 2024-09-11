@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/01 17:46:04 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/05 10:47:57 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 10:52:08 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static size_t	get_key_len(char *key)
 	if (*key == '$' || *key == '?')
 		return (1);
 
-	while(key[len] && (ft_isalnum(key[len]) || key[len] == '_'))
+	while (key[len] && (ft_isalnum(key[len]) || key[len] == '_'))
 	{
 		len++;
 	}
@@ -53,7 +53,7 @@ static bool	is_valid_key_char(char c)
 	return (ft_isalnum(c) || c == '_');
 }
 
-static t_error	has_ERRor(char *str)
+static t_error	has_error(char *str)
 {
 	size_t	i;
 	bool	bad_substition;
@@ -181,7 +181,7 @@ t_error	expand_env_var(char **str_ptr, size_t *dollar_pos)
 	{
 		return (NO_ERR);
 	}
-	if (brackets && has_ERRor(&str[*dollar_pos]))
+	if (brackets && has_error(&str[*dollar_pos]))
 	{
 		return (ERR);
 	}

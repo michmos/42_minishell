@@ -6,13 +6,12 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/30 11:23:41 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/29 11:27:20 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 10:41:16 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 #include <unistd.h>
-
 
 int	str_is_num(char *str)
 {
@@ -30,7 +29,7 @@ int	str_is_num(char *str)
 	return (1);
 }
 
-static t_error 	init_ex_val(unsigned char *result, char *input)
+static t_error	init_ex_val(unsigned char *result, char *input)
 {
 	unsigned long long	res;
 	int					sign;
@@ -46,7 +45,8 @@ static t_error 	init_ex_val(unsigned char *result, char *input)
 	{
 		if (res > ULLONG_MAX / 10)
 		{
-			ft_printf_fd(STDERR_FILENO, "exit\n%s: exit: %s: numeric argument required\n", SHELLNAME, input);
+			ft_printf_fd(STDERR_FILENO, "exit\n%s: exit: %s: numeric argument required\
+			\n", SHELLNAME, input);
 			*result = 2;
 			return (OTH_ERR);
 		}
@@ -60,7 +60,7 @@ static t_error 	init_ex_val(unsigned char *result, char *input)
 void	execute_exit(char **args)
 {
 	unsigned char	exit_val;
-	t_shell	*shell;
+	t_shell			*shell;
 
 	if (!args[1])
 	{

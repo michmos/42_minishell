@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/15 21:11:23 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/05 10:47:57 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 10:55:21 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,8 @@ static char	*get_substr_until(t_parse_str *cmd_line, const char *seperators)
 	vec.size = VEC_START_SZ;
 	vec.buf = ft_calloc(sizeof(char), vec.size);
 	if (!vec.buf)
-	{
-		perror("malloc");
-		return(NULL);
-	}
-
-	while(cur_char(cmd_line) && !ft_strchr(seperators, cur_char(cmd_line)))
+		return (perror("malloc"), NULL);
+	while (cur_char(cmd_line) && !ft_strchr(seperators, cur_char(cmd_line)))
 	{
 		if (add_char(cur_char(cmd_line), &vec) != NO_ERR)
 		{
@@ -50,11 +46,11 @@ t_error	parse_str_dq(char **lexeme, t_parse_str *cmd_line)
 	*lexeme = get_substr_until(cmd_line, "\"");
 	if (!*lexeme)
 		return (DEADLY_ERR);
-
 	if (cur_char(cmd_line) != '\"')
 	{
 		sfree((void **) lexeme);
-		ft_printf_fd(STDERR_FILENO, "syntax error: missing closing double quotation mark\n");
+		ft_printf_fd(STDERR_FILENO, \
+		"syntax error: missing closing double quotation mark\n");
 		return (ERR);
 	}
 	advance_char(cmd_line, 2);
@@ -71,7 +67,8 @@ t_error	parse_str_sq(char **lexeme, t_parse_str *cmd_line)
 	if (cur_char(cmd_line) != '\'')
 	{
 		sfree((void **) lexeme);
-		ft_printf_fd(STDERR_FILENO, "syntax error: missing closing single quotation mark\n");
+		ft_printf_fd(STDERR_FILENO, \
+		"syntax error: missing closing single quotation mark\n");
 		return (ERR);
 	}
 	advance_char(cmd_line, 2);

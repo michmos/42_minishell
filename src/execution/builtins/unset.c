@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/21 11:10:30 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/05 15:37:08 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 10:42:58 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 bool	is_same_key(char *key, t_list *cur)
 {
-	return (ft_strncmp(key, ((t_env_var *)(cur->as_ptr))->key, ft_strlen(key) + 1) == 0);
+	return (ft_strncmp(key, ((t_env_var *)(cur->as_ptr))->key, \
+	ft_strlen(key) + 1) == 0);
 }
 
 t_error	unset(char *argv[])

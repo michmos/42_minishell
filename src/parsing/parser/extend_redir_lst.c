@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/23 15:47:10 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/05 10:47:57 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 10:50:28 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ static t_error	parse_redir(t_redir **redir, t_list **rem_tokens)
 	token = pop_token(rem_tokens);
 	new_redir.type = token.tag;
 	free(token.lexeme);
-
 	// check next token
 	if (!*rem_tokens)
 	{
@@ -30,7 +29,6 @@ static t_error	parse_redir(t_redir **redir, t_list **rem_tokens)
 	}
 	else if (get_token_tag(*rem_tokens)== WHITESPACE)
 		consume_token(rem_tokens);
-
 	// get filename
 	if (!*rem_tokens || get_token_tag(*rem_tokens)!= WORD)
 	{
@@ -52,8 +50,8 @@ static t_error	parse_redir(t_redir **redir, t_list **rem_tokens)
 
 t_error	extend_redir_lst(t_list **head, t_list **rem_tokens)
 {
-	t_list  *new;
-	t_redir *redir;
+	t_list	*new;
+	t_redir	*redir;
 	t_error	error;
 
 	redir = NULL;

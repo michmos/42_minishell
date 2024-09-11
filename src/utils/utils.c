@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/24 12:17:46 by mmoser            #+#    #+#             */
-/*   Updated: 2024/08/06 15:58:52 by mmoser           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   utils.c                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/04/24 12:17:46 by mmoser        #+#    #+#                 */
+/*   Updated: 2024/09/11 10:30:26 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,8 @@ char	**store_ptrs_in_arr(t_list *lst)
 		perror("malloc");
 		return (NULL);
 	}
-
 	i = 0;
-	while(i < size)
+	while (i < size)
 	{
 		array[i] = (char *) lst->as_ptr;
 		lst = lst->next;
@@ -51,14 +50,11 @@ char	*get_env_val_ptr(char *key)
 
 	if (!key)
 		return (NULL);
-
 	env_lst = get_env_lst();
 	if (!env_lst)
 		return (NULL);
-
 	result_node = ft_lstfind(env_lst, has_key, key);
 	if (result_node)
 		return (((t_env_var *) result_node->as_ptr)->value);
 	return (NULL);
 }
-

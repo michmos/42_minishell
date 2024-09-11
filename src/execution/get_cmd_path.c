@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 14:52:41 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/06 13:48:40 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 10:32:00 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ t_error	init_cmd_path(char **cmd_path, char *cmd, char **env)
 			return (NO_ERR);
 		}
 	}
-
 	*cmd_path = ft_strdup(cmd);
 	if (!*cmd_path)
 	{

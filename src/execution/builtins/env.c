@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/16 10:00:03 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/06 14:27:04 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 10:40:02 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,45 +79,6 @@ t_env_var	*get_env_var(char *env)
 	}
 	return (env_var);
 }
-/*
-	I don't want to add the env_var to env list if it doesn't have equal sign, but I want to add it to the
-	ordered list. maybe i need to functions for that???
-*/
-
-// t_env_var	*get_env_var(char *env)
-// {
-// 	t_env_var	*env_var;
-// 	t_parse_env	env_parse;
-
-// 	env_parse.buffer = env;
-// 	env_parse.cursor_pos = 0;
-// 	env_parse.buffer_len = ft_strlen(env);
-
-// 	env_var = malloc(sizeof(t_env_var));
-// 	if (!env_var)
-// 	{
-// 		perror("malloc");
-// 		return (NULL);
-// 	}
-// 	env_var->key = get_key(env_var, &env_parse);
-// 	if (!env_var->key)
-// 	{
-// 		free(env_var);
-// 		return (NULL);
-// 	}
-// 	if (!env[env_parse.cursor_pos])
-// 		return (env_var);
-// 	env_var->equal = (env[env_parse.cursor_pos] == '=');
-// 	env_parse.cursor_pos++;
-// 	env_var->value = get_value(env_var, &env_parse);
-// 	if (!env_var->value)
-// 	{
-// 		free(env_var);
-// 		return (NULL);
-// 	}
-
-// 	return (env_var);
-// }
 
 void	free_env_var(void *node)
 {
@@ -157,9 +118,3 @@ t_list	*create_envlst(char **env)
 	}
 	return (head);
 }
-
-/*
-	before every execve call i can go and look at the env linked list created by us, and then put everything
-	into a 2d array, so that execve could use it easily.
-	every time if there's anything inside i can free it and then malloc again
-*/

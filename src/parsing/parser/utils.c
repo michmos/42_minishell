@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/21 13:30:14 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/19 14:45:04 by mmoser           ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   utils.c                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/05/21 13:30:14 by mmoser        #+#    #+#                 */
+/*   Updated: 2024/09/11 10:37:11 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 t_token	pop_token(t_list **token_lst)
 {
 	t_token	token;
-	t_list  *next_node;
+	t_list	*next_node;
 
 	next_node = (*token_lst)->next;
 	token = *((t_token *)(*token_lst)->as_ptr);
@@ -39,15 +39,15 @@ t_tag	get_token_tag(t_list *tokens)
 {
 	if (!tokens)
 		return (-1);
-	return(((t_token *)(tokens->as_ptr))->tag);
+	return (((t_token *)(tokens->as_ptr))->tag);
 }
 
-bool  is_literal(t_tag tag)
+bool	is_literal(t_tag tag)
 {
 	return (tag == WORD || tag == SI_QUO || tag == DU_QUO);
 }
 
-bool is_redir(t_tag tag)
+bool	is_redir(t_tag tag)
 {
 	return (tag == I_RD || tag == I_RD_HD || tag == O_RD || tag == O_RD_APP);
 }

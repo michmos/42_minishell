@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/21 10:42:28 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/06 16:48:42 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 10:44:43 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@ t_error	add_to_envlst(t_list *head, char **argv)
 	t_list		*cur;
 	t_list		*last;
 	int			i;
-	bool		found = false;
+	bool		found;
 
+	found = false;
 	i = -1;
 	while (argv[++i])
 	{

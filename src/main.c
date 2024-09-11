@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/23 15:56:13 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/05 10:47:57 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 10:16:39 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,23 +38,26 @@ static void	process_cmd_line(char *cmd_line)
 	}
 }
 
+static void	dup_in_out_err(t_shell *shell)
+{
+	shell->std_in = dup(STDIN_FILENO);
+	shell->std_out = dup(STDOUT_FILENO); // TODO: protect
+	shell->std_err = dup(STDERR_FILENO);
+}
+
 int	main(int argc, char *argv[], char **env)
 {
 	t_shell	*shell;
 	char	*cmd_line;
-	t_error	error;
 
-	(void)error;
 	(void)argc;
 	(void)argv;
 	init_shell(&shell, env);
 	while (1)
 	{
-		shell->std_in = dup(STDIN_FILENO);
-		shell->std_out = dup(STDOUT_FILENO); // TODO: protect
-		shell->std_err = dup(STDERR_FILENO);
+		dup_in_out_err(shell);
 		init_signals();
-		cmd_line = readline("minishell> ");
+		cmd_line = readline("minishe	t_error	error;ll> ");
 		if (!cmd_line)
 		{
 			signal_ctrl_d(cmd_line);
@@ -69,3 +72,6 @@ int	main(int argc, char *argv[], char **env)
 	}
 	clean_exit(shell->ex_code);
 }
+
+// removed t_error from main function, seems like we're not
+// using it there

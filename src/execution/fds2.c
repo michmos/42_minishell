@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   fs2.c                                              :+:    :+:            */
+/*   fds2.c                                             :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/09/06 11:50:28 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/06 11:51:34 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 10:35:04 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ t_error	reset_io(void)
 	}
 	return (0);
 }
-
 
 t_error	close_unused_fds(size_t i, size_t num_childs)
 {

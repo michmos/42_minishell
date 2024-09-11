@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/28 11:11:50 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/08/16 10:56:46 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/11 10:32:28 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 // 	free(env_var->value);
 // 	free(env_var);
 // }
-
 
 // static void	free_redir_lst(void *node)
 // {
@@ -47,7 +46,6 @@
 // 	ft_lstclear(&cmd->redir_lst, free_redir_lst);
 // 	free(cmd);
 // }
-
 
 /*
 	not particularly happy with the free functions
