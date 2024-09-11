@@ -50,7 +50,7 @@ static size_t	get_end_pos(char *str, size_t dollar_pos, bool brackets)
 
 static bool	is_valid_key_char(char c)
 {
-	return (ft_isalnum(c) || c == '_');
+	return (ft_isalnum(c) || c == '_' || c == '?');
 }
 
 static t_error	has_error(char *str)
