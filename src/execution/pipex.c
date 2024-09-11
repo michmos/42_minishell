@@ -24,16 +24,18 @@ static void	child_process(t_cmd *cmd, char *hd_str)
 	error = NO_ERR;
 	signal(SIGQUIT, SIG_DFL);
 	error = set_io_redirs(cmd->redir_lst, hd_str);
-	if (error != NO_ERR && error == DEADLY_ERR)
+	if (error == DEADLY_ERR)
 		clean_exit(DEADLY_ERR);
-	else if (error != NO_ERR && error == ERR)
+	else if (error == ERR)
 		clean_exit(ERR);
 	if (get_builtin_type(cmd->args[0]) != NO_BUILTIN)
 	{
 		error = execute_builtin(cmd->args);
 		clean_exit(error);
 	}
-	if (init_cmd_path(&path, cmd->args[0], shell->env) != NO_ERR || \
+	if (!cmd->args[0])
+		clean_exit(NO_ERR);
+	else if (init_cmd_path(&path, cmd->args[0], shell->env) != NO_ERR || \
 	cmd->args[0] == NULL)
 		clean_exit(DEADLY_ERR);
 	check_cmd(path, cmd->args[0]);

@@ -25,8 +25,7 @@ static void	process_cmd_line(char *cmd_line)
 	{
 		clean_exit(EXIT_FAILURE);
 	}
-	else if (error == ERR || (get_cmd(cmd_lst)->args[0] == NULL && \
-	get_redir(get_cmd(cmd_lst)->redir_lst)->type != I_RD_HD))
+	else if (error == ERR)
 	{
 		ft_lstclear(&cmd_lst, free_cmd);
 		return ;
