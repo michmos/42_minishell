@@ -38,14 +38,14 @@ static size_t	get_key_len(char *key)
 	return (len);
 }
 
-static size_t	get_end_pos(char *str, size_t ref_pos, bool brackets)
+static size_t	get_end_pos(char *str, size_t dollar_pos, bool brackets)
 {
 	size_t	key_pos;
 	size_t	key_len;
 
 	key_pos = get_key_pos(str);
-	key_len = get_key_len(&str[key_pos]);
-	return (ref_pos + key_pos + key_len + brackets);
+	key_len = get_key_len(&str[dollar_pos + key_pos]);
+	return (dollar_pos + key_pos + key_len + brackets);
 }
 
 static bool	is_valid_key_char(char c)
