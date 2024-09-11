@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 10:23:56 by mmoser            #+#    #+#             */
-/*   Updated: 2024/06/17 16:23:29 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/09/11 16:12:21 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@ char	cur_char(t_parse_str *str)
 	return (str->buf[str->cursor_pos]);
 }
 
-void	advance_char(t_parse_str *str, size_t n)
+void	advance_char(t_parse_str *str)
 {
-	if (str->cursor_pos + n >= str->buf_len)
+	if (str->cursor_pos + 1 >= str->buf_len)
 	{
 		str->cursor_pos = str->buf_len;
 		return ;
 	}
-	str->cursor_pos += n;
+	str->cursor_pos += 1;
 }
 
 char	peek_char(t_parse_str *str)

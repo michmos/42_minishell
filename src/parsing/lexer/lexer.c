@@ -60,15 +60,16 @@ static t_error	init_lexeme(char **lexeme, t_parse_str *cmd_line, t_tag tag)
 	if (tag == WHITESPACE)
 	{
 		while (cur_char(cmd_line) && ft_is_whitespace(cur_char(cmd_line)))
-			advance_char(cmd_line, 1);
+			advance_char(cmd_line);
 	}
 	else if (tag == I_RD || tag == O_RD || tag == PIPE)
 	{
-		advance_char(cmd_line, 1);
+		advance_char(cmd_line);
 	}
 	else if (tag == I_RD_HD || tag == O_RD_APP)
 	{
-		advance_char(cmd_line, 2);
+		advance_char(cmd_line);
+		advance_char(cmd_line);
 	}
 	else if (tag == WORD)
 	{

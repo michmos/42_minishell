@@ -124,7 +124,7 @@ t_error		add_char(char c, t_vec *vector);
 // char_ops.c --------------------------------------------------------------- //
 char		peek_char(t_parse_str *str);
 char		cur_char(t_parse_str *str);
-void		advance_char(t_parse_str *str, size_t n);
+void	advance_char(t_parse_str *str);
 
 // lexer.c ------------------------------------------------------------------ //
 t_error		create_token_lst(t_list **head, t_parse_str *cmd_line);

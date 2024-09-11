@@ -28,7 +28,7 @@ static char	*get_substr_until(t_parse_str *cmd_line, const char *seperators)
 			free(vec.buf);
 			return (NULL);
 		}
-		advance_char(cmd_line, 1);
+		advance_char(cmd_line);
 	}
 	substr = ft_realloc(vec.buf, ft_strlen(vec.buf) + 1, vec.size);
 	if (!substr)
@@ -42,7 +42,7 @@ static char	*get_substr_until(t_parse_str *cmd_line, const char *seperators)
 
 t_error	parse_str_dq(char **lexeme, t_parse_str *cmd_line)
 {
-	advance_char(cmd_line, 1);
+	advance_char(cmd_line);
 	*lexeme = get_substr_until(cmd_line, "\"");
 	if (!*lexeme)
 		return (DEADLY_ERR);
@@ -53,13 +53,13 @@ t_error	parse_str_dq(char **lexeme, t_parse_str *cmd_line)
 		"syntax error: missing closing double quotation mark\n");
 		return (ERR);
 	}
-	advance_char(cmd_line, 2);
+	advance_char(cmd_line);
 	return (NO_ERR);
 }
 
 t_error	parse_str_sq(char **lexeme, t_parse_str *cmd_line)
 {
-	advance_char(cmd_line, 1);
+	advance_char(cmd_line);
 	*lexeme = get_substr_until(cmd_line, "\'");
 	if (!*lexeme)
 		return (DEADLY_ERR);
@@ -71,7 +71,7 @@ t_error	parse_str_sq(char **lexeme, t_parse_str *cmd_line)
 		"syntax error: missing closing single quotation mark\n");
 		return (ERR);
 	}
-	advance_char(cmd_line, 2);
+	advance_char(cmd_line);
 	return (NO_ERR);
 }
 
