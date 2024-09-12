@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/25 09:25:29 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/06 14:25:07 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/12 14:13:59 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,13 +84,15 @@ t_builtins	get_builtin_type(char *cmd)
 t_error	export(char **args)
 {
 	t_shell	*shell;
+	t_error	error;
 
 	shell = get_shell_struct();
 	if (args[0] && args[1])
 	{
-		if (add_to_envlst(shell->env_lst, &args[1]) != NO_ERR)
+		error = add_to_envlst(shell->env_lst, &args[1]);
+		if (error != NO_ERR && error == DEADLY_ERR)
 		{
-			return (DEADLY_ERR);
+			return (error);
 		}
 	}
 	else
@@ -109,6 +111,7 @@ t_error	env(char **args)
 		printf("Too many arguments, please type only env\n");
 	else
 		print_envlst(shell->env_lst, 6);
+	set_exit_code(0);
 	return (NO_ERR);
 }
 

@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/17 11:02:09 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/06 14:07:13 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/12 15:56:48 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	print_err_and_exit(int num, int exit_code, char *arg)
 	}
 	else if (num == 2 && exit_code == 126)
 	{
-		ft_printf_fd(STDERR_FILENO, "%s: %s: is a directory\n", SHELLNAME, arg);
+		ft_printf_fd(STDERR_FILENO, "%s: %s: Is a directory\n", SHELLNAME, arg);
 		clean_exit(126);
 	}
 	else if (num == 3 && exit_code == 126)
@@ -51,8 +51,8 @@ void	check_cmd(char *path, char *arg)
 		print_err_and_exit(2, 126, arg);
 	else if (S_ISREG(file_stat.st_mode) && !(file_stat.st_mode & S_IXUSR))
 		print_err_and_exit(3, 126, arg);
-	else if (access(path, F_OK) == -1)
-		print_err_and_exit(4, 126, arg);
 	else if (access(path, X_OK) == -1)
 		print_err_and_exit(3, 126, arg);
+	else if (access(path, F_OK) == -1)
+		print_err_and_exit(4, 127, arg);
 }

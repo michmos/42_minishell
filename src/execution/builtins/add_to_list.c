@@ -6,11 +6,34 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/21 10:42:28 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/11 10:44:43 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/12 13:55:27 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+
+static t_error	check_key(char *key)
+{
+	int	i;
+
+	i = 0;
+	if (!key)
+		return (ERR);
+	if (!ft_isalpha(key[i]) && key[i] != '_')
+	{
+		return (ERR);
+	}
+	i++;
+	while (key[i])
+	{
+		if (!ft_isalnum(key[i]) && key[i] != '_')
+		{
+			return (ERR);
+		}
+		i++;
+	}
+	return (NO_ERR);
+}
 
 t_error	add_to_envlst(t_list *head, char **argv)
 {
@@ -20,6 +43,7 @@ t_error	add_to_envlst(t_list *head, char **argv)
 	t_list		*last;
 	int			i;
 	bool		found;
+	t_error		error;
 
 	found = false;
 	i = -1;
@@ -27,6 +51,22 @@ t_error	add_to_envlst(t_list *head, char **argv)
 	{
 		found = false;
 		env_var = get_env_var(argv[i]);
+		error = check_key(env_var->key);
+		if (error != NO_ERR)
+		{
+			if (ft_strlen(env_var->key) > 0)
+			{
+				ft_printf_fd(STDERR_FILENO, "minishell: export: `%s': \
+not a valid identifier\n", env_var->key);
+			}
+			else
+			{
+				ft_printf_fd(STDERR_FILENO, "minishell: export: `=': \
+not a valid identifier\n");
+			}
+			set_exit_code(1);
+			return (error);
+		}
 		if (!env_var)
 		{
 			return (DEADLY_ERR);

@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/09/11 10:17:01 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/11 10:34:43 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/12 12:39:21 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ typedef enum e_error
 	// Syscall fails
 	DEADLY_ERR = 200,
 	// Syntax error
-	ERR,
+	ERR = 1,
 	// Bad function input
 	INP_ERR,
 	// Other error

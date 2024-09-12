@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/30 11:23:41 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/11 15:03:11 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/12 13:45:06 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	execute_exit(char **args)
 	{
 		ft_printf_fd(STDERR_FILENO, "exit\n%s: exit: %s: numeric argument \
 required\n", SHELLNAME, args[1]);
-		clean_exit(255);
+		clean_exit(2);
 	}
 	else if (args[2])
 	{

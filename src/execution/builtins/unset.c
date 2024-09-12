@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/21 11:10:30 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/11 10:42:58 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/12 13:43:11 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,10 @@ t_error	unset(char *argv[])
 	shell = get_shell_struct();
 	prev = NULL;
 	cur = shell->env_lst;
+	if (!argv[1])
+	{
+		return (NO_ERR);
+	}
 	while (cur && !is_same_key(argv[1], cur))
 	{
 		prev = cur;
