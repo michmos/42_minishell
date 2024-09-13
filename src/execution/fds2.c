@@ -31,7 +31,7 @@ t_error	reset_io(void)
 	return (0);
 }
 
-t_error	close_unused_fds(size_t i, size_t num_childs)
+t_error	close_unused_fds(size_t child_idx, size_t num_childs)
 {
 	t_shell	*shell;
 
@@ -46,7 +46,7 @@ t_error	close_unused_fds(size_t i, size_t num_childs)
 		perror("close");
 		return (DEADLY_ERR);
 	}
-	if (i == num_childs - 1 && shell->open_fd != -1)
+	if (child_idx == num_childs - 1 && shell->open_fd != -1)
 	{
 		if (close(shell->open_fd) == -1)
 		{

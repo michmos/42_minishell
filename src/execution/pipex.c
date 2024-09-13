@@ -22,6 +22,14 @@ static void	child_process(t_cmd *cmd, char *hd_str)
 
 	shell = get_shell_struct();
 	error = NO_ERR;
+	// close unused fd
+	if (shell->open_fd != -1 && close(shell->open_fd) == -1)
+	{
+		perror("close");
+		clean_exit(DEADLY_ERR);
+	}
+	shell->open_fd = -1;
+
 	signal(SIGQUIT, SIG_DFL);
 	error = set_io_redirs(cmd->redir_lst, hd_str);
 	if (error == DEADLY_ERR || error == ERR)

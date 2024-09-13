@@ -36,7 +36,7 @@ t_error	set_io_pipes(int child_i, size_t num_childs)
 		{
 			return (DEADLY_ERR);
 		}
-		// close unused read end
+		// save unused read end
 		shell->open_fd = fds[0];
 	}
 	return (NO_ERR);
