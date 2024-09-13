@@ -65,7 +65,7 @@ t_error	cd(char *argv[])
 	if (argv[1] && argv[2])
 	{
 		ft_printf_fd(STDERR_FILENO, "cd: too many arguments\n");
-		return (NO_ERR);
+		return (ERR);
 	}
 
 	curpath = NULL;
@@ -74,7 +74,7 @@ t_error	cd(char *argv[])
 	error = set_curpath(&curpath, argv[1], shell->old_wd);
 	if (error || !curpath)
 	{
-		return (error);
+		return (ERR);
 	}
 	// section 10.
 	set_pwd(curpath);
@@ -89,6 +89,7 @@ t_error	cd(char *argv[])
 		if (chdir(curpath) == -1)
 		{
 			perror("cd");
+			error = ERR;
 		}
 	}
 	free(curpath);
