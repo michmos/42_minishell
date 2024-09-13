@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/17 11:02:09 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/13 13:47:02 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/13 14:05:23 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void	check_cmd(char *path, char *arg)
 			print_err_and_exit(4, 127, arg);
 		else if (access(path, X_OK) == -1 && access(path, F_OK) != 0)
 			print_err_and_exit(3, 126, arg);
+		else
+			print_err_and_exit(4, 127, arg);
 	}
 	else
 	{
@@ -60,5 +62,4 @@ void	check_cmd(char *path, char *arg)
 		else if (S_ISREG(file_stat.st_mode) && !(file_stat.st_mode & S_IXUSR))
 			print_err_and_exit(3, 126, arg);
 	}
-	print_err_and_exit(4, 127, arg);
 }
