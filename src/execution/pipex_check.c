@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/17 11:02:09 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/12 15:56:48 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/13 11:45:17 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,18 @@ void	check_cmd(char *path, char *arg)
 	struct stat	file_stat;
 	int			stat_result;
 
-	stat_result = stat(path, &file_stat);
-	if (stat_result == -1)
-		print_err_and_exit(1, 127, arg);
-	else if (S_ISDIR(file_stat.st_mode))
-		print_err_and_exit(2, 126, arg);
-	else if (S_ISREG(file_stat.st_mode) && !(file_stat.st_mode & S_IXUSR))
-		print_err_and_exit(3, 126, arg);
+	if (access(path, F_OK) == -1)
+		print_err_and_exit(4, 127, arg);
 	else if (access(path, X_OK) == -1)
 		print_err_and_exit(3, 126, arg);
-	else if (access(path, F_OK) == -1)
-		print_err_and_exit(4, 127, arg);
+	else
+	{
+		stat_result = stat(path, &file_stat);
+		if (stat_result == -1)
+			print_err_and_exit(1, 127, arg);
+		else if (S_ISDIR(file_stat.st_mode))
+			print_err_and_exit(2, 126, arg);
+		else if (S_ISREG(file_stat.st_mode) && !(file_stat.st_mode & S_IXUSR))
+			print_err_and_exit(3, 126, arg);
+	}
 }

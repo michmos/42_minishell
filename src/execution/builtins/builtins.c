@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/25 09:25:29 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/12 14:13:59 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/13 11:11:06 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,14 +155,19 @@ t_error	exec_one_builtin(t_cmd *cmd)
 {
 	int			stat;
 	char		*hd_str;
+	t_error		error;
 
 	if (exec_hd(&hd_str, cmd->redir_lst) != NO_ERR)
 		return (DEADLY_ERR);
-	if (set_io_redirs(cmd->redir_lst, hd_str) != NO_ERR)
+	error = set_io_redirs(cmd->redir_lst, hd_str);
+	if (error != NO_ERR && error == DEADLY_ERR)
 	{
 		free(hd_str);
 		return (DEADLY_ERR);
 	}
-	stat = execute_builtin(cmd->args);
+	stat = 0;
+	set_exit_code(error);
+	if (error == NO_ERR)
+		stat = execute_builtin(cmd->args);
 	return (stat);
 }

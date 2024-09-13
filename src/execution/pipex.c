@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 09:50:20 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/11 15:17:29 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/13 11:27:33 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,19 @@ static void	child_process(t_cmd *cmd, char *hd_str)
 	error = NO_ERR;
 	signal(SIGQUIT, SIG_DFL);
 	error = set_io_redirs(cmd->redir_lst, hd_str);
-	if (error == DEADLY_ERR)
-		clean_exit(DEADLY_ERR);
-	else if (error == ERR)
-		clean_exit(ERR);
+	if (error == DEADLY_ERR || error == ERR)
+		clean_exit(error);
 	if (get_builtin_type(cmd->args[0]) != NO_BUILTIN)
 	{
 		error = execute_builtin(cmd->args);
 		clean_exit(error);
 	}
-	if (!cmd->args[0])
-		clean_exit(NO_ERR);
+	if (!cmd->args[0] || !cmd->args[0][0])
+	{
+		if (!cmd->args[0][0])
+			ft_printf_fd(STDERR_FILENO, "%s: %s: command not found\n", SHELLNAME, cmd->args[0]);
+		clean_exit(127);
+	}
 	else if (init_cmd_path(&path, cmd->args[0], shell->env) != NO_ERR || \
 	cmd->args[0] == NULL)
 		clean_exit(DEADLY_ERR);
