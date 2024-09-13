@@ -128,7 +128,7 @@ t_error	execute_builtin(char **args)
 	else if (type == CD)
 		error = cd(args);
 	else if (type == PWD)
-		pwd(); // TODO: should throw error in case of too many arguments
+		pwd();
 	else if (type == EXPORT)
 		error = export(args);
 	else if (type == UNSET)
@@ -160,14 +160,11 @@ t_error	exec_one_builtin(t_cmd *cmd)
 	if (exec_hd(&hd_str, cmd->redir_lst) != NO_ERR)
 		return (DEADLY_ERR);
 	error = set_io_redirs(cmd->redir_lst, hd_str);
-	if (error != NO_ERR && error == DEADLY_ERR)
-	{
-		free(hd_str);
-		return (DEADLY_ERR);
-	}
-	stat = 0;
-	set_exit_code(error);
+	free(hd_str);
 	if (error == NO_ERR)
-		stat = execute_builtin(cmd->args);
-	return (stat);
+	{
+		error = execute_builtin(cmd->args);
+	}
+	set_exit_code(error);
+	return (error);
 }

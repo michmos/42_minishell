@@ -152,18 +152,15 @@ static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 t_error	set_io_redirs(t_list	*redir_lst, char *hd_str)
 {
 	t_error	error;
-	t_error	err;
 	int		fds[2];
 
 	error = NO_ERR;
-	err = NO_ERR;
 
 	// init fd array
-	err = get_io(fds, redir_lst, hd_str);
-	if (err != NO_ERR && err == DEADLY_ERR)
-		return (DEADLY_ERR);
-	else if (err != NO_ERR && err == ERR)
-		return (ERR);
+	error = get_io(fds, redir_lst, hd_str);
+	if (error != NO_ERR)
+		return (error);
+
 	// redirect
 	error = redir_io(fds);
 	// close

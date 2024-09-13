@@ -32,7 +32,7 @@ static void	process_cmd_line(char *cmd_line)
 	}
 	error = execution(cmd_lst);
 	ft_lstclear(&cmd_lst, free_cmd);
-	if (error || reset_io() != NO_ERR)
+	if (error == DEADLY_ERR || reset_io() != NO_ERR)
 	{
 		clean_exit(EXIT_FAILURE);
 	}
