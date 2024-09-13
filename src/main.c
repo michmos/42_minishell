@@ -28,6 +28,7 @@ static void	process_cmd_line(char *cmd_line)
 	else if (error == ERR)
 	{
 		ft_lstclear(&cmd_lst, free_cmd);
+		set_exit_code(2);
 		return ;
 	}
 	error = execution(cmd_lst);
