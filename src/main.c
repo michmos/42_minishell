@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/23 15:56:13 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/13 11:02:49 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/13 14:55:38 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,15 @@ int	main(int argc, char *argv[], char **env)
 		dup_in_out_err(shell);
 		init_signals();
 		cmd_line = readline("minishell> ");
+		// if (isatty(fileno(stdin)))
+		// 	cmd_line = readline("minishell> ");
+		// else
+		// {
+		// 	char *line;
+		// 	line = get_next_line(fileno(stdin));
+		// 	cmd_line = ft_strtrim(line, "\n");
+		// 	free(line);
+		// }
 		if (!cmd_line)
 		{
 			signal_ctrl_d(cmd_line);

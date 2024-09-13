@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/17 11:02:09 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/13 14:05:23 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/13 16:46:24 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ static void	print_err_and_exit(int num, int exit_code, char *arg)
 	}
 	else if (num == 4 && exit_code == 127)
 	{
-		ft_printf_fd(STDERR_FILENO, "%s: command not found\n", arg);
+		ft_printf_fd(STDERR_FILENO, "%s: %s: command not found\n", \
+		SHELLNAME, arg);
 		clean_exit(127);
 	}
 }

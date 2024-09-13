@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 14:52:41 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/11 10:32:00 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/13 16:51:22 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ static t_error	get_full_path(char **full_path, char *cmd, char **env)
 t_error	init_cmd_path(char **cmd_path, char *cmd, char **env)
 {
 	*cmd_path = NULL;
-	if (access(cmd, X_OK) != 0)
+	if (!(cmd[0] == '.' && cmd[1] == '/') && access(cmd, X_OK) != 0)
 	{
 		if (get_full_path(cmd_path, cmd, env) != NO_ERR)
 		{
