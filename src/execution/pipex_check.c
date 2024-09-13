@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/17 11:02:09 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/13 11:45:17 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/13 13:47:02 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ static void	print_err_and_exit(int num, int exit_code, char *arg)
 	}
 	else if (num == 4 && exit_code == 127)
 	{
-		ft_printf_fd(STDERR_FILENO, "%s: %s: command not found\n", \
-		SHELLNAME, arg);
+		ft_printf_fd(STDERR_FILENO, "%s: command not found\n", arg);
 		clean_exit(127);
 	}
 }
@@ -44,10 +43,13 @@ void	check_cmd(char *path, char *arg)
 	struct stat	file_stat;
 	int			stat_result;
 
-	if (access(path, F_OK) == -1)
-		print_err_and_exit(4, 127, arg);
-	else if (access(path, X_OK) == -1)
-		print_err_and_exit(3, 126, arg);
+	if (ft_strchr(path, '/') == 0)
+	{
+		if (access(path, F_OK) == -1)
+			print_err_and_exit(4, 127, arg);
+		else if (access(path, X_OK) == -1 && access(path, F_OK) != 0)
+			print_err_and_exit(3, 126, arg);
+	}
 	else
 	{
 		stat_result = stat(path, &file_stat);
@@ -58,4 +60,5 @@ void	check_cmd(char *path, char *arg)
 		else if (S_ISREG(file_stat.st_mode) && !(file_stat.st_mode & S_IXUSR))
 			print_err_and_exit(3, 126, arg);
 	}
+	print_err_and_exit(4, 127, arg);
 }
