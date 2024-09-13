@@ -30,7 +30,7 @@ static t_error	parse_redir(t_redir **redir, t_list **rem_tokens)
 	else if (get_token_tag(*rem_tokens)== WHITESPACE)
 		consume_token(rem_tokens);
 	// get filename
-	if (!*rem_tokens || get_token_tag(*rem_tokens)!= WORD)
+	if (!*rem_tokens || !is_literal(get_token_tag(*rem_tokens)))
 	{
 		ft_printf_fd(STDERR_FILENO, "syntax error: missing redirection target\n");
 		return (ERR);
