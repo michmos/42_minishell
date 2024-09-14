@@ -12,16 +12,6 @@
 
 #include "../minishell.h"
 
-static void	converter_help_free_clean(int num, char **array)
-{
-	if (num == 1)
-	{
-		ft_free_2d_array((void **)array);
-	}
-	perror("malloc");
-	clean_exit(EXIT_FAILURE);
-}
-
 char	**converter(t_list *head)
 {
 	char	*temp;
@@ -29,18 +19,32 @@ char	**converter(t_list *head)
 	int		i;
 
 	i = 0;
-	array = (char **)malloc((ft_lstsize(head) + 1) * sizeof(char *));
+	array = (char **)ft_calloc(ft_lstsize(head) + 1, sizeof(char *));
 	if (!array)
-		converter_help_free_clean(0, NULL);
+	{
+		perror("malloc");
+		return (NULL);
+	}
 	while (head != NULL)
 	{
 		temp = ft_strjoin(((t_env_var *)(head->as_ptr))->key, "=");
-		if (temp == NULL)
-			converter_help_free_clean(1, array);
+		if (!temp)
+		{
+			perror("malloc");
+			ft_free_2d_array((void **)array);
+
+		}
 		array[i] = ft_strjoin(temp, ((t_env_var *)(head->as_ptr))->value);
+		free(temp);
+		if (!array[i])
+		{
+			perror("malloc");
+			ft_free_2d_array((void **)array);
+
+		}
 		i++;
 		head = head->next;
 	}
-	array[i] = 0;
+	array[i] = NULL;
 	return (array);
 }
