@@ -12,8 +12,8 @@ OBJS		:= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 OBJS_WO_MAIN:= $(filter-out $(OBJ_DIR)/main.o, $(OBJS))
 
 CC			:= cc
-CFLAGS		:= -g -MMD -Wall -Wextra -Werror -Wunused -Wuninitialized -Wunreachable-code
-LIB_FLAGS	:= -lreadline
+CFLAGS		:= -g -MMD -Wall -Wextra -Werror -Wunused -Wuninitialized -Wunreachable-code -fsanitize=address
+LD_FLAGS	:= -lreadline -fsanitize=address
 RM			:= rm -rf
 
 TESTS_DIR	:= tests
@@ -25,7 +25,7 @@ all: $(NAME)
 
 # rule to make shell
 $(NAME): $(OBJS) $(SUBMOD_FLAG) $(LIBFT)
-	$(CC) $(OBJS) $(LIBFT) $(LIB_FLAGS) $(LDFLAGS) -o $@
+	$(CC) $(OBJS) $(LIBFT) $(LD_FLAGS) -o $@
 	@printf "$(CREATED)" $@ $(CUR_DIR)
 
 $(SUBMOD_FLAG):
@@ -41,7 +41,7 @@ $(LIBFT):
 
 # rule to make tester binaries
 %: $(OBJ_DIR)/%.o $(OBJS_WO_MAIN) $(SUBMOD_FLAG) $(LIBFT)
-	$(CC) $(OBJ_DIR)/$*.o $(OBJS_WO_MAIN) $(LIBFT) $(LIB_FLAGS) -o $(TESTS_DIR)/$*
+	$(CC) $(OBJ_DIR)/$*.o $(OBJS_WO_MAIN) $(LIBFT) $(LD_FLAGS) -o $(TESTS_DIR)/$*
 	@printf "$(CREATED)" $@ $(CUR_DIR)
 
 $(OBJ_DIR)/%.o: $(TESTS_DIR)/%.c
