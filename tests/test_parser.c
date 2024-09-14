@@ -98,7 +98,7 @@ int main(int argc, char *argv[], char **env)
 		{
 			break;
 		}
-		error = parsing(&cmd_lst, cmd_line);
+		error = parsing(&cmd_lst, &cmd_line);
 		if (error == DEADLY_ERR)
 		{
 			printf("DEADLY_ERR occurred\n");

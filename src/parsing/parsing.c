@@ -12,17 +12,22 @@
 
 #include "../minishell.h"
 
-t_error	parsing(t_list **cmd_lst, char *str)
+t_error	parsing(t_list **cmd_lst, char **str)
 {
-	t_parse_str	cmd_line;
 	t_list		*token_lst;
 	t_error		error;
 
-	cmd_line = (t_parse_str){.buf = str, .buf_len = ft_strlen(str)};
 	token_lst = NULL;
 	*cmd_lst = NULL;
+
+	// expansion
+	error = expand_all_env_vars(str);
+	if (error)
+	{
+		return (error);
+	}
 	// lexer
-	error = create_token_lst(&token_lst, &cmd_line);
+	error = create_token_lst(&token_lst, *str);
 	if (error)
 	{
 		return (error);

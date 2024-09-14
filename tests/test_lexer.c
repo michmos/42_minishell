@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_lex.c                                         :+:      :+:    :+:   */
+/*   test_lexer.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmoser <mmoser@student.codam.nl>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 11:51:51 by mmoser            #+#    #+#             */
-/*   Updated: 2024/07/26 15:28:09 by mmoser           ###   ########.fr       */
+/*   Updated: 2024/09/14 15:08:48 by mmoser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ t_list	*test_lexer(char *input)
 	cmd_line.buf = input;
 	cmd_line.buf_len = ft_strlen(input);
 	cmd_line.cursor_pos = 0;
-	create_token_lst(&head, &cmd_line);
+	create_token_lst(&head, input);
 	return (head);
 }
 

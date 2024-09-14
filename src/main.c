@@ -19,7 +19,7 @@ static void	process_cmd_line(char *cmd_line)
 
 	cmd_lst = NULL;
 	add_history(cmd_line);
-	error = parsing(&cmd_lst, cmd_line);
+	error = parsing(&cmd_lst, &cmd_line);
 	free(cmd_line);
 	if (error == DEADLY_ERR)
 	{

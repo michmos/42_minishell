@@ -109,15 +109,17 @@ static t_error	create_token(t_token **token, t_parse_str *cmd_line)
 	return (NO_ERR);
 }
 
-t_error	create_token_lst(t_list **head, t_parse_str *cmd_line)
+t_error	create_token_lst(t_list **head, char *str)
 {
 	t_list	*new;
 	t_token	*token;
 	t_error error;
+	t_parse_str	cmd_line;
 
-	while(cmd_line->cursor_pos < cmd_line->buf_len)
+	cmd_line = (t_parse_str){.buf = str, .buf_len = ft_strlen(str)};
+	while(cmd_line.cursor_pos < cmd_line.buf_len)
 	{
-		error = create_token(&token, cmd_line);
+		error = create_token(&token, &cmd_line);
 		if (error)
 		{
 			ft_lstclear(head, free_token);

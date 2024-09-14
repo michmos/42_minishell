@@ -42,6 +42,7 @@ static t_error	modify_str(char **str_ptr, size_t *cursor_pos)
 	str = *str_ptr;
 	error = NO_ERR;
 	pos = *cursor_pos;
+
 	if (pos > 0 && str[pos - 1] == '\\')
 	{
 		error = cut_out_backslash(str_ptr, pos - 1);
@@ -58,21 +59,26 @@ static t_error	modify_str(char **str_ptr, size_t *cursor_pos)
 	return (error);
 }
 
-t_error	expand_all_env_vars(char **str_ptr)
+t_error	expand_all_env_vars(char **str)
 {
 	size_t	i;
-	char	*str;
 	t_error	error;
+	bool	exp_allowed;
 
 	i = 0;
-	str = *str_ptr;
 	error = NO_ERR;
-	while (str[i] && !error)
+	exp_allowed = true;
+	while ((*str)[i] && !error)
 	{
-		if (str[i] == '$')
+		// switch state
+		if ((*str)[i] == '\'')
 		{
-			error = modify_str(str_ptr, &i);
-			str = *str_ptr;
+			exp_allowed = !exp_allowed;
+		}
+		// expand var
+		if ((*str)[i] == '$' && exp_allowed)
+		{
+			error = modify_str(str, &i);
 		}
 		i++;
 	}

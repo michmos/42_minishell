@@ -23,15 +23,6 @@ char	*get_arg(t_list **rem_tokens)
 	while (*rem_tokens && is_literal(get_token_tag(*rem_tokens)))
 	{
 		token = pop_token(rem_tokens);
-		if (token.tag == WORD || token.tag == DU_QUO)
-		{
-			if (expand_all_env_vars(&token.lexeme) != NO_ERR)
-			{
-				free(token.lexeme);
-				free(arg);
-				return (NULL);
-			}
-		}
 		temp = ft_strjoin(arg, token.lexeme);
 		free(token.lexeme);
 		free(arg);

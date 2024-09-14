@@ -94,7 +94,7 @@ typedef struct s_token
 }	t_token;
 
 // parsing.c ---------------------------------------------------------------- //
-t_error		parsing(t_list **cmd_lst, char *str);
+t_error	parsing(t_list **cmd_lst, char **str);
 
 // -------------------------- PARSING/lexer/ -------------------------------- //
 
@@ -127,7 +127,7 @@ char		cur_char(t_parse_str *str);
 void	advance_char(t_parse_str *str);
 
 // lexer.c ------------------------------------------------------------------ //
-t_error		create_token_lst(t_list **head, t_parse_str *cmd_line);
+t_error	create_token_lst(t_list **head, char *str);
 
 // -------------------------- PARSING/parser/ ------------------------------- //
 
