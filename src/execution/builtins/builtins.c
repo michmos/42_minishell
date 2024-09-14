@@ -153,7 +153,6 @@ t_error	execute_builtin(char **args)
 
 t_error	exec_one_builtin(t_cmd *cmd)
 {
-	int			stat;
 	char		*hd_str;
 	t_error		error;
 

@@ -12,11 +12,10 @@ OBJS		:= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 OBJS_WO_MAIN:= $(filter-out $(OBJ_DIR)/main.o, $(OBJS))
 
 CC			:= cc
-CFLAGS		:= -g -MMD
+CFLAGS		:= -g -MMD -Wall -Wextra -Werror -Wunused -Wuninitialized -Wunreachable-code
 LIB_FLAGS	:= -lreadline
 RM			:= rm -rf
 
-# -Wall -Wextra -Werror -Wunused -Wuninitialized -Wunreachable-code
 TESTS_DIR	:= tests
 TESTS_SRCS	:= $(shell find $(TESTS_DIR) -iname "*.c")
 TESTS_OBJS	:= $(TESTS_SRCS:$(TESTS_DIR)/%.c=$(OBJ_DIR)/%.o)

@@ -14,7 +14,6 @@
 
 t_error	execution(t_list *pars_out)
 {
-	int			stat;
 	int			num_cmd;
 	t_error		error;
 

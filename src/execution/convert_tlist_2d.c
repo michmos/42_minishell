@@ -12,18 +12,6 @@
 
 #include "../minishell.h"
 
-static int	get_length(t_list *node)
-{
-	int	length;
-
-	length = 0;
-	length += ft_strlen(((t_env_var *)(node->as_ptr))->key);
-	if (((t_env_var *)(node->as_ptr))->equal)
-		length++;
-	length += ft_strlen(((t_env_var *)(node->as_ptr))->value);
-	return (length);
-}
-
 static void	converter_help_free_clean(int num, char **array)
 {
 	if (num == 1)
@@ -38,7 +26,6 @@ char	**converter(t_list *head)
 {
 	char	*temp;
 	char	**array;
-	int		length;
 	int		i;
 
 	i = 0;
@@ -47,7 +34,6 @@ char	**converter(t_list *head)
 		converter_help_free_clean(0, NULL);
 	while (head != NULL)
 	{
-		length = get_length(head);
 		temp = ft_strjoin(((t_env_var *)(head->as_ptr))->key, "=");
 		if (temp == NULL)
 			converter_help_free_clean(1, array);

@@ -13,7 +13,7 @@
 #include "../minishell.h"
 #include <unistd.h>
 
-t_error	set_io_pipes(int child_i, size_t num_childs)
+t_error	set_io_pipes(size_t child_i, size_t num_childs)
 {
 	int		fds[2];
 	t_shell	*shell;
@@ -84,7 +84,6 @@ static int	get_hd_fd(char *hd_str)
 static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 {
 	int		i;
-	int		status;
 	t_redir	*redir;
 
 	i = 0;

@@ -34,8 +34,8 @@ static void	put_var(t_env_var *env_var)
 
 static bool	is_bigger(t_env_var *a, t_env_var *b)
 {
-	return ((a && !b) || (a && b) && ((a->key && !b->key) || \
-	(ft_strncmp(a->key, b->key, ft_strlen(a->key) + 1)) > 0));
+	return ((a && !b) || ((a && b) && ((a->key && !b->key) || \
+	(ft_strncmp(a->key, b->key, ft_strlen(a->key) + 1)) > 0)));
 }
 
 static t_env_var	*get_next_bigger(t_env_var *last_var, t_list *env_lst)
