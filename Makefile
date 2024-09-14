@@ -63,8 +63,8 @@ fclean:
 	@printf "$(REMOVED)" "tests" $(CUR_DIR)
 
 re:	
-	$(MAKE) clean
 	$(MAKE) fclean
+	$(MAKE) all
 
 dry-%:
 	$(MAKE) --dry-run --always-make $*
