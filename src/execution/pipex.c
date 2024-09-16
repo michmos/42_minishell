@@ -22,6 +22,7 @@ static void	child_process(t_cmd *cmd, char *hd_str)
 
 	shell = get_shell_struct();
 	error = NO_ERR;
+	path = NULL;
 	// close unused fd
 	if (shell->open_fd != -1 && close(shell->open_fd) == -1)
 	{
