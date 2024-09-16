@@ -33,17 +33,10 @@ static void	process_cmd_line(char *cmd_line)
 	}
 	error = execution(cmd_lst);
 	ft_lstclear(&cmd_lst, free_cmd);
-	if (error == DEADLY_ERR || reset_io() != NO_ERR)
+	if (error == DEADLY_ERR)
 	{
 		clean_exit(EXIT_FAILURE);
 	}
-}
-
-static void	dup_in_out_err(t_shell *shell)
-{
-	shell->std_in = dup(STDIN_FILENO);
-	shell->std_out = dup(STDOUT_FILENO); // TODO: protect
-	shell->std_err = dup(STDERR_FILENO);
 }
 
 int	main(int argc, char *argv[], char **env)
@@ -56,8 +49,7 @@ int	main(int argc, char *argv[], char **env)
 	init_shell(&shell, env);
 	while (1)
 	{
-		dup_in_out_err(shell);
-		init_signals();
+		init_signals(); // TODO: should this happen in the while loop
 		cmd_line = readline("minishell> ");
 		// if (isatty(fileno(stdin)))
 		// 	cmd_line = readline("minishell> ");

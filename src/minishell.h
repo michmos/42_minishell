@@ -209,7 +209,6 @@ t_error		exec_one_builtin(t_cmd *cmd);
 t_error		reset_io(void);
 t_error		set_io_redirs(t_list	*redir_lst, char *hd_str);
 t_error		set_io_pipes(size_t child_i, size_t num_childs);
-t_error		close_unused_fds(size_t i, size_t num_childs);
 
 // fds2.c -------------------------------------------------------------------//
 t_error		redir(int old_fd, int new_fd);

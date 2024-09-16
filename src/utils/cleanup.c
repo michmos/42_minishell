@@ -29,10 +29,24 @@ static void	cleanup_shell(void)
 	if (shell->cur_cmdlst)
 		ft_lstclear(&(shell->cur_cmdlst), free_cmd);
 	ft_free_2d_array((void **) shell->env);
-	if (close(shell->std_in) == -1)
-		perror("close");
-	if (close(shell->std_out) == -1)
-		perror("close");
+	if (shell->std_in != -1)
+	{
+		if (close(shell->std_in) == -1)
+			perror("close");
+
+	}
+	if (shell->std_out != -1)
+	{
+		if (close(shell->std_out) == -1)
+			perror("close");
+
+	}
+	if (shell->std_err != -1)
+	{
+		if (close(shell->std_err) == -1)
+			perror("close");
+
+	}
 	if (shell->open_fd != -1)
 	{
 		if (close(shell->open_fd) == -1)

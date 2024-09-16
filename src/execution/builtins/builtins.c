@@ -164,6 +164,7 @@ t_error	exec_one_builtin(t_cmd *cmd)
 	{
 		error = execute_builtin(cmd->args);
 	}
+	reset_io();
 	set_exit_code(error);
 	return (error);
 }

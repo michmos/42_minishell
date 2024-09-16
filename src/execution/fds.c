@@ -42,27 +42,6 @@ t_error	set_io_pipes(size_t child_i, size_t num_childs)
 	return (NO_ERR);
 }
 
-static t_error	redir_io(int fds[2])
-{
-	if (fds[0] >= 0)
-	{
-		if (dup2(fds[0], STDIN_FILENO) == -1)
-		{
-			perror("dup2");
-			return (DEADLY_ERR);
-		}
-	}
-	if (fds[1] >= 0)
-	{
-		if (dup2(fds[1], STDOUT_FILENO) == -1)
-		{
-			perror("dup2");
-			return (DEADLY_ERR);
-		}
-	}
-	return (NO_ERR);
-}
-
 static int	get_hd_fd(char *hd_str)
 {
 	int	fds[2];
@@ -148,6 +127,27 @@ static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 	return (0);
 }
 
+static t_error	redir_io(int fds[2])
+{
+	if (fds[0] >= 0)
+	{
+		if (dup2(fds[0], STDIN_FILENO) == -1)
+		{
+			perror("dup2");
+			return (DEADLY_ERR);
+		}
+	}
+	if (fds[1] >= 0)
+	{
+		if (dup2(fds[1], STDOUT_FILENO) == -1)
+		{
+			perror("dup2");
+			return (DEADLY_ERR);
+		}
+	}
+	return (NO_ERR);
+}
+
 t_error	set_io_redirs(t_list	*redir_lst, char *hd_str)
 {
 	t_error	error;
@@ -162,6 +162,7 @@ t_error	set_io_redirs(t_list	*redir_lst, char *hd_str)
 
 	// redirect
 	error = redir_io(fds);
+
 	// close
 	if (close_fd(fds[0]) != NO_ERR)
 		return (DEADLY_ERR);

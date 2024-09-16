@@ -12,13 +12,13 @@
 
 #include "../minishell.h"
 
-static t_error	get_hd_str(char **hd_str, char *delimiter)
+static t_error	get_hd_str(char **result, char *delimiter)
 {
 	char	*tmp;
 	char	*tmp2;
-	char	*result;
+	char	*hd_str;
 
-	result = NULL;
+	hd_str = NULL;
 	while (true)
 	{
 		signal(SIGINT, handle_sig_hd);
@@ -34,15 +34,15 @@ delimited by signal (wanted `%s')\n", SHELLNAME, delimiter);
 		tmp2 = ft_strjoin(tmp, "\n");
 		free(tmp);
 		if (!tmp2)
-			return (perror("malloc"), free(result), DEADLY_ERR);
-		tmp = ft_strjoin(result, tmp2);
+			return (perror("malloc"), free(hd_str), DEADLY_ERR);
+		tmp = ft_strjoin(hd_str, tmp2);
 		free(tmp2);
-		free(result);
+		free(hd_str);
 		if (!tmp)
 			return (perror("malloc"), DEADLY_ERR);
-		result = tmp;
+		hd_str = tmp;
 	}
-	*hd_str = result;
+	*result = hd_str;
 	return (NO_ERR);
 }
 

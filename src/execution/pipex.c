@@ -26,6 +26,7 @@ static void	child_process(t_cmd *cmd, char *hd_str)
 	// close unused fd
 	if (shell->open_fd != -1 && close(shell->open_fd) == -1)
 	{
+		free(hd_str);
 		perror("close");
 		clean_exit(DEADLY_ERR);
 	}
@@ -33,6 +34,7 @@ static void	child_process(t_cmd *cmd, char *hd_str)
 
 	signal(SIGQUIT, SIG_DFL);
 	error = set_io_redirs(cmd->redir_lst, hd_str);
+	free(hd_str);
 	if (error == DEADLY_ERR || error == ERR)
 		clean_exit(error);
 	if (get_builtin_type(cmd->args[0]) != NO_BUILTIN)
@@ -85,6 +87,7 @@ t_error	cmd_pipeline(t_list *cmd_lst)
 
 	i = 0;
 	num_cmd = ft_lstsize(cmd_lst);
+	hd_str = NULL;
 	while (i < num_cmd)
 	{
 		// execute heredocs
@@ -94,11 +97,13 @@ t_error	cmd_pipeline(t_list *cmd_lst)
 		}
 		if (set_io_pipes(i, num_cmd) != NO_ERR)
 		{
+			free(hd_str);
 			clean_exit(EXIT_FAILURE);
 		}
 		pid = fork();
 		if (pid == ERROR)
 		{
+			free(hd_str);
 			perror("fork");
 			clean_exit(EXIT_FAILURE);
 		}
@@ -108,13 +113,13 @@ t_error	cmd_pipeline(t_list *cmd_lst)
 			// free head and move to next node, good representation is in lstclear in while loop
 		}
 		// parent
-		if (close_unused_fds(i, num_cmd) != NO_ERR)
+		free(hd_str);
+		if (reset_io() != NO_ERR)
 		{
 			clean_exit(EXIT_FAILURE);
 		}
 		cmd_lst = cmd_lst->next;
 		i++;
-		reset_io();
 	}
 	wait_for_childs(pid, &status);
 	if (WEXITSTATUS(status) == DEADLY_ERR)

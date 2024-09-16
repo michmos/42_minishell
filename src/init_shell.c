@@ -29,6 +29,31 @@ static void	assign_env_values(char **ptr, t_list *env_lst, const char *env_key)
 	}
 }
 
+static void	bckup_std_streams(t_shell *shell)
+{
+	shell->std_in = dup(STDIN_FILENO);
+	if (shell->std_in == -1)
+	{
+		perror("dup");
+		clean_exit(EXIT_FAILURE);
+	}
+
+	shell->std_out = dup(STDOUT_FILENO);
+	if (shell->std_out == -1)
+	{
+		perror("dup");
+		clean_exit(EXIT_FAILURE);
+	}
+
+	shell->std_err = dup(STDERR_FILENO);
+	if (shell->std_err == -1)
+	{
+		perror("dup");
+		clean_exit(EXIT_FAILURE);
+	}
+}
+
+
 void	init_shell(t_shell **ptr, char **env)
 {
 	t_shell	*shell;
@@ -39,6 +64,14 @@ void	init_shell(t_shell **ptr, char **env)
 		perror("malloc");
 		exit(EXIT_FAILURE);
 	}
+	set_shell_struct(shell);
+	// init to -1 so that we can check whether they have been opened before closing them
+	shell->open_fd = -1;
+	shell->std_in = -1;
+	shell->std_out = -1;
+	shell->std_err = -1;
+
+	shell->ex_code = 0;
 	shell->env_lst = create_envlst(env);
 	if (!shell->env_lst)
 	{
@@ -49,10 +82,8 @@ void	init_shell(t_shell **ptr, char **env)
 	{
 		clean_exit(EXIT_FAILURE);
 	}
-	shell->open_fd = -1;
-	shell->ex_code = 0;
+	bckup_std_streams(shell);
 	assign_env_values(&shell->cwd, shell->env_lst, "PWD");
 	assign_env_values(&shell->old_wd, shell->env_lst, "OLDPWD");
 	*ptr = shell;
-	set_shell_struct(*ptr);
 }

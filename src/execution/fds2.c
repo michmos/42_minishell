@@ -31,32 +31,6 @@ t_error	reset_io(void)
 	return (0);
 }
 
-t_error	close_unused_fds(size_t child_idx, size_t num_childs)
-{
-	t_shell	*shell;
-
-	shell = get_shell_struct();
-	if (close(STDOUT_FILENO) == -1)
-	{
-		perror("close");
-		return (DEADLY_ERR);
-	}
-	if (close(STDIN_FILENO) == -1)
-	{
-		perror("close");
-		return (DEADLY_ERR);
-	}
-	if (child_idx == num_childs - 1 && shell->open_fd != -1)
-	{
-		if (close(shell->open_fd) == -1)
-		{
-			perror("close");
-			return (DEADLY_ERR);
-		}
-	}
-	return (NO_ERR);
-}
-
 t_error	redir(int old_fd, int new_fd)
 {
 	if (dup2(old_fd, new_fd) == -1)
