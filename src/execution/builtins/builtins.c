@@ -90,7 +90,7 @@ t_error	export(char **args)
 	if (args[0] && args[1])
 	{
 		error = add_to_envlst(shell->env_lst, &args[1]);
-		if (error != NO_ERR && error == DEADLY_ERR)
+		if (error != NO_ERR)
 		{
 			return (error);
 		}
