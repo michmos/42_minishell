@@ -80,7 +80,16 @@ static void	smplfy_inbtw_slashes(char *str)
 	}
 }
 
-static void	rmv_prev_and_dot_dot(char *curpath, size_t lst_cmps_pos)
+static void	rmv_dot_dot_slash(char *curpath, size_t pos)
+{
+	// del dot dots
+	del_char(&curpath[pos]);
+	del_char(&curpath[pos]);
+	// del slash
+	del_char(&curpath[pos]);
+}
+
+static void	rmv_prev_and_slash(char *curpath, size_t lst_cmps_pos)
 {
 	size_t i;
 
@@ -90,26 +99,24 @@ static void	rmv_prev_and_dot_dot(char *curpath, size_t lst_cmps_pos)
 		del_char(&curpath[i]);
 	// del slash
 	del_char(&curpath[i]);
-	// del dot dots
-	del_char(&curpath[i]);
-	del_char(&curpath[i]);
-	// del slash
-	del_char(&curpath[i]);
-	
 }
 
 static bool	is_affected_dot_dot(char *curpath, size_t i)
 {
 	bool	is_dot_dot;
-	bool	is_after_root;
 	bool	is_after_dot_dot;
 	bool	is_after_slash;
 
 	is_dot_dot = curpath[i] == '.' && curpath[i + 1] == '.' && (curpath[i + 2] == '/' || !curpath[i + 2]);
 	is_after_dot_dot = i >= 3 && curpath[i - 2] == '.' && curpath[i - 3] == '.';
-	is_after_root = ((i == 1 && curpath[0] == '/') || (i == 2 && ft_strncmp(curpath, "//", 2) == 0));
 	is_after_slash = (i > 0) && curpath[i - 1] == '/';
-	return (is_dot_dot && is_after_slash && !is_after_root && !is_after_dot_dot);
+	return (is_dot_dot && is_after_slash && !is_after_dot_dot);
+}
+
+static bool	is_after_root(char *curpath, size_t i)
+{
+	return ((i == 1 && curpath[0] == '/') || (i == 2 && ft_strncmp(curpath, "//", 2) == 0));
+
 }
 
 static bool	prev_comp_is_dir(char *curpath, size_t i)
@@ -138,10 +145,14 @@ static t_error	rmv_dot_dot_comps(char **curpath, char *og_path)
 			lst_cmps_pos = i + 1;
 		if ((*curpath)[i] == '.' && is_affected_dot_dot(*curpath, i))
 		{
-			if (prev_comp_is_dir(*curpath, i))
+			if (is_after_root(*curpath, i))
 			{
-				rmv_prev_and_dot_dot(*curpath, lst_cmps_pos);
-				i = 0;
+				rmv_dot_dot_slash(*curpath, i);
+			}
+			else if (prev_comp_is_dir(*curpath, i))
+			{
+				rmv_dot_dot_slash(*curpath, i);
+				rmv_prev_and_slash(*curpath, lst_cmps_pos);
 			}
 			else
 			{
@@ -149,12 +160,15 @@ static t_error	rmv_dot_dot_comps(char **curpath, char *og_path)
 				ft_bzero(*curpath, ft_strlen(*curpath));
 				return (NO_ERR);
 			}
+			i = 0;
 		}
-		else if ((*curpath)[i])
+		else
 			i++;
 	}
 	return (NO_ERR);
 }
+
+
 
 static void rmv_dot_comps(char **curpath)
 {
