@@ -150,7 +150,7 @@ static t_error	rmv_dot_dot_comps(char **curpath, char *og_path)
 				return (NO_ERR);
 			}
 		}
-		else
+		else if ((*curpath)[i])
 			i++;
 	}
 	return (NO_ERR);
@@ -185,7 +185,7 @@ static void rmv_dot_comps(char **curpath)
 			else
 				i++;
 		}
-		else
+		else if ((*curpath)[i])
 			i++;
 	}
 }
@@ -209,18 +209,18 @@ static t_error	cnvrt_to_canonical(char **curpath)
 	rmv_dot_comps(curpath);
 	// section 8 b.
 	rmv_dot_dot_comps(curpath, og_path);
+	free(og_path);
 	// section 8 c. part 2
 	smplfy_trail_slashes(*curpath);
 
 	// no further steps if empty string left
 	if (!**curpath)
 	{
-		free(og_path);
 		return (NO_ERR);
 	}
 
-	result = ft_realloc(*curpath, ft_strlen(*curpath) + 1, ft_strlen(og_path) + 1);
-	free(og_path);
+	result = ft_strdup(*curpath);
+	sfree((void **) curpath);
 	if (!result)
 	{
 		perror("malloc");

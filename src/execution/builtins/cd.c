@@ -77,7 +77,11 @@ t_error	cd(char *argv[])
 		return (ERR);
 	}
 	// section 10.
-	set_pwd(curpath);
+	if (set_pwd(curpath) != NO_ERR)
+	{
+		free(curpath);
+		return (DEADLY_ERR);
+	}
 	// section 9.
 	if (ft_strnstr(curpath, shell->old_wd, ft_strlen(shell->old_wd)) != NULL)
 	{

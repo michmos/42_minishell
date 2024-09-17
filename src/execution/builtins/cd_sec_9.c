@@ -24,6 +24,7 @@ t_error	cnvrt_to_rltv_path(char **curpath, char *cwd)
 		i++;
 	}
 	tmp = ft_strjoin("./", *curpath);
+	sfree((void **) curpath);
 	if (!tmp)
 	{
 		perror("malloc");
