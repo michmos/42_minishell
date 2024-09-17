@@ -74,11 +74,10 @@ static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 		redir = get_redir(redir_lst);
 		if (redir->type == I_RD_HD)
 		{
-			if (close_fd(fds[0]) != NO_ERR)
+			if (fds[0] == -2)
 			{
-				return (DEADLY_ERR);
+				fds[0] = get_hd_fd(hd_str);
 			}
-			fds[0] = get_hd_fd(hd_str);
 		}
 		else if (redir->type == I_RD)
 		{
