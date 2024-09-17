@@ -18,7 +18,7 @@ bool	is_same_key(char *key, t_list *cur)
 	ft_strlen(key) + 1) == 0);
 }
 
-t_error	unset(char *argv[])
+t_error	unset_var(char *arg)
 {
 	t_list		*cur;
 	t_list		*prev;
@@ -27,11 +27,8 @@ t_error	unset(char *argv[])
 	shell = get_shell_struct();
 	prev = NULL;
 	cur = shell->env_lst;
-	if (!argv[1])
-	{
-		return (NO_ERR);
-	}
-	while (cur && !is_same_key(argv[1], cur))
+
+	while (cur && !is_same_key(arg, cur))
 	{
 		prev = cur;
 		cur = cur->next;
@@ -51,4 +48,23 @@ t_error	unset(char *argv[])
 	}
 	free(cur);
 	return (NO_ERR);
+}
+
+t_error	unset(char *argv[])
+{
+	size_t	i;
+	t_error	error;
+
+	if (!argv[1])
+	{
+		return (NO_ERR);
+	}
+	i = 0;
+	error = NO_ERR;
+	while (!error && argv[i])
+	{
+		error = unset_var(argv[i]);
+		i++;
+	}
+	return (error);
 }
