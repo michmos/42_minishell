@@ -51,6 +51,10 @@ t_error	add_to_envlst(t_list *head, char **argv)
 	{
 		found = false;
 		env_var = get_env_var(argv[i]);
+		if (!env_var)
+		{
+			return (DEADLY_ERR);
+		}
 		error = check_key(env_var->key);
 		if (error != NO_ERR)
 		{
@@ -65,11 +69,8 @@ not a valid identifier\n", env_var->key);
 not a valid identifier\n");
 			}
 			set_exit_code(1);
+			free_env_var(env_var);
 			return (error);
-		}
-		if (!env_var)
-		{
-			return (DEADLY_ERR);
 		}
 		new = ft_lstnew(env_var);
 		if (!new)

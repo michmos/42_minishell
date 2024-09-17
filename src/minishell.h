@@ -237,7 +237,7 @@ char		*get_key(t_env_var *env_var, t_parse_env *env_parse);
 char		*get_value(t_env_var *env_var, t_parse_env *env_parse);
 t_env_var	*get_env_var(char *env);
 t_list		*create_envlst(char **env);
-void		free_env_var(void *node);
+void		free_env_var(void *var);
 
 // exit.c ---------------------------------------------------------------- //
 int			str_is_num(char *str);

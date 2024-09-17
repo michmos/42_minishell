@@ -80,11 +80,11 @@ t_env_var	*get_env_var(char *env)
 	return (env_var);
 }
 
-void	free_env_var(void *node)
+void	free_env_var(void *var)
 {
 	t_env_var	*env_var;
 
-	env_var = (t_env_var *)node;
+	env_var = (t_env_var *)var;
 	free(env_var->key);
 	free(env_var->value);
 	free(env_var);
