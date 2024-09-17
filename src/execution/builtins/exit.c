@@ -57,7 +57,7 @@ static t_error	init_ex_val(unsigned char *result, char *input)
 	return (NO_ERR);
 }
 
-void	execute_exit(char **args)
+t_error	execute_exit(char **args)
 {
 	unsigned char	exit_val;
 
@@ -77,6 +77,7 @@ required\n", SHELLNAME, args[1]);
 		set_exit_code(1);
 		ft_printf_fd(STDERR_FILENO, "exit\%s: exit: too many arguments\n", \
 SHELLNAME);
+		return (ERR);
 	}
 	else
 	{
@@ -84,4 +85,5 @@ SHELLNAME);
 			ft_printf("exit\n");
 		clean_exit(exit_val);
 	}
+	return (NO_ERR);
 }

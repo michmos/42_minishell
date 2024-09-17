@@ -241,7 +241,7 @@ void		free_env_var(void *var);
 
 // exit.c ---------------------------------------------------------------- //
 int			str_is_num(char *str);
-void		execute_exit(char **args);
+t_error		execute_exit(char **args);
 
 // ordered_env.c ------------------------------------------------------------ //
 t_list		*create_ordered_envlst(t_list *env);
