@@ -12,8 +12,14 @@ OBJS		:= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 OBJS_WO_MAIN:= $(filter-out $(OBJ_DIR)/main.o, $(OBJS))
 
 CC			:= cc
+FSAN		?= 1
+ifeq ($(FSAN),1)
 CFLAGS		:= -g -MMD -Wall -Wextra -Werror -Wunused -Wuninitialized -Wunreachable-code -fsanitize=address
 LD_FLAGS	:= -lreadline -fsanitize=address
+else
+CFLAGS		:= -g -MMD -Wall -Wextra -Werror -Wunused -Wuninitialized -Wunreachable-code
+LD_FLAGS	:= -lreadline
+endif
 RM			:= rm -rf
 
 TESTS_DIR	:= tests
