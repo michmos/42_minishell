@@ -12,7 +12,7 @@
 
 #include "../../minishell.h"
 
-char	*get_key(t_env_var *env_var, t_parse_env *env_parse)
+static char	*get_key(t_env_var *env_var, t_parse_env *env_parse)
 {
 	while (env_parse->buffer[env_parse->cursor_pos] != '=')
 	{
@@ -30,7 +30,7 @@ char	*get_key(t_env_var *env_var, t_parse_env *env_parse)
 	return (env_var->key);
 }
 
-char	*get_value(t_env_var *env_var, t_parse_env *env_parse)
+static char	*get_value(t_env_var *env_var, t_parse_env *env_parse)
 {
 	int	i;
 	int	pos;
@@ -52,7 +52,7 @@ char	*get_value(t_env_var *env_var, t_parse_env *env_parse)
 	return (env_var->value);
 }
 
-t_env_var	*get_env_var(char *env)
+t_env_var	*create_env_var(char *env)
 {
 	t_env_var	*env_var;
 	t_parse_env	env_parse;
@@ -80,16 +80,6 @@ t_env_var	*get_env_var(char *env)
 	return (env_var);
 }
 
-void	free_env_var(void *var)
-{
-	t_env_var	*env_var;
-
-	env_var = (t_env_var *)var;
-	free(env_var->key);
-	free(env_var->value);
-	free(env_var);
-}
-
 t_list	*create_envlst(char **env)
 {
 	t_env_var	*env_var;
@@ -101,7 +91,7 @@ t_list	*create_envlst(char **env)
 	head = NULL;
 	while (env[++i])
 	{
-		env_var = get_env_var(env[i]);
+		env_var = create_env_var(env[i]);
 		if (!env_var)
 		{
 			ft_lstclear(&head, free_env_var);

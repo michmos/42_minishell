@@ -81,27 +81,6 @@ t_builtins	get_builtin_type(char *cmd)
 		return (NO_BUILTIN);
 }
 
-t_error	export(char **args)
-{
-	t_shell	*shell;
-	t_error	error;
-
-	shell = get_shell_struct();
-	if (args[0] && args[1])
-	{
-		error = add_to_envlst(shell->env_lst, &args[1]);
-		if (error != NO_ERR)
-		{
-			return (error);
-		}
-	}
-	else
-	{
-		print_ordered_lst();
-	}
-	return (NO_ERR);
-}
-
 t_error	env(char **args)
 {
 	t_shell	*shell;
@@ -130,7 +109,7 @@ t_error	execute_builtin(char **args)
 	else if (type == PWD)
 		pwd();
 	else if (type == EXPORT)
-		error = export(args);
+		error = exec_export(args);
 	else if (type == UNSET)
 		error = unset(args);
 	else if (type == ENV)

@@ -36,3 +36,13 @@ void	free_token(void *token)
 	free(((t_token *)token)->lexeme);
 	free(token);
 }
+
+void	free_env_var(void *var)
+{
+	t_env_var	*env_var;
+
+	env_var = (t_env_var *)var;
+	free(env_var->key);
+	free(env_var->value);
+	free(env_var);
+}

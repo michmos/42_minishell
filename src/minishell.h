@@ -195,15 +195,15 @@ typedef enum e_builtins
 	EXIT
 }	t_builtins;
 
-// add_to_list.c ------------------------------------------------------------ //
-t_error		add_to_envlst(t_list *head, char **argv);
-
 // builtins.c --------------------------------------------------------------- //
 void		print_ordered_lst(void);
 void		print_envlst(t_list *head, int order);
 t_builtins	get_builtin_type(char *cmd);
 t_error		execute_builtin(char **args);
 t_error		exec_one_builtin(t_cmd *cmd);
+
+// export.c --------------------------------------------------------------- //
+t_error		exec_export(char **args);
 
 // fds.c--------------------------------------------------------------------//
 t_error		reset_io(void);
@@ -233,9 +233,7 @@ t_error		cd(char *argv[]);
 void		echo(char *argv[]);
 
 // env.c -------------------------------------------------------------------- //
-char		*get_key(t_env_var *env_var, t_parse_env *env_parse);
-char		*get_value(t_env_var *env_var, t_parse_env *env_parse);
-t_env_var	*get_env_var(char *env);
+t_env_var	*create_env_var(char *env);
 t_list		*create_envlst(char **env);
 void		free_env_var(void *var);
 
