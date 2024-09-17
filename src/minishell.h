@@ -42,15 +42,12 @@ typedef enum e_error
 {
 	// No error
 	NO_ERR,
-	// Syscall fails
+	// Shell cannot continue running - like failed malloc
 	DEADLY_ERR = 200,
-	// Syntax error
+	// Shell can continue running - like syntax error
 	ERR = 1,
 	// Bad function input
 	INP_ERR,
-	// Other error
-	OTH_ERR,
-	// OPEN_ERR
 }	t_error;
 
 typedef struct s_shell
@@ -239,7 +236,7 @@ void		free_env_var(void *var);
 
 // exit.c ---------------------------------------------------------------- //
 int			str_is_num(char *str);
-t_error		execute_exit(char **args);
+t_error		exec_exit(char **args);
 
 // ordered_env.c ------------------------------------------------------------ //
 t_list		*create_ordered_envlst(t_list *env);

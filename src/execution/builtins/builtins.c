@@ -115,7 +115,7 @@ t_error	execute_builtin(char **args)
 	else if (type == ENV)
 		error = env(args);
 	else if (type == EXIT)
-		execute_exit(args);
+		error = exec_exit(args);
 
 	if (type == CD || type == EXPORT || type == UNSET || type == ENV)
 	{
@@ -135,6 +135,7 @@ t_error	exec_one_builtin(t_cmd *cmd)
 	char		*hd_str;
 	t_error		error;
 
+	hd_str = NULL;
 	if (exec_hd(&hd_str, cmd->redir_lst) != NO_ERR)
 		return (DEADLY_ERR);
 	error = set_io_redirs(cmd->redir_lst, hd_str);

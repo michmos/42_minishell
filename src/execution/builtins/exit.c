@@ -48,7 +48,7 @@ static t_error	init_ex_val(unsigned char *result, char *input)
 			ft_printf_fd(STDERR_FILENO, "exit\n%s: exit: %s: numeric argument required\
 			\n", SHELLNAME, input);
 			*result = 2;
-			return (OTH_ERR);
+			return (ERR);
 		}
 		res = (res * 10) + (input[i] - '0');
 		i++;
@@ -57,7 +57,7 @@ static t_error	init_ex_val(unsigned char *result, char *input)
 	return (NO_ERR);
 }
 
-t_error	execute_exit(char **args)
+t_error	exec_exit(char **args)
 {
 	unsigned char	exit_val;
 
