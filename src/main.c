@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void	process_cmd_line(char *cmd_line)
+static void	process_cmd_line(char *cmd_line, t_shell *shell)
 {
 	t_error	error;
 	t_list	*cmd_lst;
@@ -20,6 +20,7 @@ static void	process_cmd_line(char *cmd_line)
 	cmd_lst = NULL;
 	add_history(cmd_line);
 	error = parsing(&cmd_lst, &cmd_line);
+	shell->cur_cmdlst = cmd_lst;
 	free(cmd_line);
 	if (error == DEADLY_ERR)
 	{
@@ -32,13 +33,14 @@ static void	process_cmd_line(char *cmd_line)
 		return ;
 	}
 	error = execution(cmd_lst);
-	ft_lstclear(&cmd_lst, free_cmd);
+	ft_lstclear(&shell->cur_cmdlst, free_cmd);
 	if (error == DEADLY_ERR)
 	{
 		clean_exit(EXIT_FAILURE);
 	}
 }
 
+// TODO: delete valrind suppression file for norm
 int	main(int argc, char *argv[], char **env)
 {
 	t_shell	*shell;
@@ -70,7 +72,7 @@ int	main(int argc, char *argv[], char **env)
 			free(cmd_line);
 			continue ;
 		}
-		process_cmd_line(cmd_line);
+		process_cmd_line(cmd_line, shell);
 	}
 	clean_exit(shell->ex_code);
 }

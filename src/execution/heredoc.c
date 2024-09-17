@@ -30,7 +30,10 @@ delimited by signal (wanted `%s')\n", SHELLNAME, delimiter);
 			break ;
 		}
 		if (ft_strncmp(tmp, delimiter, ft_strlen(tmp) + 1) == 0)
+		{
+			free(tmp);
 			break ;
+		}
 		tmp2 = ft_strjoin(tmp, "\n");
 		free(tmp);
 		if (!tmp2)

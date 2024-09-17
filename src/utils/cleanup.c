@@ -59,6 +59,7 @@ void	clean_exit(int exit_code)
 {
 	int	stat;
 
+	stat = -1;
 	wait_for_childs(-1, &stat);
 	if (WEXITSTATUS(stat) == DEADLY_ERR)
 	{

@@ -34,4 +34,5 @@ void	free_cmd(void *cmd)
 void	free_token(void *token)
 {
 	free(((t_token *)token)->lexeme);
+	free(token);
 }

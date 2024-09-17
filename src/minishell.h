@@ -310,6 +310,7 @@ void		handle_sig(int signal);
 void		handle_sig_child(int signal);
 void		handle_sig_hd(int signal);
 void		signal_ctrl_d(char *line);
+void		signal_sigquit(int signal);
 int			init_signals(void);
 
 // -------------------------------------------------------------------------- //

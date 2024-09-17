@@ -45,6 +45,14 @@ void	handle_sig_child(int signal)
 	}
 }
 
+void	signal_sigquit(int signal)
+{
+	if (signal == SIGQUIT)
+	{
+		clean_exit(131);
+	}
+}
+
 void	handle_sig(int signal)
 {
 	if (signal == SIGINT)
@@ -63,6 +71,7 @@ void	signal_ctrl_d(char *line)
 	{
 		printf("exit\n");
 	}
+	set_exit_code(0);
 }
 
 int	init_signals(void)
