@@ -50,18 +50,24 @@ typedef enum e_error
 	INP_ERR,
 }	t_error;
 
+typedef struct s_cmdline
+{
+	t_list	*cmdlst;
+	int		open_pipe_end;
+	char	*hd_str;
+} t_cmdline;
+
 typedef struct s_shell
 {
-	char	*cwd;		// cur working dir
-	char	*old_wd;	// last working dir
-	t_list	*env_lst;	// env_lst
-	char	**env;		// env array
-	int		ex_code;	// ex_code of last command
-	int		std_in;		// stdin backup
-	int		std_out;	// stdout backup
-	int		std_err;	// stderr backup
-	int		open_fd;	// additional fd
-	t_list	*cur_cmdlst;// cur command list
+	char		*cwd;		// cur working dir
+	char		*old_wd;	// last working dir
+	t_list		*env_lst;	// env_lst
+	char		**env;		// env array
+	int			ex_code;	// ex_code of last command
+	int			std_in;		// stdin backup
+	int			std_out;	// stdout backup
+	int			std_err;	// stderr backup
+	t_cmdline	cur_cmdline;// cur cmdline data
 }	t_shell;
 
 // init_shell.c ------------------------------------------------------------- //
@@ -276,7 +282,7 @@ char		**converter(t_list *head);
 t_error		execution(t_list *pars_out);
 
 // heredoc.c ---------------------------------------------------------//
-t_error		exec_hd(char **hd_str, t_list *redir_lst);
+t_error		exec_hd(t_list *redir_lst);
 
 // pipex_check.c ---------------------------------------------------------//
 void		check_cmd(char *path, char *arg);

@@ -21,9 +21,9 @@ t_error	set_io_pipes(size_t child_i, size_t num_childs)
 	shell = get_shell_struct();
 	if (child_i > 0) // redirect stdin to pipe if not first child
 	{
-		if (redir(shell->open_fd, STDIN_FILENO) != NO_ERR)
+		if (redir(shell->cur_cmdline.open_pipe_end, STDIN_FILENO) != NO_ERR)
 			return (DEADLY_ERR);
-		shell->open_fd = -1;
+		shell->cur_cmdline.open_pipe_end = -1;
 	}
 	if (child_i < num_childs -1) // redirect stdout to pipe if not last child
 	{
@@ -37,7 +37,7 @@ t_error	set_io_pipes(size_t child_i, size_t num_childs)
 			return (DEADLY_ERR);
 		}
 		// save unused read end
-		shell->open_fd = fds[0];
+		shell->cur_cmdline.open_pipe_end = fds[0];
 	}
 	return (NO_ERR);
 }

@@ -15,12 +15,9 @@
 static void	process_cmd_line(char *cmd_line, t_shell *shell)
 {
 	t_error	error;
-	t_list	*cmd_lst;
 
-	cmd_lst = NULL;
 	add_history(cmd_line);
-	error = parsing(&cmd_lst, &cmd_line);
-	shell->cur_cmdlst = cmd_lst;
+	error = parsing(&shell->cur_cmdline.cmdlst, &cmd_line);
 	free(cmd_line);
 	if (error == DEADLY_ERR)
 	{
@@ -28,12 +25,12 @@ static void	process_cmd_line(char *cmd_line, t_shell *shell)
 	}
 	else if (error == ERR)
 	{
-		ft_lstclear(&cmd_lst, free_cmd);
+		ft_lstclear(&shell->cur_cmdline.cmdlst, free_cmd);
 		set_exit_code(2);
 		return ;
 	}
-	error = execution(cmd_lst);
-	ft_lstclear(&shell->cur_cmdlst, free_cmd);
+	error = execution(shell->cur_cmdline.cmdlst);
+	ft_lstclear(&shell->cur_cmdline.cmdlst, free_cmd);
 	if (error == DEADLY_ERR)
 	{
 		clean_exit(EXIT_FAILURE);
@@ -53,15 +50,6 @@ int	main(int argc, char *argv[], char **env)
 	{
 		init_signals(); // TODO: should this happen in the while loop
 		cmd_line = readline("minishell> ");
-		// if (isatty(fileno(stdin)))
-		// 	cmd_line = readline("minishell> ");
-		// else
-		// {
-		// 	char *line;
-		// 	line = get_next_line(fileno(stdin));
-		// 	cmd_line = ft_strtrim(line, "\n");
-		// 	free(line);
-		// }
 		if (!cmd_line)
 		{
 			signal_ctrl_d(cmd_line);

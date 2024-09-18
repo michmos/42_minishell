@@ -49,7 +49,7 @@ delimited by signal (wanted `%s')\n", SHELLNAME, delimiter);
 	return (NO_ERR);
 }
 
-t_error	exec_hd(char **hd_str, t_list *redir_lst)
+t_error	exec_hd(t_list *redir_lst)
 {
 	char		*result;
 
@@ -67,6 +67,6 @@ t_error	exec_hd(char **hd_str, t_list *redir_lst)
 		}
 		redir_lst = redir_lst->next;
 	}
-	*hd_str = result;
+	get_shell_struct()->cur_cmdline.hd_str = result;
 	return (NO_ERR);
 }

@@ -66,10 +66,10 @@ void	init_shell(t_shell **ptr, char **env)
 	}
 	set_shell_struct(shell);
 	// init to -1 so that we can check whether they have been opened before closing them
-	shell->open_fd = -1;
 	shell->std_in = -1;
 	shell->std_out = -1;
 	shell->std_err = -1;
+	shell->cur_cmdline.open_pipe_end = -1;
 
 	shell->ex_code = 0;
 	shell->env_lst = create_envlst(env);

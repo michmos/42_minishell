@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-static void	child_process(t_cmd *cmd, char *hd_str)
+static void	child_process(t_cmd *cmd)
 {
 	t_shell	*shell;
 	t_error	error;
@@ -25,16 +25,14 @@ static void	child_process(t_cmd *cmd, char *hd_str)
 	error = NO_ERR;
 	path = NULL;
 	// close unused fd
-	if (shell->open_fd != -1 && close(shell->open_fd) == -1)
+	if (shell->cur_cmdline.open_pipe_end != -1 && close(shell->cur_cmdline.open_pipe_end) == -1)
 	{
-		free(hd_str); // TODO: add hd_str to struct for clean exit
 		perror("close");
 		clean_exit(DEADLY_ERR);
 	}
-	shell->open_fd = -1;
+	shell->cur_cmdline.open_pipe_end = -1;
 
-	error = set_io_redirs(cmd->redir_lst, hd_str);
-	free(hd_str);
+	error = set_io_redirs(cmd->redir_lst, shell->cur_cmdline.hd_str);
 	if (error == DEADLY_ERR || error == ERR)
 		clean_exit(error);
 	if (!cmd->args[0])
@@ -92,44 +90,39 @@ t_error	cmd_pipeline(t_list *cmd_lst)
 	int	i;
 	int	status;
 	pid_t	pid;
-	char	*hd_str;
 	int	num_cmd;
 
 	i = 0;
 	num_cmd = ft_lstsize(cmd_lst);
-	hd_str = NULL;
 	pid = -1;
 	set_exit_code(0);
 	while (i < num_cmd)
 	{
 		// execute heredocs
-		if (exec_hd(&hd_str, get_cmd(cmd_lst)->redir_lst) != NO_ERR)
+		if (exec_hd(get_cmd(cmd_lst)->redir_lst) != NO_ERR)
 		{
 			clean_exit(EXIT_FAILURE);
 		}
 		if (set_io_pipes(i, num_cmd) != NO_ERR)
 		{
-			free(hd_str);
 			clean_exit(EXIT_FAILURE);
 		}
 		pid = fork();
 		if (pid == ERROR)
 		{
-			free(hd_str);
 			perror("fork");
 			clean_exit(EXIT_FAILURE);
 		}
 		else if (pid == 0)
 		{
-			child_process((t_cmd *)(cmd_lst->as_ptr), hd_str);
-			// free head and move to next node, good representation is in lstclear in while loop
+			child_process((t_cmd *)(cmd_lst->as_ptr));
 		}
 		// parent
-		free(hd_str);
 		if (reset_io() != NO_ERR)
 		{
 			clean_exit(EXIT_FAILURE);
 		}
+		sfree((void **) &get_shell_struct()->cur_cmdline.hd_str);
 		cmd_lst = cmd_lst->next;
 		i++;
 	}

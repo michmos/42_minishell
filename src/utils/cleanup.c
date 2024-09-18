@@ -26,8 +26,9 @@ static void	cleanup_shell(void)
 	{
 		ft_lstclear(&(shell->env_lst), free_env_var);
 	}
-	if (shell->cur_cmdlst)
-		ft_lstclear(&(shell->cur_cmdlst), free_cmd);
+	free(shell->cur_cmdline.hd_str);
+	if (shell->cur_cmdline.cmdlst)
+		ft_lstclear(&(shell->cur_cmdline.cmdlst), free_cmd);
 	ft_free_2d_array((void **) shell->env);
 	if (shell->std_in != -1)
 	{
@@ -47,9 +48,9 @@ static void	cleanup_shell(void)
 			perror("close");
 
 	}
-	if (shell->open_fd != -1)
+	if (shell->cur_cmdline.open_pipe_end != -1)
 	{
-		if (close(shell->open_fd) == -1)
+		if (close(shell->cur_cmdline.open_pipe_end) == -1)
 			perror("close");
 	}
 	free(shell);
