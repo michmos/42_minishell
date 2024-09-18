@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/09/11 10:17:01 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/18 14:39:41 by mmoser        ########   odam.nl         */
+/*   Updated: 2024/09/18 15:02:29 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,6 +306,9 @@ t_error		exec_hd(t_list *redir_lst);
 
 // pipex_check.c ---------------------------------------------------------//
 void		check_cmd(char *path, char *arg);
+
+// pipex_child.c ---------------------------------------------------------//
+void		child_process(t_cmd *cmd);
 
 // pipex_free.c ---------------------------------------------------------//
 void		free_ar2(void **array);
