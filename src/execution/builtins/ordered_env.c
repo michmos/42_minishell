@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/16 11:11:31 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/11 10:44:02 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 13:47:41 by mmoser        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,13 @@ static bool	is_bigger(t_env_var *a, t_env_var *b)
 static t_env_var	*get_next_bigger(t_env_var *last_var, t_list *env_lst)
 {
 	t_env_var	*next_bigger;
-	
-	// find first variable with bigger key then last_var
+
 	while (env_lst && (is_bigger(last_var, (t_env_var *)(env_lst->as_ptr)) \
 	|| (t_env_var *)(env_lst->as_ptr) == last_var))
 	{
 		env_lst = env_lst->next;
 	}
 	next_bigger = (t_env_var *) env_lst->as_ptr;
-
-	// find smallest variable that is still bigger then last_var
 	while (env_lst)
 	{
 		if (is_bigger((t_env_var *)(env_lst->as_ptr), last_var)

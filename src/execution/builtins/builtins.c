@@ -6,58 +6,11 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/25 09:25:29 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/13 11:11:06 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 14:06:33 by mmoser        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-#include <stdio.h>
-#include <unistd.h>
-
-void	print_envlst(t_list *head, int order)
-{
-	t_list	*tmp;
-
-	tmp = head;
-	if (order == 4)
-	{
-		while (tmp != NULL)
-		{
-			if (!((t_env_var *)(tmp->as_ptr))->equal)
-			{
-				printf("declare -x %s\n", ((t_env_var *)(tmp->as_ptr))->key);
-			}
-			else
-			{
-				if (((t_env_var *)(tmp->as_ptr))->key)
-					printf("declare -x %s", ((t_env_var *)(tmp->as_ptr))->key);
-				if (((t_env_var *)(tmp->as_ptr))->equal)
-					printf("=");
-				if (((t_env_var *)(tmp->as_ptr))->value)
-					printf("\"%s\"\n", ((t_env_var *)(tmp->as_ptr))->value);
-			}
-			tmp = tmp->next;
-		}
-	}
-	else
-	{
-		while (tmp != NULL)
-		{
-			if (!((t_env_var *)(tmp->as_ptr))->equal)
-			{
-				tmp = tmp->next;
-			}
-			else
-			{
-				printf("%s", ((t_env_var *)(tmp->as_ptr))->key);
-				if (((t_env_var *)(tmp->as_ptr))->equal)
-					printf("=");
-				printf("%s\n", ((t_env_var *)(tmp->as_ptr))->value);
-				tmp = tmp->next;
-			}
-		}
-	}
-}
 
 t_builtins	get_builtin_type(char *cmd)
 {
@@ -94,10 +47,21 @@ t_error	env(char **args)
 	return (NO_ERR);
 }
 
+static t_error	update_env_array(void)
+{
+	t_shell		*shell;
+
+	shell = get_shell_struct();
+	ft_free_2d_array((void **) shell->env);
+	shell->env = converter(shell->env_lst);
+	if (!shell->env)
+		return (DEADLY_ERR);
+	return (NO_ERR);
+}
+
 t_error	execute_builtin(char **args)
 {
 	t_error		error;
-	t_shell		*shell;
 	t_builtins	type;
 
 	error = NO_ERR;
@@ -116,16 +80,10 @@ t_error	execute_builtin(char **args)
 		error = env(args);
 	else if (type == EXIT)
 		error = exec_exit(args);
-
 	if (type == CD || type == EXPORT || type == UNSET || type == ENV)
 	{
-		shell = get_shell_struct();
-		ft_free_2d_array((void **) shell->env);
-		shell->env = converter(shell->env_lst);
-		if (!shell->env)
-		{
-			return (DEADLY_ERR);
-		}
+		if (update_env_array() != NO_ERR)
+			error = DEADLY_ERR;
 	}
 	return (error);
 }

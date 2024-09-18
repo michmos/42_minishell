@@ -75,9 +75,8 @@ required\n", SHELLNAME, args[1]);
 	else if (args[2])
 	{
 		set_exit_code(1);
-		ft_printf_fd(STDERR_FILENO, "exit\%s: exit: too many arguments\n", \
-SHELLNAME);
-		return (ERR);
+		return (ft_printf_fd(STDERR_FILENO, "exit\%s: exit: \
+too many arguments\n", SHELLNAME), ERR);
 	}
 	else
 	{

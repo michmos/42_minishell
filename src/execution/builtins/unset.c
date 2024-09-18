@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/21 11:10:30 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/12 13:43:11 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 13:48:20 by mmoser        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,25 +27,18 @@ t_error	unset_var(char *arg)
 	shell = get_shell_struct();
 	prev = NULL;
 	cur = shell->env_lst;
-
 	while (cur && !is_same_key(arg, cur))
 	{
 		prev = cur;
 		cur = cur->next;
 	}
 	if (!cur)
-	{
 		return (NO_ERR);
-	}
 	free_env_var((t_env_var *) cur->as_ptr);
 	if (cur == shell->env_lst)
-	{
 		shell->env_lst = cur->next;
-	}
 	else
-	{
 		prev->next = cur->next;
-	}
 	free(cur);
 	return (NO_ERR);
 }

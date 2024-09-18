@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/16 10:00:03 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/11 10:40:02 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 13:48:36 by mmoser        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ t_env_var	*create_env_var(char *env)
 	env_parse.buffer = env;
 	env_parse.cursor_pos = 0;
 	env_parse.buffer_len = ft_strlen(env);
-
 	env_var = ft_calloc(1, sizeof(t_env_var));
 	if (!env_var)
 		return (perror("malloc"), NULL);
