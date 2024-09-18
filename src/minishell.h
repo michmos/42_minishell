@@ -221,6 +221,10 @@ t_error		redir(int old_fd, int new_fd);
 t_error		input_redirections(int fds[2], t_redir *redir, char *hd_str);
 t_error		output_redirections(int fds[2], t_redir *redir);
 t_error		handle_redirection_err(int fds[2], t_redir *redir);
+
+// cd.c --------------------------------------------------------------------- //
+t_error	cd(char *argv[]);
+
 // cd_sec_1_to_6.c ---------------------------------------------------------- //
 t_error		init_curpath(char **curpath, char *arg);
 

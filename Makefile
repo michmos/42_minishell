@@ -22,11 +22,6 @@ LD_FLAGS	:= -lreadline
 endif
 RM			:= rm -rf
 
-TESTS_DIR	:= tests
-TESTS_SRCS	:= $(shell find $(TESTS_DIR) -iname "*.c")
-TESTS_OBJS	:= $(TESTS_SRCS:$(TESTS_DIR)/%.c=$(OBJ_DIR)/%.o)
-TESTS_BINS	:= $(TESTS_SRCS:%.c=%)
-
 all: $(NAME)
 
 # rule to make shell
@@ -44,15 +39,6 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 $(LIBFT):
 	$(MAKE) -C $(@D) all
-
-# rule to make tester binaries
-%: $(OBJ_DIR)/%.o $(OBJS_WO_MAIN) $(SUBMOD_FLAG) $(LIBFT)
-	$(CC) $(OBJ_DIR)/$*.o $(OBJS_WO_MAIN) $(LIBFT) $(LD_FLAGS) -o $(TESTS_DIR)/$*
-	@printf "$(CREATED)" $@ $(CUR_DIR)
-
-$(OBJ_DIR)/%.o: $(TESTS_DIR)/%.c
-	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	$(MAKE) -C $(dir $(LIBFT)) clean
