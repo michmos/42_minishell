@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/31 16:19:25 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/05 10:45:53 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 13:07:49 by mmoser        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,14 @@ t_error	add_slash(char **str)
 
 bool	is_dir(char *pathname)
 {
-	struct stat statbuff;
+	struct stat	statbuff;
 
 	if (stat(pathname, &statbuff) != 0)
 		return (false);
 	return (S_ISDIR(statbuff.st_mode));
 }
 
-void del_char(char *ptr)
+void	del_char(char *ptr)
 {
 	ft_memmove(ptr, ptr + 1, ft_strlen(ptr + 1) + 1);
 }
-

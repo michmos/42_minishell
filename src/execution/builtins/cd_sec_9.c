@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/22 09:50:28 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/05 10:45:53 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 13:03:05 by mmoser        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 t_error	cnvrt_to_rltv_path(char **curpath, char *cwd)
 {
 	size_t	i;
-	char *tmp;
+	char	*tmp;
 
 	i = 0;
 	while (**curpath && cwd[i] && **curpath == cwd[i])

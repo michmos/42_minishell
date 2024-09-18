@@ -224,8 +224,27 @@ t_error		handle_redirection_err(int fds[2], t_redir *redir);
 // cd_sec_1_to_6.c ---------------------------------------------------------- //
 t_error		init_curpath(char **curpath, char *arg);
 
+// cd_sec_3_to_6.c ---------------------------------------------------------- //
+t_error		try_curdir(char **finding, char *dir);
+t_error		try_cdpaths(char **finding, char *dir);
+
 // cd_sec_7_to_8.c ---------------------------------------------------------- //
 t_error		modify_curpath(char **curpath);
+
+// cd_sec_8_slashes.c ------------------------------------------------------- //
+void		smplfy_inbtw_slashes(char *str);
+void		smplfy_trail_slashes(char *str);
+void		smplfy_lead_slashes(char *str);
+
+// cd_sec_8_dots1.c --------------------------------------------------------- //
+void		rmv_dot_comps(char **curpath);
+t_error		rmv_dot_dot_comps(char **curpath, char *og_path);
+
+// cd_sec_8_dots2.c --------------------------------------------------------- //
+void	rmv_dot_dot_slash(char *curpath, size_t pos);
+void	rmv_prev_and_slash(char *curpath, size_t lst_cmps_pos);
+bool	is_affected_dot_dot(char *curpath, size_t i);
+void	handle_no_dir(char *curpath, char *og_path);
 
 // cd_sec_9.c --------------------------------------------------------------- //
 t_error		cnvrt_to_rltv_path(char **curpath, char *cwd);
@@ -234,9 +253,6 @@ t_error		cnvrt_to_rltv_path(char **curpath, char *cwd);
 bool		is_dir(char *pathname);
 t_error		add_slash(char **str);
 void		del_char(char *ptr);
-
-// cd.c --------------------------------------------------------------------- //
-t_error		cd(char *argv[]);
 
 // echo.c ------------------------------------------------------------------ //
 void		echo(char *argv[]);
