@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/09/11 10:17:01 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/18 13:48:18 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 13:56:20 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,12 +211,16 @@ t_error		exec_one_builtin(t_cmd *cmd);
 t_error		exec_export(char **args);
 
 // fds.c--------------------------------------------------------------------//
-t_error		reset_io(void);
 t_error		set_io_redirs(t_list	*redir_lst, char *hd_str);
 t_error		set_io_pipes(size_t child_i, size_t num_childs);
+int			get_hd_fd(char *hd_str);
 
 // fds2.c -------------------------------------------------------------------//
+t_error		reset_io(void);
 t_error		redir(int old_fd, int new_fd);
+t_error		input_redirections(int fds[2], t_redir *redir, char *hd_str);
+t_error		output_redirections(int fds[2], t_redir *redir);
+t_error		handle_redirection_err(int fds[2], t_redir *redir);
 // cd_sec_1_to_6.c ---------------------------------------------------------- //
 t_error		init_curpath(char **curpath, char *arg);
 
@@ -313,7 +317,6 @@ void		handle_sig(int signal);
 void		handle_sig_child(int signal);
 void		handle_sig_hd(int signal);
 void		signal_ctrl_d(char *line);
-void		signal_sigquit(int signal);
 int			init_signals(void);
 
 // -------------------------------------------------------------------------- //

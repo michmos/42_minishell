@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/26 09:50:20 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/18 10:11:09 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 12:11:06 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	child_process(t_cmd *cmd)
 	char	*path;
 
 	shell = get_shell_struct();
-	signal(SIGQUIT, signal_sigquit);
+	signal(SIGQUIT, handle_sig_child);
 	error = NO_ERR;
 	path = NULL;
 	// close unused fd

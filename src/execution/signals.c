@@ -6,22 +6,22 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/08/14 09:31:22 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/18 09:55:43 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 12:12:52 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	g_signal; //Check the global variable. This global variable cannot provide any other information or data access than the number of a received signal.
+int	g_signal;
 
 void	handle_sig_hd(int signal)
 {
 	if (signal == SIGINT)
 	{
-		g_signal = 42;
+		g_signal = SIGINT;
 		if (close(STDIN_FILENO) == -1)
 			perror("close");
-		if (g_signal == 42)
+		if (g_signal == SIGINT)
 			write(1, "\n", 1);
 		if (close(STDOUT_FILENO) == -1)
 			perror("close");
@@ -39,14 +39,10 @@ void	handle_sig_child(int signal)
 	{
 		g_signal = 0;
 		rl_on_new_line();
-		if (g_signal != 42)
+		if (g_signal != SIGINT)
 			write(1, "\n", 1);
 		rl_replace_line("", 1);
 	}
-}
-
-void	signal_sigquit(int signal)
-{
 	if (signal == SIGQUIT)
 	{
 		clean_exit(131);
@@ -57,8 +53,9 @@ void	handle_sig(int signal)
 {
 	if (signal == SIGINT)
 	{
+		g_signal = 0;
 		rl_on_new_line();
-		if (g_signal != 42)
+		if (g_signal != SIGINT)
 			write(1, "\n", 1);
 		rl_replace_line("", 1);
 		rl_redisplay();
