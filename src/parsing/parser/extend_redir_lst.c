@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/23 15:47:10 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/11 10:50:28 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 12:05:37 by mmoser        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,38 +48,26 @@ static t_error	parse_redir(t_redir **redir, t_list **rem_tokens)
 	t_redir	new_redir;
 
 	new_redir.type = get_redir_type(rem_tokens);
-
-	// check next token
 	if (!*rem_tokens)
 	{
-		ft_printf_fd(STDERR_FILENO, "syntax error: missing redirection target\n");
+		ft_printf_fd(STDERR_FILENO, "syntax error: \
+		missing redirection target\n");
 		return (ERR);
 	}
-
-	if (get_token_tag(*rem_tokens)== WHITESPACE)
-	{
+	if (get_token_tag(*rem_tokens) == WHITESPACE)
 		consume_token(rem_tokens);
-	}
-
-	// check next token
 	if (!*rem_tokens || !is_literal(get_token_tag(*rem_tokens)))
 	{
-		ft_printf_fd(STDERR_FILENO, "syntax error: missing redirection target\n");
+		ft_printf_fd(STDERR_FILENO, "syntax error: \
+		missing redirection target\n");
 		return (ERR);
 	}
-
 	new_redir.filename = get_redir_filename(rem_tokens);
 	if (!new_redir.filename)
-	{
 		return (DEADLY_ERR);
-	}
-
 	*redir = ft_calloc(1, sizeof(t_redir));
 	if (!*redir)
-	{
-		perror("malloc");
-		return (DEADLY_ERR);
-	}
+		return (perror("malloc"), DEADLY_ERR);
 	**redir = new_redir;
 	return (NO_ERR);
 }

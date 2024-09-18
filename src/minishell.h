@@ -157,6 +157,11 @@ t_error		expand_all_env_vars(char **str_ptr);
 // expand_env_var.c --------------------------------------------------------- //
 t_error		expand_env_var(char **str_ptr, size_t *cur_pos);
 
+// expand_env_var2.c -------------------------------------------------------- //
+t_error		get_insertion(char	**insertion, char *ref_start);
+size_t		get_key_len(char *key);
+size_t		get_key_pos(char *ref_start);
+
 // get_cmd_args.c ----------------------------------------------------------- //
 t_error		extend_arg_lst(t_list **args_lst, t_list **rem_tokens);
 

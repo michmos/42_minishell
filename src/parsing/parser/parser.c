@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/07 11:33:33 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/11 10:49:40 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 12:04:32 by mmoser        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,20 @@ static t_error	parse_pipe(t_list **rem_tokens)
 	return (NO_ERR);
 }
 
-// TODO: only do normconform on very end
+static t_error	use_token(t_cmd *cmd, t_list **rem_tokens, t_list **arg_lst)
+{
+	t_error	error;
+
+	error = NO_ERR;
+	if (get_token_tag(*rem_tokens) == WHITESPACE)
+		consume_token(rem_tokens);
+	else if (is_redir(get_token_tag(*rem_tokens)))
+		error = extend_redir_lst(&cmd->redir_lst, rem_tokens);
+	else if (is_literal(get_token_tag(*rem_tokens)))
+		error = extend_arg_lst(arg_lst, rem_tokens);
+	return (error);
+}
+
 static t_error	parse_cmd(t_cmd **cmd, t_list **rem_tokens)
 {
 	t_error	error;
@@ -39,27 +52,11 @@ static t_error	parse_cmd(t_cmd **cmd, t_list **rem_tokens)
 
 	new_cmd = ft_calloc(1, sizeof(t_cmd));
 	if (!new_cmd)
-	{
-		perror("malloc");
-		return (DEADLY_ERR);
-	}
+		return (perror("malloc"), DEADLY_ERR);
 	error = NO_ERR;
 	arg_lst = NULL;
 	while (!error && *rem_tokens && get_token_tag(*rem_tokens) != PIPE)
-	{
-		if (get_token_tag(*rem_tokens) == WHITESPACE)
-		{
-			consume_token(rem_tokens);
-		}
-		else if (is_redir(get_token_tag(*rem_tokens)))
-		{
-			error = extend_redir_lst(&new_cmd->redir_lst, rem_tokens);
-		}
-		else if (is_literal(get_token_tag(*rem_tokens)))
-		{
-			error = extend_arg_lst(&arg_lst, rem_tokens);
-		}
-	}
+		error = use_token(new_cmd, rem_tokens, &arg_lst);
 	if (!error)
 	{
 		new_cmd->args = store_ptrs_in_arr(arg_lst);
@@ -70,11 +67,7 @@ static t_error	parse_cmd(t_cmd **cmd, t_list **rem_tokens)
 		}
 	}
 	if (error)
-	{
-		ft_lstclear(&arg_lst, free);
-		free_cmd(new_cmd);
-		return (error);
-	}
+		return (ft_lstclear(&arg_lst, free), free_cmd(new_cmd), error);
 	ft_lstclear(&arg_lst, NULL);
 	*cmd = new_cmd;
 	return (NO_ERR);

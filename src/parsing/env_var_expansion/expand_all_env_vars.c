@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/15 13:22:17 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/11 10:53:24 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 12:05:23 by mmoser        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ static t_error	modify_str(char **str_ptr, size_t *cursor_pos)
 	str = *str_ptr;
 	error = NO_ERR;
 	pos = *cursor_pos;
-
 	if (pos > 0 && str[pos - 1] == '\\')
 	{
 		error = cut_out_backslash(str_ptr, pos - 1);
@@ -70,12 +69,10 @@ t_error	expand_all_env_vars(char **str)
 	exp_allowed = true;
 	while ((*str)[i] && !error)
 	{
-		// switch state
 		if ((*str)[i] == '\'')
 		{
 			exp_allowed = !exp_allowed;
 		}
-		// expand var
 		if ((*str)[i] == '$' && exp_allowed)
 		{
 			error = modify_str(str, &i);

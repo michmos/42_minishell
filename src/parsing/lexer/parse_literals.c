@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/15 21:11:23 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/11 10:55:21 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 11:31:39 by mmoser        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ t_error	parse_str_sq(char **lexeme, t_parse_str *cmd_line)
 	*lexeme = get_substr_until(cmd_line, "\'");
 	if (!*lexeme)
 		return (DEADLY_ERR);
-
 	if (cur_char(cmd_line) != '\'')
 	{
 		sfree((void **) lexeme);
