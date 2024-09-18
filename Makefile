@@ -9,10 +9,9 @@ SRCS		:= $(shell find $(SRC_DIR) -iname "*.c")
 
 OBJ_DIR		:= .build
 OBJS		:= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-OBJS_WO_MAIN:= $(filter-out $(OBJ_DIR)/main.o, $(OBJS))
 
 CC			:= cc
-FSAN		?= 1
+FSAN		?= 0
 ifeq ($(FSAN),1)
 CFLAGS		:= -g -MMD -Wall -Wextra -Werror -Wunused -Wuninitialized -Wunreachable-code -fsanitize=address
 LD_FLAGS	:= -lreadline -fsanitize=address
@@ -25,7 +24,7 @@ RM			:= rm -rf
 all: $(NAME)
 
 # rule to make shell
-$(NAME): $(OBJS) $(SUBMOD_FLAG) $(LIBFT)
+$(NAME): $(SUBMOD_FLAG) $(OBJS)  $(LIBFT)
 	$(CC) $(OBJS) $(LIBFT) $(LD_FLAGS) -o $@
 	@printf "$(CREATED)" $@ $(CUR_DIR)
 
