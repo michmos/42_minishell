@@ -65,7 +65,6 @@ static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 
 	fds[0] = -2;
 	fds[1] = -2;
-
 	while (redir_lst)
 	{
 		redir = get_redir(redir_lst);
