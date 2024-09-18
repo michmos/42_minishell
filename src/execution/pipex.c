@@ -42,7 +42,7 @@ static void	child_process(t_cmd *cmd)
 	else if (!cmd->args[0][0])
 	{
 		ft_printf_fd(STDERR_FILENO, "%s: \
-		set_exit_code(130);%s: command not found\n", SHELLNAME, cmd->args[0]);
+set_exit_code(130);%s: command not found\n", SHELLNAME, cmd->args[0]);
 		clean_exit(127);
 	}
 	if (get_builtin_type(cmd->args[0]) != NO_BUILTIN)

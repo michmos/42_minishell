@@ -51,7 +51,7 @@ static t_error	parse_redir(t_redir **redir, t_list **rem_tokens)
 	if (!*rem_tokens)
 	{
 		ft_printf_fd(STDERR_FILENO, "syntax error: \
-		missing redirection target\n");
+missing redirection target\n");
 		return (ERR);
 	}
 	if (get_token_tag(*rem_tokens) == WHITESPACE)
@@ -59,7 +59,7 @@ static t_error	parse_redir(t_redir **redir, t_list **rem_tokens)
 	if (!*rem_tokens || !is_literal(get_token_tag(*rem_tokens)))
 	{
 		ft_printf_fd(STDERR_FILENO, "syntax error: \
-		missing redirection target\n");
+missing redirection target\n");
 		return (ERR);
 	}
 	new_redir.filename = get_redir_filename(rem_tokens);

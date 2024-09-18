@@ -15,7 +15,7 @@
 void	handle_no_dir(char *curpath, char *og_path)
 {
 	ft_printf_fd(STDERR_FILENO, "cd: %s: \
-	No such file or directory\n", og_path);
+No such file or directory\n", og_path);
 	ft_bzero(curpath, ft_strlen(curpath));
 }
 

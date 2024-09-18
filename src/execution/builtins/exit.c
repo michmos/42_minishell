@@ -46,7 +46,7 @@ static t_error	init_ex_val(unsigned char *result, char *input)
 		if (res > ULLONG_MAX / 10)
 		{
 			ft_printf_fd(STDERR_FILENO, "exit\n%s: exit: %s: numeric argument required\
-			\n", SHELLNAME, input);
+\n", SHELLNAME, input);
 			*result = 2;
 			return (ERR);
 		}

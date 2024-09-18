@@ -87,10 +87,10 @@ static t_error	export_arg(t_list **head, char *arg)
 	{
 		if (ft_strlen(env_var->key) > 0)
 			ft_printf_fd(STDERR_FILENO, "minishell: export: `%s': \
-			not a valid identifier\n", env_var->key);
+not a valid identifier\n", env_var->key);
 		else
 			ft_printf_fd(STDERR_FILENO, "minishell: export: `=': \
-			not a valid identifier\n");
+not a valid identifier\n");
 		set_exit_code(1);
 		free_env_var(env_var);
 		return (ERR);
