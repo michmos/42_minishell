@@ -6,20 +6,13 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/09/11 10:17:01 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/18 14:00:05 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 14:39:41 by mmoser        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-// # include "../external_libs/42_libs/ft_libs.h"
-// # include "readline/readline.h"
-// # include "readline/history.h"
-// # include <stdio.h>
-// # include <sys/stat.h>
-
-# define SHELLNAME "minishell"
 # include "../external_libs/42_libs/ft_libs.h"
 # include <stdio.h>
 # include <readline/readline.h>
@@ -33,6 +26,7 @@
 # include <linux/limits.h>
 # include <sys/stat.h>
 
+# define SHELLNAME "minishell"
 # define ERROR -1
 
 typedef enum e_error
@@ -223,7 +217,7 @@ t_error		output_redirections(int fds[2], t_redir *redir);
 t_error		handle_redirection_err(int fds[2], t_redir *redir);
 
 // cd.c --------------------------------------------------------------------- //
-t_error	cd(char *argv[]);
+t_error		cd(char *argv[]);
 
 // cd_sec_1_to_6.c ---------------------------------------------------------- //
 t_error		init_curpath(char **curpath, char *arg);
@@ -245,10 +239,10 @@ void		rmv_dot_comps(char **curpath);
 t_error		rmv_dot_dot_comps(char **curpath, char *og_path);
 
 // cd_sec_8_dots2.c --------------------------------------------------------- //
-void	rmv_dot_dot_slash(char *curpath, size_t pos);
-void	rmv_prev_and_slash(char *curpath, size_t lst_cmps_pos);
-bool	is_affected_dot_dot(char *curpath, size_t i);
-void	handle_no_dir(char *curpath, char *og_path);
+void		rmv_dot_dot_slash(char *curpath, size_t pos);
+void		rmv_prev_and_slash(char *curpath, size_t lst_cmps_pos);
+bool		is_affected_dot_dot(char *curpath, size_t i);
+void		handle_no_dir(char *curpath, char *og_path);
 
 // cd_sec_9.c --------------------------------------------------------------- //
 t_error		cnvrt_to_rltv_path(char **curpath, char *cwd);
