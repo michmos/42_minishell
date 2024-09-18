@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/08/29 10:02:34 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/18 13:57:07 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 13:59:29 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@ t_error	set_io_pipes(size_t child_i, size_t num_childs)
 	t_shell	*shell;
 
 	shell = get_shell_struct();
-	if (child_i > 0) // redirect stdin to pipe if not first child
+	if (child_i > 0)
 	{
 		if (redir(shell->cur_cmdline.open_pipe_end, STDIN_FILENO) != NO_ERR)
 			return (DEADLY_ERR);
 		shell->cur_cmdline.open_pipe_end = -1;
 	}
-	if (child_i < num_childs -1) // redirect stdout to pipe if not last child
+	if (child_i < num_childs -1)
 	{
 		if (pipe(fds) == -1)
 		{
@@ -36,16 +36,15 @@ t_error	set_io_pipes(size_t child_i, size_t num_childs)
 		{
 			return (DEADLY_ERR);
 		}
-		// save unused read end
 		shell->cur_cmdline.open_pipe_end = fds[0];
 	}
 	return (NO_ERR);
 }
 
-static int	get_hd_fd(char *hd_str)
+int	get_hd_fd(char *hd_str)
 {
 	int	fds[2];
-	// redirect stdin to pipe if not first child
+
 	if (pipe(fds) == -1)
 	{
 		perror("pipe");
@@ -62,66 +61,29 @@ static int	get_hd_fd(char *hd_str)
 
 static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 {
-	int		i;
 	t_redir	*redir;
 
-	i = 0;
 	fds[0] = -2;
 	fds[1] = -2;
 
 	while (redir_lst)
 	{
 		redir = get_redir(redir_lst);
-		if (redir->type == I_RD_HD)
+		if (redir->type == I_RD_HD || redir->type == I_RD)
 		{
-			if (fds[0] == -2)
-			{
-				fds[0] = get_hd_fd(hd_str);
-			}
+			if (input_redirections(fds, redir, hd_str) != NO_ERR)
+				return (DEADLY_ERR);
 		}
-		else if (redir->type == I_RD)
+		else if (redir->type == O_RD || redir->type == O_RD_APP)
 		{
-			if (close_fd(fds[0]) != NO_ERR)
-			{
+			if (output_redirections(fds, redir) != NO_ERR)
 				return (DEADLY_ERR);
-			}
-			fds[0] = open(redir->filename, O_RDONLY);
 		}
-		else if (redir->type == O_RD)
+		if (handle_redirection_err(fds, redir) != NO_ERR)
 		{
-			if (close_fd(fds[1]) != NO_ERR)
-			{
-				return (DEADLY_ERR);
-			}
-			fds[1] = open(redir->filename, O_CREAT | O_RDWR | O_TRUNC, 0777);
-		}
-		else if (redir->type == O_RD_APP)
-		{
-			if (close_fd(fds[1]) != NO_ERR)
-			{
-				return (DEADLY_ERR);
-			}
-			fds[1] = open(redir->filename, O_CREAT | O_RDWR | O_APPEND, 0777);
-		}
-
-
-
-
-		if (fds[0] == -1 || fds[1] == -1)
-		{
-			if (close_fd(fds[0]) != NO_ERR)
-			{
-				return (DEADLY_ERR);
-			}
-			if (close_fd(fds[1]) != NO_ERR)
-			{
-				return (DEADLY_ERR);
-			}
-			ft_printf_fd(STDERR_FILENO, "%s: %s: %s\n", SHELLNAME, redir->filename, strerror(errno));
 			return (ERR);
 		}
 		redir_lst = redir_lst->next;
-		i++;
 	}
 	return (0);
 }
@@ -153,16 +115,10 @@ t_error	set_io_redirs(t_list	*redir_lst, char *hd_str)
 	int		fds[2];
 
 	error = NO_ERR;
-
-	// init fd array
 	error = get_io(fds, redir_lst, hd_str);
 	if (error != NO_ERR)
 		return (error);
-
-	// redirect
 	error = redir_io(fds);
-
-	// close
 	if (close_fd(fds[0]) != NO_ERR)
 		return (DEADLY_ERR);
 	if (close_fd(fds[1]) != NO_ERR)
