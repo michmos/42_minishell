@@ -43,7 +43,7 @@ static size_t	get_end_pos(char *str, size_t dollar_pos, bool brackets)
 	size_t	key_pos;
 	size_t	key_len;
 
-	key_pos = get_key_pos(str);
+	key_pos = get_key_pos(&str[dollar_pos]);
 	key_len = get_key_len(&str[dollar_pos + key_pos]);
 	return (dollar_pos + key_pos + key_len + brackets);
 }
