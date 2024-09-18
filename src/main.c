@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/23 15:56:13 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/18 09:58:40 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 11:18:42 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	main(int argc, char *argv[], char **env)
 	init_shell(&shell, env);
 	while (1)
 	{
-		init_signals(); // TODO: should this happen in the while loop
+		init_signals();
 		cmd_line = readline("minishell> ");
 		if (!cmd_line)
 		{
@@ -64,6 +64,3 @@ int	main(int argc, char *argv[], char **env)
 	}
 	clean_exit(shell->ex_code);
 }
-
-// removed t_error from main function, seems like we're not
-// using it there

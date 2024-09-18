@@ -6,7 +6,7 @@
 /*   By: mmoser <mmoser@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/26 14:35:12 by mmoser        #+#    #+#                 */
-/*   Updated: 2024/09/11 14:58:42 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 13:49:27 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,36 +23,23 @@ static void	cleanup_shell(void)
 	free(shell->cwd);
 	free(shell->old_wd);
 	if (shell->env_lst)
-	{
 		ft_lstclear(&(shell->env_lst), free_env_var);
-	}
 	free(shell->cur_cmdline.hd_str);
 	if (shell->cur_cmdline.cmdlst)
 		ft_lstclear(&(shell->cur_cmdline.cmdlst), free_cmd);
 	ft_free_2d_array((void **) shell->env);
 	if (shell->std_in != -1)
-	{
 		if (close(shell->std_in) == -1)
 			perror("close");
-
-	}
 	if (shell->std_out != -1)
-	{
 		if (close(shell->std_out) == -1)
 			perror("close");
-
-	}
 	if (shell->std_err != -1)
-	{
 		if (close(shell->std_err) == -1)
 			perror("close");
-
-	}
 	if (shell->cur_cmdline.open_pipe_end != -1)
-	{
 		if (close(shell->cur_cmdline.open_pipe_end) == -1)
 			perror("close");
-	}
 	free(shell);
 }
 

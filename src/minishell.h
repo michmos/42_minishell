@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/09/11 10:17:01 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/12 12:39:21 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/18 13:48:18 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,6 @@
 
 # define ERROR -1
 
-// maybe i don't need this global signal, cause i have one in signals.c
-extern int	g_signal;
-
 typedef enum e_error
 {
 	// No error
@@ -55,7 +52,7 @@ typedef struct s_cmdline
 	t_list	*cmdlst;
 	int		open_pipe_end;
 	char	*hd_str;
-} t_cmdline;
+}	t_cmdline;
 
 typedef struct s_shell
 {
@@ -97,7 +94,7 @@ typedef struct s_token
 }	t_token;
 
 // parsing.c ---------------------------------------------------------------- //
-t_error	parsing(t_list **cmd_lst, char **str);
+t_error		parsing(t_list **cmd_lst, char **str);
 
 // -------------------------- PARSING/lexer/ -------------------------------- //
 
@@ -127,10 +124,10 @@ t_error		add_char(char c, t_vec *vector);
 // char_ops.c --------------------------------------------------------------- //
 char		peek_char(t_parse_str *str);
 char		cur_char(t_parse_str *str);
-void	advance_char(t_parse_str *str);
+void		advance_char(t_parse_str *str);
 
 // lexer.c ------------------------------------------------------------------ //
-t_error	create_token_lst(t_list **head, char *str);
+t_error		create_token_lst(t_list **head, char *str);
 
 // -------------------------- PARSING/parser/ ------------------------------- //
 
