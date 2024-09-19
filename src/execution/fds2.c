@@ -6,7 +6,7 @@
 /*   By: pminialg <pminialg@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/09/06 11:50:28 by pminialg      #+#    #+#                 */
-/*   Updated: 2024/09/18 13:35:29 by pminialg      ########   odam.nl         */
+/*   Updated: 2024/09/19 09:41:58 by pminialg      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@ t_error	reset_io(void)
 		return (DEADLY_ERR);
 	}
 	if (dup2(shell->std_out, STDOUT_FILENO) == -1)
+	{
+		perror("dup2");
+		return (DEADLY_ERR);
+	}
+	if (dup2(shell->std_err, STDERR_FILENO) == -1)
 	{
 		perror("dup2");
 		return (DEADLY_ERR);
