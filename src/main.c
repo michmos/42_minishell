@@ -37,7 +37,6 @@ static void	process_cmd_line(char *cmd_line, t_shell *shell)
 	}
 }
 
-// TODO: delete valrind suppression file for norm
 int	main(int argc, char *argv[], char **env)
 {
 	t_shell	*shell;
@@ -45,6 +44,8 @@ int	main(int argc, char *argv[], char **env)
 
 	(void)argc;
 	(void)argv;
+	if (argc != 1)
+		return (printf("Usage: ./minishell\n"), EXIT_FAILURE);
 	init_shell(&shell, env);
 	while (1)
 	{
