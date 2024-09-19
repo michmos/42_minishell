@@ -11,9 +11,6 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-#include <readline/readline.h>
-#include <stdlib.h>
-#include <unistd.h>
 
 static void	cleanup_shell(void)
 {

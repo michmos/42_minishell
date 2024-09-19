@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <unistd.h>
 
 static void	assign_env_values(char **ptr, t_list *env_lst, const char *env_key)
 {

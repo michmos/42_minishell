@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-#include <stdlib.h>
-#include <unistd.h>
 
 // waits for all childs and retrieves the exit code of the last child
 // or of any other child in case an error occurred in another child
