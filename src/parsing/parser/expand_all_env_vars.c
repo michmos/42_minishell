@@ -59,6 +59,29 @@ static t_error	modify_str(char **str_ptr, size_t *cursor_pos)
 	return (error);
 }
 
+t_error	expand_tilda(char **str, size_t	*idx)
+{
+	char	*result;
+	size_t	result_size;
+	char	*home_ptr;
+
+	home_ptr = get_shell_struct()->home_dir;
+	result_size = *idx + ft_strlen(&(*str)[*idx + 1]) + ft_strlen(home_ptr) + 1;
+	result = ft_calloc(result_size, sizeof(char));
+	if (!result)
+	{
+		perror("malloc");
+		return (DEADLY_ERR);
+	}
+	ft_strlcpy(result, *str, (*idx) + 1);
+	ft_strlcat(result, home_ptr, result_size);
+	ft_strlcat(result, &(*str)[*idx + 1], result_size);
+	free(*str);
+	*str = result;
+	*idx += ft_strlen(home_ptr) - 1;
+	return (NO_ERR);
+}
+
 t_error	expand_all_env_vars(char **str)
 {
 	size_t	i;
@@ -80,7 +103,11 @@ t_error	expand_all_env_vars(char **str)
 		{
 			in_sngl_quotes = !in_sngl_quotes;
 		}
-		if ((*str)[i] == '$' && !in_sngl_quotes)
+		if ((*str)[i] == '~' && !in_sngl_quotes && !in_dbl_quotes)
+		{
+			error = expand_tilda(str, &i);
+		}
+		else if ((*str)[i] == '$' && !in_sngl_quotes)
 		{
 			error = modify_str(str, &i);
 		}

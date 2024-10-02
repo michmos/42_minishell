@@ -22,6 +22,7 @@ static void	cleanup_shell(void)
 	shell = get_shell_struct();
 	free(shell->cwd);
 	free(shell->old_wd);
+	free(shell->home_dir);
 	if (shell->env_lst)
 	{
 		ft_lstclear(&(shell->env_lst), free_env_var);

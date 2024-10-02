@@ -61,6 +61,7 @@ typedef struct s_shell
 {
 	char		*cwd;		// cur working dir
 	char		*old_wd;	// last working dir
+	char		*home_dir;		// home dir
 	t_list		*env_lst;	// env_lst
 	char		**env;		// env array
 	int			ex_code;	// ex_code of last command

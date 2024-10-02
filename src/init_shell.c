@@ -85,5 +85,6 @@ void	init_shell(t_shell **ptr, char **env)
 	bckup_std_streams(shell);
 	assign_env_values(&shell->cwd, shell->env_lst, "PWD");
 	assign_env_values(&shell->old_wd, shell->env_lst, "OLDPWD");
+	assign_env_values(&shell->home_dir, shell->env_lst, "HOME");
 	*ptr = shell;
 }
