@@ -87,6 +87,10 @@ static t_error	extend_cmd_lst(t_list **cmd_lst, t_list **rem_tokens)
 	t_list	*new;
 
 	cmd = NULL;
+	while (*rem_tokens && get_token_tag(*rem_tokens) == WHITESPACE)
+	{
+		consume_token(rem_tokens);
+	}
 	if (get_token_tag(*rem_tokens) == PIPE)
 	{
 		ft_printf_fd(STDERR_FILENO, "syntax error: unexpected token: %s\n", \
