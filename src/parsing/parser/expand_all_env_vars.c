@@ -63,20 +63,24 @@ t_error	expand_all_env_vars(char **str)
 {
 	size_t	i;
 	t_error	error;
-	bool	exp_allowed;
+	bool	in_sngl_quotes;
+	bool	in_dbl_quotes;
 
 	i = 0;
 	error = NO_ERR;
-	exp_allowed = true;
+	in_sngl_quotes = false;
+	in_dbl_quotes = false;
 	while ((*str)[i] && !error)
 	{
-		// switch state
-		if ((*str)[i] == '\'')
+		if ((*str)[i] == '\"' && !in_sngl_quotes)
 		{
-			exp_allowed = !exp_allowed;
+			in_dbl_quotes = !in_dbl_quotes;
 		}
-		// expand var
-		if ((*str)[i] == '$' && exp_allowed)
+		else if ((*str)[i] == '\'' && !in_dbl_quotes)
+		{
+			in_sngl_quotes = !in_sngl_quotes;
+		}
+		if ((*str)[i] == '$' && !in_sngl_quotes)
 		{
 			error = modify_str(str, &i);
 		}
