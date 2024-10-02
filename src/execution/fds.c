@@ -93,7 +93,7 @@ static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 			{
 				return (DEADLY_ERR);
 			}
-			fds[1] = open(redir->filename, O_CREAT | O_RDWR | O_TRUNC, 0777);
+			fds[1] = open(redir->filename, O_CREAT | O_RDWR | O_TRUNC, 0666);
 		}
 		else if (redir->type == O_RD_APP)
 		{
@@ -101,7 +101,7 @@ static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 			{
 				return (DEADLY_ERR);
 			}
-			fds[1] = open(redir->filename, O_CREAT | O_RDWR | O_APPEND, 0777);
+			fds[1] = open(redir->filename, O_CREAT | O_RDWR | O_APPEND, 0666);
 		}
 
 
