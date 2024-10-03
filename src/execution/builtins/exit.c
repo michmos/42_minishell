@@ -12,7 +12,7 @@
 
 #include "../../minishell.h"
 
-int	str_is_num(char *str)
+static int	str_is_num(char *str)
 {
 	int	i;
 
@@ -44,8 +44,7 @@ static t_error	init_ex_val(unsigned char *result, char *input)
 	{
 		if (res > ULLONG_MAX / 10)
 		{
-			ft_printf_fd(STDERR_FILENO, "exit\n%s: exit: %s: numeric argument required\
-			\n", SHELLNAME, input);
+			ft_printf_fd(STDERR_FILENO, "exit\n%s: exit: %s: numeric argument required\n", SHELLNAME, input);
 			*result = 2;
 			return (ERR);
 		}
@@ -67,15 +66,13 @@ t_error	exec_exit(char **args)
 	}
 	else if (!str_is_num(args[1]))
 	{
-		ft_printf_fd(STDERR_FILENO, "exit\n%s: exit: %s: numeric argument \
-required\n", SHELLNAME, args[1]);
+		ft_printf_fd(STDERR_FILENO, "exit\n%s: exit: %s: numeric argument required\n", SHELLNAME, args[1]);
 		clean_exit(2);
 	}
 	else if (args[2])
 	{
 		set_exit_code(1);
-		ft_printf_fd(STDERR_FILENO, "exit\%s: exit: too many arguments\n", \
-SHELLNAME);
+		ft_printf_fd(STDERR_FILENO, "exit\%s: exit: too many arguments\n", SHELLNAME);
 		return (ERR);
 	}
 	else

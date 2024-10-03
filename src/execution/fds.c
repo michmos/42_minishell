@@ -12,6 +12,44 @@
 
 #include "../minishell.h"
 
+t_error	reset_io(void)
+{
+	t_shell	*shell;
+
+	shell = get_shell_struct();
+	if (dup2(shell->std_in, STDIN_FILENO) == -1)
+	{
+		perror("dup2");
+		return (DEADLY_ERR);
+	}
+	if (dup2(shell->std_out, STDOUT_FILENO) == -1)
+	{
+		perror("dup2");
+		return (DEADLY_ERR);
+	}
+	if (dup2(shell->std_err, STDERR_FILENO) == -1)
+	{
+		perror("dup2");
+		return (DEADLY_ERR);
+	}
+	return (0);
+}
+
+t_error	redir(int old_fd, int new_fd)
+{
+	if (dup2(old_fd, new_fd) == -1)
+	{
+		perror("dup2");
+		return (DEADLY_ERR);
+	}
+	if (close(old_fd) == -1)
+	{
+		perror("close");
+		return (DEADLY_ERR);
+	}
+	return (NO_ERR);
+}
+
 t_error	set_io_pipes(size_t child_i, size_t num_childs)
 {
 	int		fds[2];
@@ -21,7 +59,9 @@ t_error	set_io_pipes(size_t child_i, size_t num_childs)
 	if (child_i > 0) // redirect stdin to pipe if not first child
 	{
 		if (redir(shell->cur_cmdline.open_pipe_end, STDIN_FILENO) != NO_ERR)
+		{
 			return (DEADLY_ERR);
+		}
 		shell->cur_cmdline.open_pipe_end = -1;
 	}
 	if (child_i < num_childs -1) // redirect stdout to pipe if not last child
@@ -103,9 +143,7 @@ static t_error	get_io(int fds[2], t_list *redir_lst, char *hd_str)
 			fds[1] = open(redir->filename, O_CREAT | O_RDWR | O_APPEND, 0666);
 		}
 
-
-
-
+		// check for failed opening
 		if (fds[0] == -1 || fds[1] == -1)
 		{
 			if (close_fd(fds[0]) != NO_ERR)

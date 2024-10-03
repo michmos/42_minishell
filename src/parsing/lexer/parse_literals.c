@@ -49,8 +49,7 @@ t_error	parse_str_dq(char **lexeme, t_parse_str *cmd_line)
 	if (cur_char(cmd_line) != '\"')
 	{
 		sfree((void **) lexeme);
-		ft_printf_fd(STDERR_FILENO, \
-		"syntax error: missing closing double quotation mark\n");
+		ft_printf_fd(STDERR_FILENO, "syntax error: missing closing double quotation mark\n");
 		return (ERR);
 	}
 	advance_char(cmd_line);
@@ -67,8 +66,7 @@ t_error	parse_str_sq(char **lexeme, t_parse_str *cmd_line)
 	if (cur_char(cmd_line) != '\'')
 	{
 		sfree((void **) lexeme);
-		ft_printf_fd(STDERR_FILENO, \
-		"syntax error: missing closing single quotation mark\n");
+		ft_printf_fd(STDERR_FILENO, "syntax error: missing closing single quotation mark\n");
 		return (ERR);
 	}
 	advance_char(cmd_line);

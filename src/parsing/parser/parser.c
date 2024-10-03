@@ -30,7 +30,6 @@ static t_error	parse_pipe(t_list **rem_tokens)
 	return (NO_ERR);
 }
 
-// TODO: only do normconform on very end
 static t_error	parse_cmd(t_cmd **cmd, t_list **rem_tokens)
 {
 	t_error	error;

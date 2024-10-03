@@ -12,51 +12,6 @@
 
 #include "../../minishell.h"
 
-void	print_envlst(t_list *head, int order)
-{
-	t_list	*tmp;
-
-	tmp = head;
-	if (order == 4)
-	{
-		while (tmp != NULL)
-		{
-			if (!((t_env_var *)(tmp->as_ptr))->equal)
-			{
-				printf("declare -x %s\n", ((t_env_var *)(tmp->as_ptr))->key);
-			}
-			else
-			{
-				if (((t_env_var *)(tmp->as_ptr))->key)
-					printf("declare -x %s", ((t_env_var *)(tmp->as_ptr))->key);
-				if (((t_env_var *)(tmp->as_ptr))->equal)
-					printf("=");
-				if (((t_env_var *)(tmp->as_ptr))->value)
-					printf("\"%s\"\n", ((t_env_var *)(tmp->as_ptr))->value);
-			}
-			tmp = tmp->next;
-		}
-	}
-	else
-	{
-		while (tmp != NULL)
-		{
-			if (!((t_env_var *)(tmp->as_ptr))->equal)
-			{
-				tmp = tmp->next;
-			}
-			else
-			{
-				printf("%s", ((t_env_var *)(tmp->as_ptr))->key);
-				if (((t_env_var *)(tmp->as_ptr))->equal)
-					printf("=");
-				printf("%s\n", ((t_env_var *)(tmp->as_ptr))->value);
-				tmp = tmp->next;
-			}
-		}
-	}
-}
-
 t_builtins	get_builtin_type(char *cmd)
 {
 	if (cmd == NULL)
@@ -77,19 +32,6 @@ t_builtins	get_builtin_type(char *cmd)
 		return (EXIT);
 	else
 		return (NO_BUILTIN);
-}
-
-t_error	env(char **args)
-{
-	t_shell	*shell;
-
-	shell = get_shell_struct();
-	if (args[1])
-		printf("Too many arguments, please type only env\n");
-	else
-		print_envlst(shell->env_lst, 6);
-	set_exit_code(0);
-	return (NO_ERR);
 }
 
 t_error	execute_builtin(char **args)

@@ -12,6 +12,15 @@
 
 #include "../../minishell.h"
 
+bool	is_dir(char *pathname)
+{
+	struct stat statbuff;
+
+	if (stat(pathname, &statbuff) != 0)
+		return (false);
+	return (S_ISDIR(statbuff.st_mode));
+}
+
 // section 1. - 8.
 static t_error	set_curpath(char **curpath, char *arg, char *old_wd)
 {

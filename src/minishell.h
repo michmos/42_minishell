@@ -13,12 +13,6 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-// # include "../external_libs/42_libs/ft_libs.h"
-// # include "readline/readline.h"
-// # include "readline/history.h"
-// # include <stdio.h>
-// # include <sys/stat.h>
-
 # define SHELLNAME "minishell"
 # include "../external_libs/42_libs/ft_libs.h"
 # include <stdio.h>
@@ -35,9 +29,6 @@
 
 # define ERROR -1
 
-// maybe i don't need this global signal, cause i have one in signals.c
-extern int	g_signal;
-
 typedef enum e_error
 {
 	// No error
@@ -50,6 +41,7 @@ typedef enum e_error
 	INP_ERR,
 }	t_error;
 
+// information specific to each command line
 typedef struct s_cmdline
 {
 	t_list	*cmdlst;
@@ -57,11 +49,12 @@ typedef struct s_cmdline
 	char	*hd_str;
 } t_cmdline;
 
+// information about the shell
 typedef struct s_shell
 {
 	char		*cwd;		// cur working dir
 	char		*old_wd;	// last working dir
-	char		*home_dir;		// home dir
+	char		*home_dir;	// home dir
 	t_list		*env_lst;	// env_lst
 	char		**env;		// env array
 	int			ex_code;	// ex_code of last command
@@ -70,6 +63,9 @@ typedef struct s_shell
 	int			std_err;	// stderr backup
 	t_cmdline	cur_cmdline;// cur cmdline data
 }	t_shell;
+
+// main.c ------------------------------------------------------------------- //
+int	main(int argc, char *argv[], char **env);
 
 // init_shell.c ------------------------------------------------------------- //
 void		init_shell(t_shell **ptr, char **env);
@@ -100,8 +96,8 @@ typedef struct s_token
 // parsing.c ---------------------------------------------------------------- //
 t_error	parsing(t_list **cmd_lst, char **str);
 
-// -------------------------- PARSING/lexer/ -------------------------------- //
 
+// -------------------------- PARSING/lexer/ -------------------------------- //
 # define VEC_START_SZ 4
 
 typedef struct s_parse_str
@@ -128,25 +124,39 @@ t_error		add_char(char c, t_vec *vector);
 // char_ops.c --------------------------------------------------------------- //
 char		peek_char(t_parse_str *str);
 char		cur_char(t_parse_str *str);
-void	advance_char(t_parse_str *str);
+void		advance_char(t_parse_str *str);
 
 // lexer.c ------------------------------------------------------------------ //
-t_error	create_token_lst(t_list **head, char *str);
+t_error		create_token_lst(t_list **head, char *str);
+
 
 // -------------------------- PARSING/parser/ ------------------------------- //
-
 typedef struct s_cmd
 {
 	char	**args;
 	t_list	*redir_lst;
 }	t_cmd;
 
-// TODO: we already have token - adapt naming and remove double
 typedef struct s_redir
 {
 	t_tag	type;
 	char	*filename;
 }	t_redir;
+
+// expand_all_env_vars.c --------------------------------------------------- //
+t_error		expand_all_env_vars(char **str_ptr);
+
+// expand_env_var.c --------------------------------------------------------- //
+t_error		expand_env_var(char **str_ptr, size_t *cur_pos);
+
+// extend_arg_lst.c --------------------------------------------------------- //
+t_error		extend_arg_lst(t_list **args_lst, t_list **rem_tokens);
+
+// extend_redir_lst.c ------------------------------------------------------- //
+t_error		extend_redir_lst(t_list **head, t_list **rem_tokens);
+
+// parser.c ----------------------------------------------------------------- //
+t_error		create_cmd_lst(t_list **cmd_lst, t_list **token_lst);
 
 // utils.c ------------------------------------------------------------------ //
 t_token		pop_token(t_list **rem_tokens);
@@ -155,32 +165,58 @@ t_tag		get_token_tag(t_list *tokens);
 bool		is_literal(t_tag tag);
 bool		is_redir(t_tag tag);
 
-// expand_all_env_vars.c --------------------------------------------------- //
-t_error		expand_all_env_vars(char **str_ptr);
-
-// expand_env_var.c --------------------------------------------------------- //
-t_error		expand_env_var(char **str_ptr, size_t *cur_pos);
-
-// get_cmd_args.c ----------------------------------------------------------- //
-t_error		extend_arg_lst(t_list **args_lst, t_list **rem_tokens);
-
-// get_redir_lst.c ---------------------------------------------------------- //
-t_error		extend_redir_lst(t_list **head, t_list **rem_tokens);
-
-// parser.c ----------------------------------------------------------------- //
-t_error		create_cmd_lst(t_list **cmd_lst, t_list **token_lst);
 
 // -------------------------------------------------------------------------- //
 // --------------------------- EXECUTION/ ----------------------------------- //
 // -------------------------------------------------------------------------- //
+
+// execution.c -------------------------------------------------------------- //
+t_error		execution(t_list *pars_out);
+
+// cmd_pipeline.c ----------------------------------------------------------- //
+void		wait_for_childs(pid_t last_child, int *status);
+t_error		cmd_pipeline(t_list *cmd_lst);
+
+// get_cmd_path.c ----------------------------------------------------------- //
+t_error		init_cmd_path(char **cmd_path, char *cmd, char **env);
+
+// heredoc.c ---------------------------------------------------------------- //
+t_error		exec_hd(t_list *redir_lst);
+
+// fds.c -------------------------------------------------------------------- //
+t_error		reset_io(void);
+t_error		redir(int old_fd, int new_fd);
+t_error		set_io_pipes(size_t child_i, size_t num_childs);
+t_error		set_io_redirs(t_list	*redir_lst, char *hd_str);
+
+// cmd_check.c -------------------------------------------------------------- //
+void		check_cmd(char *path, char *arg);
+
+// signals.c ---------------------------------------------------------------- //
+int			init_signals(void);
+void		signal_ctrl_d(char *line);
+void		handle_sig(int signal);
+void		signal_sigquit(int signal);
+void		handle_sig_child(int signal);
+void		handle_sig_hd(int signal);
+
+// utils.c ------------------------------------------------------------------ //
+t_cmd		*get_cmd(t_list *lst);
+t_redir		*get_redir(t_list *lst);
+void		err_exit(char *str);
+char		**converter(t_list *head);
+t_error		close_fd(int fd);
+
+
+// ------------------------ EXECUTION/builtins/ ----------------------------- //
 typedef struct s_env_var
 {
-	char	*key;	// before equal sign
-	char	*value; // after equal sign
+	char	*key;
+	char	*value;
 	bool	equal;
 }	t_env_var;
 
-typedef struct s_parse_env // TODO: we already have parse_str - remove double
+typedef struct s_parse_env
 {
 	char	*buffer;
 	size_t	buffer_len;
@@ -200,60 +236,46 @@ typedef enum e_builtins
 }	t_builtins;
 
 // builtins.c --------------------------------------------------------------- //
-void		print_ordered_lst(void);
-void		print_envlst(t_list *head, int order);
-t_builtins	get_builtin_type(char *cmd);
 t_error		execute_builtin(char **args);
 t_error		exec_one_builtin(t_cmd *cmd);
-
-// export.c --------------------------------------------------------------- //
-t_error		exec_export(char **args);
-
-// fds.c--------------------------------------------------------------------//
-t_error		reset_io(void);
-t_error		set_io_redirs(t_list	*redir_lst, char *hd_str);
-t_error		set_io_pipes(size_t child_i, size_t num_childs);
-
-// fds2.c -------------------------------------------------------------------//
-t_error		redir(int old_fd, int new_fd);
-// cd_sec_1_to_6.c ---------------------------------------------------------- //
-t_error		init_curpath(char **curpath, char *arg);
-
-// cd_sec_7_to_8.c ---------------------------------------------------------- //
-t_error		modify_curpath(char **curpath);
-
-// cd_sec_9.c --------------------------------------------------------------- //
-t_error		cnvrt_to_rltv_path(char **curpath, char *cwd);
-
-// cd_utils.c --------------------------------------------------------------- //
-bool		is_dir(char *pathname);
-t_error		add_slash(char **str);
-void		del_char(char *ptr);
+t_builtins	get_builtin_type(char *cmd);
 
 // cd.c --------------------------------------------------------------------- //
 t_error		cd(char *argv[]);
+bool		is_dir(char *pathname);
 
-// echo.c ------------------------------------------------------------------ //
-void		echo(char *argv[]);
+// cd_sec_1_to_6.c ---------------------------------------------------------- //
+t_error		init_curpath(char **curpath, char *arg);
+
+// cd_sec_7_to_9.c ---------------------------------------------------------- //
+void 		del_char(char *ptr);
+t_error		cnvrt_to_rltv_path(char **curpath, char *cwd);
+t_error		modify_curpath(char **curpath);
 
 // env.c -------------------------------------------------------------------- //
-t_env_var	*create_env_var(char *env);
+t_error		env(char **args);
 t_list		*create_envlst(char **env);
-void		free_env_var(void *var);
+t_env_var	*create_env_var(char *env);
 
-// exit.c ---------------------------------------------------------------- //
-int			str_is_num(char *str);
+// echo.c ------------------------------------------------------------------- //
+void		echo(char *argv[]);
+
+// exit.c ------------------------------------------------------------------- //
 t_error		exec_exit(char **args);
 
+// export.c ----------------------------------------------------------------- //
+t_error		exec_export(char **args);
+
 // ordered_env.c ------------------------------------------------------------ //
-t_list		*create_ordered_envlst(t_list *env);
+void		print_ordered_lst(void);
 char		*key(t_list *node);
 
-// pwd.c ------------------------------------------------------------ //
+// pwd.c -------------------------------------------------------------------- //
 void		pwd(void);
 
-// unset.c ------------------------------------------------------------ //
+// unset.c ------------------------------------------------------------------ //
 t_error		unset(char *argv[]);
+
 
 // -------------------------------------------------------------------------- //
 // ------------------------ SETTERS_GETTERS/ -------------------------------- //
@@ -274,65 +296,23 @@ void		set_env_lst(t_list *new_lst);
 // pwd.c -------------------------------------------------------------------- //
 t_error		set_pwd(char *new_path);
 
-// ----------------------- EXECUTION/execution/ ---------------------------//
-
-// convert_tlist_2d.c ----------------------------------------------------//
-char		**converter(t_list *head);
-
-// execution.c ------------------------------------------------------------//
-t_error		execution(t_list *pars_out);
-
-// heredoc.c ---------------------------------------------------------//
-t_error		exec_hd(t_list *redir_lst);
-
-// pipex_check.c ---------------------------------------------------------//
-void		check_cmd(char *path, char *arg);
-
-// pipex_free.c ---------------------------------------------------------//
-void		free_ar2(void **array);
-void		wait_free_exit(int exit_status);
-
-// pipex_helper.c ---------------------------------------------------------//
-t_cmd		*get_cmd(t_list *lst);
-t_redir		*get_redir(t_list *lst);
-void		err_exit(char *str);
-t_error		close_fd(int fd);
-
-// pipex_paths.c ----------------------------------------------------------//
-t_error		init_cmd_path(char **cmd_path, char *command, char **env);
-char		*get_env_path(char **env);
-// static char *concat_path(char *dir, char *command);
-
-// pipex.c ----------------------------------------------------------------//
-void		wait_for_childs(pid_t last_child, int *status);
-t_error		cmd_pipeline(t_list *cmd_lst);
-
-// signals.c -----------------------------------------------------------//
-void		handle_sig(int signal);
-void		handle_sig_child(int signal);
-void		handle_sig_hd(int signal);
-void		signal_ctrl_d(char *line);
-void		signal_sigquit(int signal);
-int			init_signals(void);
 
 // -------------------------------------------------------------------------- //
 // ----------------------------- UTILS/ ------------------------------------- //
 // -------------------------------------------------------------------------- //
 
-// utils.c ------------------------------------------------------------------ //
-char		**store_ptrs_in_arr(t_list *lst);
-char		*get_env_val_ptr(char *key);
-bool		has_key(void *var, char *key);
+// cleanup.c ---------------------------------------------------------------- //
+void	clean_exit(int exit_code);
 
 // free.c ------------------------------------------------------------------- //
-void		free_token(void *token);
-void		free_cmd(void *cmd);
-void		free_redir(void *redir);
+void	free_redir(void	*redir);
+void	free_cmd(void *cmd);
+void	free_token(void *token);
+void	free_env_var(void *var);
 
-// exit_code.c -------------------------------------------------------------- //
-int			get_exit_code(void);
-void		set_exit_code(int code);
-// cleanup.c --------------------------------------------------------------- //
-void		clean_exit(int exit_code);
+// utils.c ------------------------------------------------------------------ //
+char	*get_env_val_ptr(char *key);
+bool	has_key(void *var, char *key);
+char	**store_ptrs_in_arr(t_list *lst);
 
 #endif

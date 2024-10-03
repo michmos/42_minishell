@@ -12,6 +12,51 @@
 
 #include "../../minishell.h"
 
+static void	print_envlst(t_list *head, int order)
+{
+	t_list	*tmp;
+
+	tmp = head;
+	if (order == 4)
+	{
+		while (tmp != NULL)
+		{
+			if (!((t_env_var *)(tmp->as_ptr))->equal)
+			{
+				printf("declare -x %s\n", ((t_env_var *)(tmp->as_ptr))->key);
+			}
+			else
+			{
+				if (((t_env_var *)(tmp->as_ptr))->key)
+					printf("declare -x %s", ((t_env_var *)(tmp->as_ptr))->key);
+				if (((t_env_var *)(tmp->as_ptr))->equal)
+					printf("=");
+				if (((t_env_var *)(tmp->as_ptr))->value)
+					printf("\"%s\"\n", ((t_env_var *)(tmp->as_ptr))->value);
+			}
+			tmp = tmp->next;
+		}
+	}
+	else
+	{
+		while (tmp != NULL)
+		{
+			if (!((t_env_var *)(tmp->as_ptr))->equal)
+			{
+				tmp = tmp->next;
+			}
+			else
+			{
+				printf("%s", ((t_env_var *)(tmp->as_ptr))->key);
+				if (((t_env_var *)(tmp->as_ptr))->equal)
+					printf("=");
+				printf("%s\n", ((t_env_var *)(tmp->as_ptr))->value);
+				tmp = tmp->next;
+			}
+		}
+	}
+}
+
 static char	*get_key(t_env_var *env_var, t_parse_env *env_parse)
 {
 	while (env_parse->buffer[env_parse->cursor_pos] != '=')
@@ -108,3 +153,17 @@ t_list	*create_envlst(char **env)
 	}
 	return (head);
 }
+
+t_error	env(char **args)
+{
+	t_shell	*shell;
+
+	shell = get_shell_struct();
+	if (args[1])
+		printf("Too many arguments, please type only env\n");
+	else
+		print_envlst(shell->env_lst, 6);
+	set_exit_code(0);
+	return (NO_ERR);
+}
+

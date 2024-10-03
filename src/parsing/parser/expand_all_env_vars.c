@@ -59,7 +59,7 @@ static t_error	modify_str(char **str_ptr, size_t *cursor_pos)
 	return (error);
 }
 
-t_error	expand_tilda(char **str, size_t	*idx)
+static t_error	expand_tilda(char **str, size_t	*idx)
 {
 	char	*result;
 	size_t	result_size;

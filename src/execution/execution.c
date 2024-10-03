@@ -20,8 +20,7 @@ t_error	execution(t_list *pars_out)
 	num_cmd = ft_lstsize(pars_out);
 	if (num_cmd == 0)
 		return (ERROR);
-	if (num_cmd == 1 && \
-	get_builtin_type(get_cmd(pars_out)->args[0]) != NO_BUILTIN)
+	if (num_cmd == 1 && get_builtin_type(get_cmd(pars_out)->args[0]) != NO_BUILTIN)
 	{
 		error = exec_one_builtin(get_cmd(pars_out));
 	}

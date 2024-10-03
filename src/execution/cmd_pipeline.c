@@ -22,6 +22,7 @@ static void	child_process(t_cmd *cmd)
 	signal(SIGQUIT, signal_sigquit);
 	error = NO_ERR;
 	path = NULL;
+
 	// close unused fd
 	if (shell->cur_cmdline.open_pipe_end != -1 && close(shell->cur_cmdline.open_pipe_end) == -1)
 	{
@@ -29,10 +30,12 @@ static void	child_process(t_cmd *cmd)
 		clean_exit(DEADLY_ERR);
 	}
 	shell->cur_cmdline.open_pipe_end = -1;
-
+	// set input output
 	error = set_io_redirs(cmd->redir_lst, shell->cur_cmdline.hd_str);
 	if (error == DEADLY_ERR || error == ERR)
+	{
 		clean_exit(error);
+	}
 	if (!cmd->args[0])
 	{
 		clean_exit(0);
@@ -43,14 +46,17 @@ static void	child_process(t_cmd *cmd)
 		set_exit_code(130);%s: command not found\n", SHELLNAME, cmd->args[0]);
 		clean_exit(127);
 	}
+	// exec builtin if applicable
 	if (get_builtin_type(cmd->args[0]) != NO_BUILTIN)
 	{
 		error = execute_builtin(cmd->args);
 		clean_exit(error);
 	}
-	else if (init_cmd_path(&path, cmd->args[0], shell->env) != NO_ERR || \
-	cmd->args[0] == NULL)
+	// add path to the executable
+	if (init_cmd_path(&path, cmd->args[0], shell->env) != NO_ERR || cmd->args[0] == NULL)
+	{
 		clean_exit(DEADLY_ERR);
+	}
 	check_cmd(path, cmd->args[0]);
 	execve(path, cmd->args, shell->env);
 	perror("execve");
@@ -101,6 +107,7 @@ t_error	cmd_pipeline(t_list *cmd_lst)
 		{
 			clean_exit(EXIT_FAILURE);
 		}
+		// redirect in out to pipe ends
 		if (set_io_pipes(i, num_cmd) != NO_ERR)
 		{
 			clean_exit(EXIT_FAILURE);
@@ -115,7 +122,6 @@ t_error	cmd_pipeline(t_list *cmd_lst)
 		{
 			child_process((t_cmd *)(cmd_lst->as_ptr));
 		}
-		// parent
 		if (reset_io() != NO_ERR)
 		{
 			clean_exit(EXIT_FAILURE);
@@ -130,6 +136,8 @@ t_error	cmd_pipeline(t_list *cmd_lst)
 		clean_exit(EXIT_FAILURE);
 	}
 	if (get_exit_code() != 130 && get_exit_code() != 131)
+	{
 		set_exit_code(WEXITSTATUS(status));
+	}
 	return (NO_ERR);
 }

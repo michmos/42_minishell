@@ -16,8 +16,7 @@ static void	print_err_and_exit(int num, int exit_code, char *arg)
 {
 	if (num == 1 && exit_code == 127)
 	{
-		ft_printf_fd(STDERR_FILENO, "%s: %s: No such file or directory\n", \
-		SHELLNAME, arg);
+		ft_printf_fd(STDERR_FILENO, "%s: %s: No such file or directory\n", SHELLNAME, arg);
 		clean_exit(127);
 	}
 	else if (num == 2 && exit_code == 126)
@@ -27,14 +26,12 @@ static void	print_err_and_exit(int num, int exit_code, char *arg)
 	}
 	else if (num == 3 && exit_code == 126)
 	{
-		ft_printf_fd(STDERR_FILENO, "%s: %s: Permission denied\n", \
-		SHELLNAME, arg);
+		ft_printf_fd(STDERR_FILENO, "%s: %s: Permission denied\n", SHELLNAME, arg);
 		clean_exit(126);
 	}
 	else if (num == 4 && exit_code == 127)
 	{
-		ft_printf_fd(STDERR_FILENO, "%s: %s: command not found\n", \
-		SHELLNAME, arg);
+		ft_printf_fd(STDERR_FILENO, "%s: %s: command not found\n", SHELLNAME, arg);
 		clean_exit(127);
 	}
 }

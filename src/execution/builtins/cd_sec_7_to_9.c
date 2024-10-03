@@ -12,6 +12,53 @@
 
 #include "../../minishell.h"
 
+void del_char(char *ptr)
+{
+	ft_memmove(ptr, ptr + 1, ft_strlen(ptr + 1) + 1);
+}
+
+// section 9
+t_error	cnvrt_to_rltv_path(char **curpath, char *cwd)
+{
+	size_t	i;
+	char *tmp;
+
+	i = 0;
+	while (**curpath && cwd[i] && **curpath == cwd[i])
+	{
+		del_char(*curpath);
+		i++;
+	}
+	tmp = ft_strjoin("./", *curpath);
+	sfree((void **) curpath);
+	if (!tmp)
+	{
+		perror("malloc");
+		return (DEADLY_ERR);
+	}
+	*curpath = tmp;
+	return (NO_ERR);
+}
+
+static t_error	add_slash(char **str)
+{
+	char	*result;
+
+	if (!str || !*str)
+	{
+		return (INP_ERR);
+	}
+	result = ft_strjoin(*str, "/");
+	if (!result)
+	{
+		perror("malloc");
+		return (DEADLY_ERR);
+	}
+	free(*str);
+	*str = result;
+	return (NO_ERR);
+}
+
 static void	smplfy_lead_slashes(char *str)
 {
 	size_t	count;
@@ -277,7 +324,6 @@ static t_error	concatenate_to_pwd(char **curpath)
 	*curpath = tmp;
 	return (NO_ERR);
 }
-
 
 t_error	modify_curpath(char **curpath)
 {

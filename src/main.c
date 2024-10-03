@@ -49,7 +49,7 @@ int	main(int argc, char *argv[], char **env)
 	init_shell(&shell, env);
 	while (1)
 	{
-		init_signals(); // TODO: should this happen in the while loop
+		init_signals();
 		cmd_line = readline("minishell> ");
 		if (!cmd_line)
 		{

@@ -32,7 +32,7 @@ static char	*concat_path(char *dir, char *command)
 	return (result);
 }
 
-char	*get_env_path(char **env)
+static char	*get_env_path(char **env)
 {
 	size_t	i;
 
@@ -47,7 +47,7 @@ char	*get_env_path(char **env)
 	return (NULL);
 }
 
-t_error	get_bin_paths(char ***bin_paths, char **env)
+static t_error	get_bin_paths(char ***bin_paths, char **env)
 {
 	char	*env_path;
 
@@ -75,9 +75,13 @@ static t_error	get_full_path(char **full_path, char *cmd, char **env)
 	*full_path = NULL;
 	error = NO_ERR;
 	if (get_bin_paths(&bin_paths, env) != NO_ERR)
+	{
 		return (DEADLY_ERR);
+	}
 	else if (!bin_paths)
+	{
 		return (NO_ERR);
+	}
 	i = 0;
 	while (bin_paths[i])
 	{
@@ -88,11 +92,14 @@ static t_error	get_full_path(char **full_path, char *cmd, char **env)
 			break ;
 		}
 		if (access(*full_path, X_OK) == 0)
+		{
 			break ;
+		}
 		sfree((void **) full_path);
 		i++;
 	}
-	return (ft_free_2d_array((void **) bin_paths), error);
+	ft_free_2d_array((void **) bin_paths);
+	return (error);
 }
 
 t_error	init_cmd_path(char **cmd_path, char *cmd, char **env)

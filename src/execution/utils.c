@@ -40,3 +40,40 @@ t_error	close_fd(int fd)
 	}
 	return (NO_ERR);
 }
+
+char	**converter(t_list *head)
+{
+	char	*temp;
+	char	**array;
+	int		i;
+
+	i = 0;
+	array = (char **)ft_calloc(ft_lstsize(head) + 1, sizeof(char *));
+	if (!array)
+	{
+		perror("malloc");
+		return (NULL);
+	}
+	while (head != NULL)
+	{
+		temp = ft_strjoin(((t_env_var *)(head->as_ptr))->key, "=");
+		if (!temp)
+		{
+			perror("malloc");
+			ft_free_2d_array((void **)array);
+
+		}
+		array[i] = ft_strjoin(temp, ((t_env_var *)(head->as_ptr))->value);
+		free(temp);
+		if (!array[i])
+		{
+			perror("malloc");
+			ft_free_2d_array((void **)array);
+
+		}
+		i++;
+		head = head->next;
+	}
+	array[i] = NULL;
+	return (array);
+}

@@ -26,25 +26,24 @@ static void	cleanup_shell(void)
 	}
 	free(shell->cur_cmdline.hd_str);
 	if (shell->cur_cmdline.cmdlst)
+	{
 		ft_lstclear(&(shell->cur_cmdline.cmdlst), free_cmd);
+	}
 	ft_free_2d_array((void **) shell->env);
 	if (shell->std_in != -1)
 	{
 		if (close(shell->std_in) == -1)
 			perror("close");
-
 	}
 	if (shell->std_out != -1)
 	{
 		if (close(shell->std_out) == -1)
 			perror("close");
-
 	}
 	if (shell->std_err != -1)
 	{
 		if (close(shell->std_err) == -1)
 			perror("close");
-
 	}
 	if (shell->cur_cmdline.open_pipe_end != -1)
 	{

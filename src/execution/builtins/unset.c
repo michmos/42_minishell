@@ -12,13 +12,13 @@
 
 #include "../../minishell.h"
 
-bool	is_same_key(char *key, t_list *cur)
+static bool	is_same_key(char *key, t_list *cur)
 {
 	return (ft_strncmp(key, ((t_env_var *)(cur->as_ptr))->key, \
 	ft_strlen(key) + 1) == 0);
 }
 
-t_error	unset_var(char *arg)
+static t_error	unset_var(char *arg)
 {
 	t_list		*cur;
 	t_list		*prev;

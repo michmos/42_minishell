@@ -59,7 +59,9 @@ t_error	set_pwd(char *new_path)
 
 	shell = get_shell_struct();
 	if (!shell)
+	{
 		return (INP_ERR);
+	}
 	if (update_shell_struct(shell, new_path) != NO_ERR)
 	{
 		return (DEADLY_ERR);

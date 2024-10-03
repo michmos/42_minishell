@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-int	g_signal; //Check the global variable. This global variable cannot provide any other information or data access than the number of a received signal.
+int	g_signal;
 
 void	handle_sig_hd(int signal)
 {

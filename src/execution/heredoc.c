@@ -22,11 +22,10 @@ static t_error	get_hd_str(char **result, char *delimiter)
 	while (true)
 	{
 		signal(SIGINT, handle_sig_hd);
-		tmp = readline("> "); // TODO: protect
+		tmp = readline("> ");
 		if (!tmp)
 		{
-			ft_printf_fd(STDERR_FILENO, "%s: warning: here-document \
-delimited by signal (wanted `%s')\n", SHELLNAME, delimiter);
+			ft_printf_fd(STDERR_FILENO, "%s: warning: here-document delimited by signal (wanted `%s')\n", SHELLNAME, delimiter);
 			break ;
 		}
 		if (ft_strncmp(tmp, delimiter, ft_strlen(tmp) + 1) == 0)
@@ -37,12 +36,19 @@ delimited by signal (wanted `%s')\n", SHELLNAME, delimiter);
 		tmp2 = ft_strjoin(tmp, "\n");
 		free(tmp);
 		if (!tmp2)
-			return (perror("malloc"), free(hd_str), DEADLY_ERR);
+		{
+			perror("malloc");
+			free(hd_str);
+			return (DEADLY_ERR);
+		}
 		tmp = ft_strjoin(hd_str, tmp2);
 		free(tmp2);
 		free(hd_str);
 		if (!tmp)
-			return (perror("malloc"), DEADLY_ERR);
+		{
+			perror("malloc");
+			return (DEADLY_ERR);
+		}
 		hd_str = tmp;
 	}
 	*result = hd_str;
