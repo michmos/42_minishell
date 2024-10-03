@@ -11,10 +11,6 @@
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-#include <stddef.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 
 // section 1. - 8.
 static t_error	set_curpath(char **curpath, char *arg, char *old_wd)

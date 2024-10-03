@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-#include <stdio.h>
-#include <unistd.h>
 
 void	print_envlst(t_list *head, int order)
 {

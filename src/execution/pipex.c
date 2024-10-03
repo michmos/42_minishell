@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-#include <stdlib.h>
-#include <unistd.h>
 
 static void	child_process(t_cmd *cmd)
 {

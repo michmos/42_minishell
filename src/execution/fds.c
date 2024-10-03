@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-#include <unistd.h>
 
 t_error	set_io_pipes(size_t child_i, size_t num_childs)
 {

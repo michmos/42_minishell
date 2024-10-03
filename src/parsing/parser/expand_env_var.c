@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-#include <stddef.h>
-#include <unistd.h>
 
 static size_t	get_key_pos(char *ref_start)
 {

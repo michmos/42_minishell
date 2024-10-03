@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-#include <stdio.h>
 
 static t_error	try_curdir(char **finding, char *dir)
 {
