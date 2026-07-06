@@ -1,4 +1,4 @@
-# 42 minishell
+# minishell
 This project was developed together with [**PauliusMinialga**](https://github.com/PauliusMinialga)
 
 ## About the project
@@ -45,7 +45,7 @@ Find a more extensive list of the features below:
 ### Cloning
 Run the following command to clone the repo and build the executable:
 ```
-git clone https://github.com/michmos/42_minishell.git && cd 42_minishell && make
+git clone https://github.com/michmos/minishell.git && cd minishell && make
 ```
 ### Running
 Run the executable:
